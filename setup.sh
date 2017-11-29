@@ -72,7 +72,6 @@ ${OUTPUT} -o lo -j ACCEPT
 ${INPUT} --protocol tcp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 ${INPUT} --protocol udp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
-
 # Allow the following outgoing requests for the following protocols:
 
 # DNS
@@ -80,6 +79,9 @@ ${OUTPUT} --protocol udp --dport 53 -j ACCEPT
 
 # HTTP
 ${OUTPUT} --protocol tcp --dport 80 -j ACCEPT
+
+# NTP
+${OUTPUT} --protocol udp --dport 123 -j ACCEPT
 
 # HTTPS
 ${OUTPUT} --protocol tcp --dport 443 -j ACCEPT
