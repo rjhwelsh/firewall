@@ -98,6 +98,9 @@ ${OUTPUT} --protocol tcp --dport 993 -m conntrack --ctstate NEW,ESTABLISHED -j A
 # PGP KEYSERVERS
 ${OUTPUT} --protocol tcp --dport 11371 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 
+# ICMP handling
+${OUTPUT} --protocol icmp --icmp-type echo-request -j ACCEPT
+${INPUT} --protocol icmp --icmp-type echo-reply -j ACCEPT
 
 # Conclude
 # These final rules reject anything that is not matched by the rules above
