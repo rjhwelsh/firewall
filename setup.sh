@@ -83,6 +83,7 @@ ${INPUT} --protocol udp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 # DNS
 ${OUTPUT} --protocol udp --dport 53 -j ACCEPT
+${OUTPUT} --protocol tcp --dport 53 -j ACCEPT
 
 # HTTP
 ${OUTPUT} --protocol tcp --dport 80 -j ACCEPT
