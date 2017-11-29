@@ -2,6 +2,13 @@
 
 # Firewall setup script
 
+# INSTALL (gentoo)
+# As root run the following
+# ./setup.sh
+# rc-service iptables save
+# rc-service iptables start
+# rc-update add iptables default
+
 # Acknowledgements
 # The following sources of information were used in the making of this script
 
