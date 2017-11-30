@@ -118,6 +118,11 @@ ${OUTPUT} --protocol tcp --dport 11371 -m conntrack --ctstate NEW,ESTABLISHED -j
 ${OUTPUT} --protocol icmp --icmp-type echo-request -j ACCEPT
 ${INPUT} --protocol icmp --icmp-type echo-reply -j ACCEPT
 
+
+# SSH PORT allow out and knocking sequence
+${OUTPUT} --protocol tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+source ./ssh_port_knocking.sh 
+
 # Conclude
 # These final rules reject anything that is not matched by the rules above
 ${INPUT} -j DROP
