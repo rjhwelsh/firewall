@@ -9,6 +9,13 @@
 # rc-service iptables start
 # rc-update add iptables default
 
+# Pesky programs that interfere with iptables themselves.
+# rc-service libvirtd
+# virsh net-list --all                  # list all networks
+# virsh net-destroy default             # shutdown network
+# virsh net-autostart --disable default # disable autostart
+# virsh net-undefine default            # permanently remove network
+
 # Acknowledgements
 # The following sources of information were used in the making of this script
 
