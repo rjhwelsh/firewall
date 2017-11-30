@@ -110,8 +110,8 @@ ${OUTPUT} --protocol tcp --dport 993 -m conntrack --ctstate NEW,ESTABLISHED -j A
 ${OUTPUT} --protocol tcp --dport 11371 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 
 # ICMP handling
-${OUTPUT} --protocol icmp --icmp-type echo-request -j ACCEPT
-${INPUT} --protocol icmp --icmp-type echo-reply -j ACCEPT
+${OUTPUT} --protocol ipv6-icmp --icmpv6-type echo-request -j ACCEPT
+${INPUT} --protocol ipv6-icmp --icmpv6-type echo-reply -j ACCEPT
 
 # Conclude
 # These final rules reject anything that is not matched by the rules above
