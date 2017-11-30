@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# Firewall setup script
+# Ipv4 Iptables Firewall setup script
 
 # INSTALL (gentoo)
-# As root run the following
-# ./setup.sh
+# As root run this script and then the following commands
+#
 # rc-service iptables save
 # rc-service iptables start
 # rc-update add iptables default
@@ -68,8 +68,9 @@ ${IPTABLES} --policy OUTPUT ACCEPT
 ${IPTABLES} --policy FORWARD ACCEPT
 
 # Flush all current iptables rules.
+# and delete all user-defined chains.
 ${IPTABLES} --flush
-
+${IPTABLES} --delete-chain
 
 # Accept all local connections
 ${INPUT} -i lo -j ACCEPT
