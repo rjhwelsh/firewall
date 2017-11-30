@@ -63,7 +63,7 @@ function iptable_knock_chain {
 	done
 
 	# FIRST KNOCK
-	NO=1
+	no=1
 	GATE="${GATE_BASENAME}${no}"
 	# AUTH= not required ; no authorization required for the first knock
 	${IPTABLES} -A "${INITIAL_CHAIN}" -j "${GATE}"
