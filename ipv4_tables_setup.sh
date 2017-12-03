@@ -115,30 +115,21 @@ ${OUTPUT} --protocol tcp --dport 993 -m conntrack --ctstate NEW,ESTABLISHED -j A
 # PGP KEYSERVERS
 ${OUTPUT} --protocol tcp --dport 11371 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 
-# SIP (linphone)
+# SIP
 
-# SIP SERVER PORT
+# Sip server ports
+${OUTPUT} --protocol tcp --dport 5060 -j ACCEPT
+${OUTPUT} --protocol udp --dport 5060 -j ACCEPT
 
-# dig sip.linphone.org
-# ${INPUT} --protocol udp --source 91.121.209.194 --dport 5060:5064 -j ACCEPT
-# ${OUTPUT} --protocol udp --dport 3478 -j ACCEPT
-# ${OUTPUT} --protocol tcp --dport 3478 -j ACCEPT
-
-${OUTPUT} --protocol udp --dport 5060:5064 -j ACCEPT
-${OUTPUT} --protocol tcp --dport 5060:5064 -j ACCEPT
+  # Stun server access
+${OUTPUT} --protocol udp --dport 3478 -j ACCEPT
+${OUTPUT} --protocol tcp --dport 3478 -j ACCEPT
 
    # Audio RTP port
-${OUTPUT} --protocol udp --dport 7078 -j ACCEPT
-#${OUTPUT} --protocol tcp --dport 7078 -j ACCEPT
+${OUTPUT} --protocol udp --dport 7076:7079 -j ACCEPT
 
    # Video RTP port
-${OUTPUT} --protocol udp --dport 9078 -j ACCEPT
-#${OUTPUT} --protocol tcp --dport 9078 -j ACCEPT
-
-   # RTP PORTS
-#${OUTPUT} --protocol tcp --dport 10000:20000 -j ACCEPT
-#${OUTPUT} --protocol udp --dport 10000:20000 -j ACCEPT
-
+${OUTPUT} --protocol udp --dport 9076:9079 -j ACCEPT
 
 # ICMP handling
 ${OUTPUT} --protocol icmp --icmp-type echo-request -j ACCEPT
