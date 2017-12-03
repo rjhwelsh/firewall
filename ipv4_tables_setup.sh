@@ -40,6 +40,7 @@
 # CONFIG_NETFILTER_XT_MATCH_LIMIT=m           #xt_limit
 # CONFIG_IP_NF_TARGET_MASQUERADE=m            #ipt_MASQUERADE
 # CONFIG_NETFILTER_XT_MATCH_MULTIPORT=m       #xt_multiport
+# CONFIG_NF_CONNTRACK_SIP=m                   #nf_conntrack_sip
 
 # IPTABLES BINARY
 IPTABLES="/sbin/iptables"
@@ -115,8 +116,12 @@ ${OUTPUT} --protocol tcp --dport 993 -m conntrack --ctstate NEW,ESTABLISHED -j A
 ${OUTPUT} --protocol tcp --dport 11371 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 
 # SIP (linphone)
-${OUTPUT} --protocol udp --dport 5060 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-${OUTPUT} --protocol udp --dport 7078 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+# SIP SERVER PORT
+${OUTPUT} --protocol udp --dport 5060 -j ACCEPT
+   # Audio RTP port
+${OUTPUT} --protocol udp --dport 7078 -j ACCEPT
+   # Video RTP port
+${OUTPUT} --protocol udp --dport 9078 -j ACCEPT
 
 # ICMP handling
 ${OUTPUT} --protocol icmp --icmp-type echo-request -j ACCEPT
