@@ -84,6 +84,13 @@ ${IPTABLES} --delete-chain
 ${INPUT} -i lo -j ACCEPT
 ${OUTPUT} -o lo -j ACCEPT
 
+# Ethernet
+# DHCP
+${INPUT} -i enp12s0 --protocol udp --sport 68 --dport 67 -j ACCEPT
+${OUTPUT} -o enp12s0 --protocol udp --sport 67 --dport 68 -j ACCEPT
+
+# All other connections
+
 # Allow established and related incoming connections
 ${INPUT} --protocol tcp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 ${INPUT} --protocol udp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
