@@ -144,7 +144,8 @@ ${INPUT} --protocol icmp --icmp-type echo-reply -j ACCEPT
 
 
 # SSH PORT allow out and knocking sequence
-${OUTPUT} --protocol tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+${OUTPUT} --protocol tcp --dport 22 -j ACCEPT # Allow outgoing ssh to go out
+${OUTPUT} --protocol tcp --sport 22 -j ACCEPT # Allow incoming ssh to go out
 source ./ssh_port_knocking.sh
 
 # Conclude
