@@ -141,7 +141,10 @@ ${OUTPUT} --protocol udp --dport 9076:9079 -j ACCEPT
 # IRC and similar chat clients
    # Google hangouts
 ${OUTPUT} --protocol tcp --dport 5222 -j ACCEPT
-
+   # IRC (including ssl support)
+${OUTPUT} --protocol tcp --dport 6667 -j ACCEPT
+${OUTPUT} --protocol tcp --dport 6697 -j ACCEPT
+${OUTPUT} --protocol tcp --dport 7000 -j ACCEPT
 
 # ICMP handling
 ${OUTPUT} --protocol icmp --icmp-type echo-request -j ACCEPT
