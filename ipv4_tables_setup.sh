@@ -150,6 +150,9 @@ ${OUTPUT} --protocol tcp --dport 7000 -j ACCEPT
 ${OUTPUT} --protocol icmp --icmp-type echo-request -j ACCEPT
 ${INPUT} --protocol icmp --icmp-type echo-reply -j ACCEPT
 
+# BIT-TORRENT (rtorrent in/out 49173)
+${OUTPUT} --protocol tcp --sport 49173 -j ACCEPT
+${INPUT} --protocol tcp --dport 49173 -j ACCEPT
 
 # SSH PORT allow out and knocking sequence
 ${OUTPUT} --protocol tcp --dport 22 -j ACCEPT # Allow outgoing ssh to go out
