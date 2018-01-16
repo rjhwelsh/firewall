@@ -41,6 +41,8 @@
 # CONFIG_IP_NF_TARGET_MASQUERADE=m            #ipt_MASQUERADE
 # CONFIG_NETFILTER_XT_MATCH_MULTIPORT=m       #xt_multiport
 # CONFIG_NF_CONNTRACK_SIP=m                   #nf_conntrack_sip
+#
+# In gentoo modules to load can be set in /etc/conf.d/modules
 
 # IPTABLES BINARY
 IPTABLES="/sbin/iptables"
@@ -91,6 +93,12 @@ ${OUTPUT} -o enp12s0 --protocol udp --sport 67 --dport 68 -j ACCEPT
 
 # All other connections
 
+# Allow incoming, outgoing connections for distcc
+# daemon is disabled by default
+# (potential security hole)
+${OUTPUT} -d '192.168.1.0/24' --protocol tcp --sport 3632 -j ACCEPT
+${INPUT} -s '192.168.1.0/24' --protocol tcp --dport 3632 -j ACCEPT
+
 # Allow established and related incoming connections
 ${INPUT} --protocol tcp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 ${INPUT} --protocol udp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
@@ -111,16 +119,16 @@ ${OUTPUT} --protocol udp --dport 123 -j ACCEPT
 ${OUTPUT} --protocol tcp --dport 443 -j ACCEPT
 
 # SMTP
-${OUTPUT} --protocol tcp --dport 587 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+${OUTPUT} --protocol tcp --dport 587 -j ACCEPT
 
 # CUPS / PRINTSERVER
-${OUTPUT} --protocol tcp --dport 631 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+${OUTPUT} --protocol tcp --dport 631 -j ACCEPT
 
 # IMAP
-${OUTPUT} --protocol tcp --dport 993 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+${OUTPUT} --protocol tcp --dport 993 -j ACCEPT
 
 # PGP KEYSERVERS
-${OUTPUT} --protocol tcp --dport 11371 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+${OUTPUT} --protocol tcp --dport 11371 -j ACCEPT
 
 # SIP
 
