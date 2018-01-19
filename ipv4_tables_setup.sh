@@ -112,6 +112,10 @@ ${INPUT} --protocol udp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 ${OUTPUT} --protocol udp --dport 53 -j ACCEPT
 ${OUTPUT} --protocol tcp --dport 53 -j ACCEPT
 
+# Avahi zeroconf
+${INPUT} --protocol udp --dport 5353 -j ACCEPT
+${OUTPUT} --protocol udp --sport 5353 -j ACCEPT
+
 # HTTP
 ${OUTPUT} --protocol tcp --dport 80 -j ACCEPT
 
