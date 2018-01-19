@@ -87,9 +87,12 @@ ${INPUT} -i lo -j ACCEPT
 ${OUTPUT} -o lo -j ACCEPT
 
 # Ethernet
-# DHCP
+# DHCP assign to anonymous
 ${INPUT} -i enp12s0 --protocol udp --sport 68 --dport 67 -j ACCEPT
 ${OUTPUT} -o enp12s0 --protocol udp --sport 67 --dport 68 -j ACCEPT
+# DHCP receive from anonymous
+${INPUT} -i enp12s0 --protocol udp --sport 67 --dport 68 -j ACCEPT
+${OUTPUT} -o enp12s0 --protocol udp --sport 68 --dport 67 -j ACCEPT
 
 # All other connections
 
