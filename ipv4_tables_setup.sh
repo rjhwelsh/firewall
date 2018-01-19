@@ -52,6 +52,12 @@ INPUT="$IPTABLES -t filter --append INPUT"
 OUTPUT="$IPTABLES -t filter --append OUTPUT"
 FORWARD="$IPTABLES -t filter --append FORWARD"
 
+HOST_IP="192.168.1.1"
+CLIENT_IP="${HOST_IP}/24"
+INTERFACE="eth0"
+LAN_IN="${INPUT} -s ${CLIENT_IP} -d ${HOST_IP} -i ${INTERFACE}"
+LAN_OUT="${OUTPUT} -d ${CLIENT_IP} -s ${HOST_IP} -o ${INTERFACE}"
+
 # IMPLEMENTATION
 
 # Before diving in ...
@@ -99,8 +105,8 @@ ${OUTPUT} -o enp12s0 --protocol udp --sport 68 --dport 67 -j ACCEPT
 # Allow incoming, outgoing connections for distcc
 # daemon is disabled by default
 # (potential security hole)
-${OUTPUT} -d '192.168.1.0/24' --protocol tcp --sport 3632 -j ACCEPT
-${INPUT} -s '192.168.1.0/24' --protocol tcp --dport 3632 -j ACCEPT
+${OUTPUT} -d ${CLIENT_IP} --protocol tcp --sport 3632 -j ACCEPT
+${INPUT} -s ${CLIENT_IP} --protocol tcp --dport 3632 -j ACCEPT
 
 # Allow established and related incoming connections
 ${INPUT} --protocol tcp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
