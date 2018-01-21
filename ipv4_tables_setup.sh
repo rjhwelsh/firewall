@@ -136,6 +136,7 @@ ${OUTPUT} --protocol tcp --dport 587 -j ACCEPT
 
 # CUPS / PRINTSERVER
 ${OUTPUT} --protocol tcp --dport 631 -j ACCEPT
+${OUTPUT} --protocol tcp --sport 631 -j ACCEPT
 
 # IMAP
 ${OUTPUT} --protocol tcp --dport 993 -j ACCEPT
