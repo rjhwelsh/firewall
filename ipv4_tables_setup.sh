@@ -168,12 +168,12 @@ ${OUTPUT} --protocol tcp --dport 6667 -j ACCEPT
 ${OUTPUT} --protocol tcp --dport 6697 -j ACCEPT
 ${OUTPUT} --protocol tcp --dport 7000 -j ACCEPT
 
-# Xonotic - First Person Shooter
+# Hedgewars - Turn Based Strategy Game
 # Multiplayer Server Port
-${OUTPUT} --protocol udp --sport 26000 -j ACCEPT
-${INPUT} --protocol udp --dport 26000 -j ACCEPT
+${OUTPUT} --protocol tcp --sport 46631 -j ACCEPT
+${INPUT} --protocol tcp --dport 46631 -j ACCEPT
 # Multiplayer Client
-${OUTPUT} --protocol udp --dport 26000 -j ACCEPT
+${OUTPUT} --protocol tcp --dport 46631 -j ACCEPT
 
 # ICMP handling
 ${OUTPUT} --protocol icmp --icmp-type echo-request -j ACCEPT
