@@ -122,6 +122,9 @@ ${OUTPUT} --protocol tcp --dport 53 -j ACCEPT
 ${INPUT} --protocol udp --dport 5353 -j ACCEPT
 ${OUTPUT} --protocol udp --sport 5353 -j ACCEPT
 
+# FTP
+${OUTPUT} --protocol tcp --dport 21 -j ACCEPT
+
 # HTTP
 ${OUTPUT} --protocol tcp --dport 80 -j ACCEPT
 
