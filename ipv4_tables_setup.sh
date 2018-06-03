@@ -52,7 +52,7 @@ INPUT="$IPTABLES -t filter --append INPUT"
 OUTPUT="$IPTABLES -t filter --append OUTPUT"
 FORWARD="$IPTABLES -t filter --append FORWARD"
 
-HOST_IP="192.168.1.1"
+HOST_IP="192.168.178.25"
 CLIENT_IP="${HOST_IP}/24"
 INTERFACE="eth0"
 LAN_IN="${INPUT} -s ${CLIENT_IP} -d ${HOST_IP} -i ${INTERFACE}"
@@ -107,6 +107,13 @@ ${OUTPUT} -o enp12s0 --protocol udp --sport 68 --dport 67 -j ACCEPT
 # (potential security hole)
 ${OUTPUT} -d ${CLIENT_IP} --protocol tcp --sport 3632 -j ACCEPT
 ${INPUT} -s ${CLIENT_IP} --protocol tcp --dport 3632 -j ACCEPT
+
+# SYNCTHING p2p sync app
+# Restrict to LAN connections only.
+${OUTPUT} -d ${CLIENT_IP} --protocol tcp --dport 22000 -j ACCEPT
+${INPUT} -s ${CLIENT_IP} --protocol tcp --dport 22000 -j ACCEPT
+${OUTPUT} -d ${CLIENT_IP} --protocol udp --dport 21027 -j ACCEPT
+${INPUT} -s ${CLIENT_IP} --protocol udp --dport 21027 -j ACCEPT
 
 # Allow established and related incoming connections
 ${INPUT} --protocol tcp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
