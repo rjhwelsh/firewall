@@ -86,6 +86,7 @@ ${IPTABLES} --policy FORWARD ACCEPT
 # Flush all current iptables rules.
 # and delete all user-defined chains.
 ${IPTABLES} --flush
+${IPTABLES} -t nat --flush
 ${IPTABLES} --delete-chain
 
 # Accept all local connections
