@@ -114,6 +114,10 @@ ${INPUT} -i enp12s0 --protocol tcp --dport 53 -j ACCEPT
 ${OUTPUT} -o enp12s0 --protocol udp --sport 53 -j ACCEPT
 ${OUTPUT} -o enp12s0 --protocol tcp --sport 53 -j ACCEPT
 
+# Allow forwarded service to clients
+# HTTP/HTTPS
+${FORWARD} --protocol tcp --sport 80 -j ACCEPT
+${FORWARD} --protocol tcp --sport 443 -j ACCEPT
 
 # ICMP
 ${FORWARD} --protocol icmp --icmp-type echo-reply -j ACCEPT
