@@ -104,6 +104,13 @@ ${OUTPUT} -o enp12s0 --protocol udp --sport 67 --dport 68 -j ACCEPT
 ${INPUT} -i enp12s0 --protocol udp --sport 67 --dport 68 -j ACCEPT
 ${OUTPUT} -o enp12s0 --protocol udp --sport 68 --dport 67 -j ACCEPT
 
+# DNS Communication
+# Allow clients on internal network access to DNS
+${INPUT} -i enp12s0 --protocol udp --dport 53 -j ACCEPT
+${INPUT} -i enp12s0 --protocol tcp --dport 53 -j ACCEPT
+${OUTPUT} -o enp12s0 --protocol udp --sport 53 -j ACCEPT
+${OUTPUT} -o enp12s0 --protocol tcp --sport 53 -j ACCEPT
+
 # All other connections
 
 # Allow incoming, outgoing connections for distcc
