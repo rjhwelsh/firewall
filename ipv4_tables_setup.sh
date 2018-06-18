@@ -96,8 +96,10 @@ ${OUTPUT} -o lo -j ACCEPT
 # Allow the wireless to masquerade
 # echo "1" > /proc/sys/net/ipv4/ip_forward
 ${IPTABLES} -t nat -A POSTROUTING -o wlp3s0b1 -j MASQUERADE
+${FORWARD} -i enp12s0 -j ACCEPT
 
 # Ethernet
+
 # DHCP assign to anonymous
 ${INPUT} -i enp12s0 --protocol udp --sport 68 --dport 67 -j ACCEPT
 ${OUTPUT} -o enp12s0 --protocol udp --sport 67 --dport 68 -j ACCEPT
