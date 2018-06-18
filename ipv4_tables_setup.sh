@@ -118,6 +118,10 @@ ${OUTPUT} -o enp12s0 --protocol tcp --sport 53 -j ACCEPT
 # HTTP/HTTPS
 ${FORWARD} --protocol tcp --sport 80 -j ACCEPT
 ${FORWARD} --protocol tcp --sport 443 -j ACCEPT
+# FTP
+${FORWARD} --protocol tcp --sport 21 -j ACCEPT
+# RSYNC
+${FORWARD} --protocol tcp --sport 873 -j ACCEPT
 
 # ICMP
 ${FORWARD} --protocol icmp --icmp-type echo-reply -j ACCEPT
