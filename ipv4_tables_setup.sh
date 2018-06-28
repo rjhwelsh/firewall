@@ -122,9 +122,10 @@ ${FORWARD} --protocol tcp --sport 443 -j ACCEPT
 ${FORWARD} --protocol tcp --sport 21 -j ACCEPT
 # RSYNC
 ${FORWARD} --protocol tcp --sport 873 -j ACCEPT
-
 # ICMP
 ${FORWARD} --protocol icmp --icmp-type echo-reply -j ACCEPT
+# NTP
+${FORWARD} --protocol udp --dport 123 -j ACCEPT
 
 # All other connections
 
