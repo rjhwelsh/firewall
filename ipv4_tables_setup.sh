@@ -53,7 +53,7 @@ OUTPUT="$IPTABLES -t filter --append OUTPUT"
 FORWARD="$IPTABLES -t filter --append FORWARD"
 
 HOST_IP="192.168.178.25"
-CLIENT_IP="${HOST_IP}/16" 
+CLIENT_IP="${HOST_IP}/16"
 INTERFACE="eth0"
 LAN_IN="${INPUT} -s ${CLIENT_IP} -d ${HOST_IP} -i ${INTERFACE}"
 LAN_OUT="${OUTPUT} -d ${CLIENT_IP} -s ${HOST_IP} -o ${INTERFACE}"
@@ -230,7 +230,6 @@ ${INPUT} --protocol icmp --icmp-type echo-reply -j ACCEPT
 # SSH PORT allow out and knocking sequence
 ${OUTPUT} --protocol tcp --dport 22 -j ACCEPT # Allow outgoing ssh to go out
 ${OUTPUT} --protocol tcp --sport 22 -j ACCEPT # Allow incoming ssh to go out
-source ./ssh_port_knocking.sh
 
 # Conclude
 # These final rules reject anything that is not matched by the rules above
