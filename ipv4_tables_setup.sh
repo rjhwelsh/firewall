@@ -125,7 +125,7 @@ ${FORWARD} --protocol tcp --sport 873 -j ACCEPT
 # ICMP
 ${FORWARD} --protocol icmp --icmp-type echo-reply -j ACCEPT
 # NTP
-${FORWARD} --protocol udp --dport 123 -j ACCEPT
+${FORWARD} --protocol udp --sport 123 -j ACCEPT
 
 # All other connections
 
