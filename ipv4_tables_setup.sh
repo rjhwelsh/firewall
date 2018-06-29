@@ -214,6 +214,7 @@ ${OUTPUT} --protocol tcp --sport 46631 -j ACCEPT
 ${INPUT} --protocol tcp --dport 46631 -j ACCEPT
 # Multiplayer Client
 ${OUTPUT} --protocol tcp --dport 46631 -j ACCEPT
+${INPUT} --protocol tcp --sport 46631 -j ACCEPT
 
 # ICMP handling
 ${OUTPUT} --protocol icmp --icmp-type echo-request -j ACCEPT
