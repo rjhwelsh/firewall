@@ -208,6 +208,10 @@ ${OUTPUT} --protocol tcp --dport 6667 -j ACCEPT
 ${OUTPUT} --protocol tcp --dport 6697 -j ACCEPT
 ${OUTPUT} --protocol tcp --dport 7000 -j ACCEPT
 
+# OpenVPN client 
+${OUTPUT} --protocol udp --dport 26009 -j ACCEPT
+${INPUT} --protocol udp --sport 26009 -j ACCEPT
+
 # Hedgewars - Turn Based Strategy Game
 # Multiplayer Server Port
 ${OUTPUT} --protocol tcp --sport 46631 -j ACCEPT
