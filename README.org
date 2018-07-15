@@ -1,0 +1,229 @@
+#+TITLE: Iptables firewall configuration setup
+#+AUTHOR: Roger J. H. Welsh
+#+EMAIL: rjhwelsh@gmail.com
+#+STARTUP: inlineimages
+
+* About
+This document aims to document and standardize firewall security modules across
+my domain.
+
+
+* Overview
+
+** Iptables
+Iptables processes packets through chains and tables.
+
+*** Tables
+**** filter
+		 This default table used for general transmission *to*, *thru* and *from*
+		 the local socket.
+**** nat
+		 This table is consulted when a packet creating a new connection is
+		 encountered. This is for address translation.
+**** mangle
+		 This table is used for specialized packet alteration. Nat is a special type of
+		 mangling.
+**** raw
+		 This table is for configuring exemptions from connection tracking in
+		 combination with the =NOTRACK= target.
+*** Chains
+
+**** Prerouting
+		 This chain is for rules before making a routing decision.
+**** Forward
+
+		 This is for forwarding to other (non-local) ip addresses.
+**** Input
+		 This is for packets to the router.
+**** Output
+		 This is for packets from the router.
+**** Postrouting
+		 This is for packets after they have been forwarded or output from the router.
+**** Adding new chains
+New chains can be added to iptables with.
+#+BEGIN_SRC sh
+iptables --new-chain $NAME
+#+END_SRC
+These can allow you to setup a branched structure for your firewall.
+
+*** Diagram
+
+ (Transcribed from
+ https://serverfault.com/questions/441615/iptables-snat-eats-packets,
+ https://www.frozentux.net/iptables-tutorial/chunkyhtml/index.html,
+ Source: Iptables Tutorial 1.2.1 Oskar Andreasson 2006)
+
+ #+BEGIN_SRC plantuml :file uml/iptables.png :exports none
+	 @startuml
+	 title Iptables Fundamental
+
+	 skinparam activity {
+			 StartColor red
+			 EndColor green
+			 BackgroundColor Peru
+			 BackgroundColor<<preroute>> MediumVioletRed
+
+			 BackgroundColor<<forward>> Yellow
+			 BackgroundColor<<input>> Orange
+			 BackgroundColor<<output>> RoyalBlue
+			 BackgroundColor<<postroute>> YellowGreen
+			 BackgroundColor<<local>> Black
+
+			 BorderThickness 200
+			 TitleFontSize 40
+			 ActivityFontSize 25
+			 ActivityFontSize 25
+			 BorderColor Peru
+			 BorderColor<<raw>> Maroon
+			 BorderColor<<mangle>> Magenta
+			 BorderColor<<nat>> Lime
+			 BorderColor<<filter>> MidnightBlue
+
+			 FontColor<<local>> White
+			}
+
+
+	 (*) --> "<<raw>>\nPREROUTING" <<preroute>> <<raw>>
+	 --> "<<mangle>>\nPREROUTING"  <<preroute>> <<mangle>>
+	 --> "<<nat>>\nPREROUTING" <<preroute>> <<nat>>
+	 If "" then
+	 -right-> [forward] "<<mangle>>\nFORWARD" <<forward>> <<mangle>>
+	 --> "<<filter>>\nFORWARD"  as FWD1 <<forward>> <<filter>>
+	 else
+	 -left-> [input] "<<mangle>>\nINPUT" <<input>> <<mangle>>
+	 --> "<<filter>>\nINPUT"  <<input>> <<filter>>
+	 --> "<<local>>\nPROCESS" <<local>>
+	 --> "<<raw>>\nOUTPUT" <<output>> <<raw>>
+	 --> "<<mangle>>\nOUTPUT" <<output>> <<mangle>>
+	 --> "<<nat>>\nOUTPUT" <<output>> <<nat>>
+	 --> "<<filter>>\nOUTPUT" as OUT1 <<output>> <<filter>>
+	 endif
+	 -right-> "<<route>>\nDecision" as POST0 <<route>>
+	 FWD1 -left-> POST0
+	 --> "<<mangle>>\nPOSTROUTING" <<postroute>> <<mangle>>
+	 --> "<<nat>>\nPOSTROUTING" <<postroute>> <<nat>>
+	 --> (*)
+	 @enduml
+
+ #+END_SRC
+
+ #+RESULTS:
+ [[file:uml/iptables.png]]
+
+ #+NAME: Iptables Processing. fig:iptables1
+ #+CAPTION: Illustrates how iptables processes internet packets at layer 2.
+ #+ATTR_ORG: :width 100%
+ #+ATTR_LATEX: :height 0.9\textheight
+	file:uml/iptables.png
+
+** Module Syntax
+
+The modules contained in this repository are a collection of bash scripts for
+convenient execution of firewall rules.
+
+ * The =up.sh= script is responsible for the main execution of these
+scripts. Single modules like =panic=, =lock= can be specified to configure the
+firewall for the particular situation. Otherwise the script for the host will be
+run.
+ * =modules.d= provides base scripts for configuring specific services.
+ * =hosts.d= provides specific configuration for particular hosts.
+
+Configuration variables follow the following standard syntax.
+The configuration variables can be used by the scripts to build iptables rules
+quickly.
+
+| Config Variable | Represents                                                                 | Examples                                 |
+|-----------------+----------------------------------------------------------------------------+------------------------------------------|
+| IPTABLES        | The location of the iptables binary                                        | IPTABLES=/sbin/iptables                  |
+| IPTABLES_6      | The location of the ip6tables binary                                       | /sbin/ip6tables                          |
+| ${VAR}_6        | Any variable with a _6 suffix will use an ip6tables version.               | LOCAL_lo_6=::1/128                       |
+|-----------------+----------------------------------------------------------------------------+------------------------------------------|
+| IF              | The interface that is being used                                           | lo, tun0, wlan0, enp12s0                 |
+| LOCAL_${IF}     | The ip address of the localhost on interface                               | LOCAL_lo=127.0.0.1                       |
+| SUBNET_${IF}    | The ip address subnet connected to interface                               | SUBNET_wlan0=192.168.1.1/24              |
+| GATEWAY_${IF}   | The ip address of your gateway for interface                               | GATEWAY_wlan0=192.168.1.1                |
+|-----------------+----------------------------------------------------------------------------+------------------------------------------|
+| CHAIN           | The name of iptables chain                                                 | output,input,postrouting                 |
+| TABLE           | The name of an iptables table.                                             | filter,nat,mangle,raw                    |
+| POLICY          | The default POLICY for a new rule.                                         |                                          |
+| JUMP            | The default JUMP location for a new rule.                                  |                                          |
+| JUMP_${CHAIN}   | The default jump location for $chain (default rules)                       |                                          |
+| POLICY_${CHAIN} | The default policy for a chain (and final rule)                            | ACCEPT,DROP,REJECT                       |
+| POLICY_${IF}    | The default policy for an interface.                                       |                                          |
+|-----------------+----------------------------------------------------------------------------+------------------------------------------|
+| ${CHAIN}        | A short way to write "iptables --append ${CHAIN}"                          | ${OUTPUT} --sport 22 -j ACCEPT           |
+| I_${CHAIN}      | A short way to write "iptables --insert ${CHAIN}"                          | ${I_OUTPUT} -j ACCEPT (bypass firewall)  |
+|-----------------+----------------------------------------------------------------------------+------------------------------------------|
+| MASQ_IN_${IF}   | Allows masquerading from this interface when executed with mark.           |                                          |
+|                 | iptables -A PREROUTING -t mangle -i $NATIF -j MARK --set-mark $MARK        | ${MASQ_IN_eth0} 12                       |
+| MASQ_OUT_${IF}  | Allows masquerading out of this interface when executed with mark.         |                                          |
+|                 | iptables -A POSTROUTING -o ${IF} -t nat -m mark -j MASQUERADE --mark $MARK | ${MASQ_OUT_wlan0} 12                     |
+|                 | * You will require `echo "1" > /proc/sys/net/ipv4/ip_forward`   also.      |                                          |
+|-----------------+----------------------------------------------------------------------------+------------------------------------------|
+| PING_REQUEST    | Options to allow a ping request.                                           | --protocol icmp --icmp-type echo-request |
+| PING_REPLY      | Options to allow a ping reply.                                             | --protocol icmp --icmp-type echo-reply   |
+|-----------------+----------------------------------------------------------------------------+------------------------------------------|
+
+The following are a list of convenience functions.
+|-----------+-------------------------------------------------------------------------------------+--------------------------|
+| scan_if   | Automatically configure all available interfaces.                                   |                          |
+| new_if    | Configure a new interface.                                                          |                          |
+| new_chain | Configure a new chain. By initiating global variables as above.                     | iptables --new-chain     |
+|-----------+-------------------------------------------------------------------------------------+--------------------------|
+| two_way   | Configure a rule for sending and receiving.                                         | two_way ${CHAIN} ${ARGS} |
+|           | For each chain:  "out" and "in" will be swapped, etc.                               | ${OUTPUT} --sport 22     |
+|           | Whilst for each argument. "-d" and "-s" will be swapped. etc.                       | ${INPUT} --dport 22      |
+|           | (This allows for quickly establishing a two way connection, primarily for servers.) |                          |
+|-----------+-------------------------------------------------------------------------------------+--------------------------|
+
+Local variables for each module script.
+| Variable | Argument           | Description                              | Example                |
+|----------+--------------------+------------------------------------------+------------------------|
+| PORT     | -p XX, --port      | Specifies the port for the module        | -p 22                  |
+| SRC      | -s XX, --src       | Specifies an ip address range for module | -s 192.168.1.1/24      |
+| DEST     | -d XX, --dest      | Destination ip address range             | -d 192.168.2.1/24      |
+| CTSTATE  | -c XX, --ctstate   | Specify a ctstate for connection         | -c ESTABLISHED,RELATED |
+| PROTOCOL | -P XX, --protocol  | Specify a protocol udp, tcp.             | -P tcp,udp             |
+| IF       | -i XX, --interface | Specify an interface to operate over.    | -i wlan0               |
+| MODE     | -m XX, --mode      | Specify a mode, server or client.        | -m server              |
+|          |                    | (More than one may be selected.)         |                        |
+| JUMP     | -j XX, --jump      | Specify the modules jump target.         | -j ACCEPT              |
+| HOST     | -h XX, --host      | Specify the hostname.                    | -h localhost           |
+| LOG      | -l , --log         | Specifies enabling logging.              | -l                     |
+| VERBOSE  | -v                 | Verbosely executes script.               | -v                     |
+|----------+--------------------+------------------------------------------+------------------------|
+
+Default modules.
+| Module | Description                                                    |
+|--------+----------------------------------------------------------------|
+| panic  | Locks out server completely.                                   |
+| lock   | Locks down server, except for critical remote admin access.    |
+| local  | Locks down server except for local connections / admin access. |
+| flush  | Removes all iptables chains, tables and rules.                 |
+| setup  | Sets up the default firewall profile configuration variables.  |
+|        |                                                                |
+
+Some examples for a module.
+#+BEGIN_EXAMPLE first_module.sh
+# Arguments are interpreted by the setup script.
+setup.sh ${@}
+${OUTPUT} --dport ${PORT} -j ACCEPT
+
+# Simple example, allow http traffic out.
+# (Hardcoded ports)
+${OUTPUT} --dport 80 -j ACCEPT
+
+# Adding a chain for handling ssh.
+new_chain SSH_OUT
+${OUTPUT} --sport 22 -j SSH_OUT
+${SSH_OUT} -d ${SUBNET_wlan0} -j ACCEPT
+${SSH_OUT} -j ${POLICY_OUTPUT}
+
+# Setting up a server connection
+two_way ${OUTPUT} --dport 443 -j ACCEPT
+# Also sets up (implicitly)..
+# ${INPUT} --sport 443 -j ACCEPT
+#+END_EXAMPLE
+
+
+* Modules
