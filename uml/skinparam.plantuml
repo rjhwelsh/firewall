@@ -1,0 +1,38 @@
+@startuml
+   skinparam title {
+	 	 	 FontSize 40
+		 }
+	 skinparam activity {
+			 StartColor red
+			 EndColor green
+			 BackgroundColor Peru
+			 BackgroundColor<<preroute>> MediumVioletRed
+
+			 BackgroundColor<<forward>> Yellow
+			 BackgroundColor<<input>> Orange
+			 BackgroundColor<<output>> RoyalBlue
+			 BackgroundColor<<postroute>> YellowGreen
+			 BackgroundColor<<local>> Black
+
+			 BorderThickness 200
+			 FontSize 17
+			 FontSize 17
+			 BorderColor Peru
+			 BorderColor<<raw>> Maroon
+			 BorderColor<<mangle>> Magenta
+			 BorderColor<<nat>> Lime
+			 BorderColor<<filter>> MidnightBlue
+
+			 FontColor<<local>> White
+			}
+
+   skinparam sequence {
+
+	 		 ArrowColor<<input>> Red
+			 ArrowColor<<output>> Blue
+			 ArrowColor<<forward>> Orange
+
+	 }
+
+
+@enduml
