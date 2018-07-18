@@ -185,15 +185,15 @@ Local variables for each module script.
 | VERBOSE  | -v                 | Verbosely executes script.               | -v                |
 |----------+--------------------+------------------------------------------+-------------------|
 
-Default modules.
-| Module | Description                                                    |
-|--------+----------------------------------------------------------------|
-| panic  | Locks out server completely.                                   |
-| lock   | Locks down server, except for critical remote/local admin access. |
-| local  | Locks down server except for local connections / admin access. |
-| flush  | Removes all iptables chains, tables and rules.                 |
-| setup  | Sets up the default firewall profile configuration variables.  |
-|        |                                                                |
+Default functions.
+| Module | Description                                                              |
+|--------+--------------------------------------------------------------------------|
+| start  | Sets up the default firewall profile configuration variables.            |
+| stop   | Removes all iptables chains, tables and rules.                           |
+| reload | start; then stop;                                                        |
+| lock   | Locks down server, except for critical remote/local admin access.        |
+| panic  | Locks out server completely.                                             |
+
 
 Some examples for a module.
 #+BEGIN_EXAMPLE first_module.sh
@@ -218,16 +218,38 @@ two_way ${OUTPUT} --dport 443 -j ACCEPT
 #+END_EXAMPLE
 
 
-* Modules
-** Defaults
-*** setup
+* Base functions
 Configure all the variables required for the module.
+** start
+Starts up all default rules for host/service.
+#+BEGIN_EXAMPLE sh
+./hosts.d/localhost start
+#+END_EXAMPLE
 
-*** flush
+** stop
 Remove all rules, tables and chains from iptables.
+#+BEGIN_EXAMPLE sh
+./hosts.d/localhost stop
+#+END_EXAMPLE
 
-*** panic
+** reload
+Runs =stop=, and then immediately runs =start=.
+#+BEGIN_EXAMPLE sh
+./hosts.d/localhost reload
+#+END_EXAMPLE
+
+** log
+Adds logging rules instead of default rules.
+If rules are already loaded, logging rules will appear ahead of any other rules.
+#+BEGIN_EXAMPLE sh
+./hosts.d/localhost log ${@}
+#+END_EXAMPLE
+
+** panic
 Panic. ALL INTERFACES ARE LOCKED.
+#+BEGIN_EXAMPLE sh
+./hosts.d/localhost panic
+#+END_EXAMPLE
 Even the administrative interfaces.
 Only non-network logins are permitted.
 Default POLICY is set to deny.
@@ -253,9 +275,14 @@ Default POLICY is set to deny.
  #+ATTR_ORG: :width 100%
  #+ATTR_LATEX: :options scale=0.5
 	file:uml/panic.png
-*** lock
+** lock
 Only special access through remote and local administrative channels are
 allowed. All normal (non-essential) services are cut.
+
+#+BEGIN_EXAMPLE sh
+./hosts.d/localhost lock
+#+END_EXAMPLE
+
  #+BEGIN_SRC plantuml :file uml/lock.png :exports none
 	 @startuml
 				 title Lock Module
@@ -287,9 +314,13 @@ allowed. All normal (non-essential) services are cut.
  #+ATTR_ORG: :width 100%
  #+ATTR_LATEX: :options scale=0.4
 	file:uml/lock.png
-*** local
-This locks down all connections except for local interfaces and ip addresses.
-Special access through vpn service is allowed.
+** Additional notes
+All of these services are configurable bash functions in the host directory.
+
+
+* Services
+** local
+Accept all packets from local ip addresses.
  #+BEGIN_SRC plantuml :file uml/local.png :exports none
 	 @startuml
 				 title Local Module
@@ -297,25 +328,10 @@ Special access through vpn service is allowed.
 				 !include uml/skinparam.plantuml
 				 participant localnet as subnet
 				 participant localhost as local
-				 participant admin as admin
-				 participant vpnclient as vpn
 
-
-				 vpn -[#red]>> local : openvpn
-				 local -[#blue]>> vpn : openvpn
-
-				 admin -[#red]> local :ssh -p 22
-				 local -[#blue]> admin :ssh -p 22
-
-			   subnet -[#red]> local :
-         local -[#blue]> subnet :
-         subnet -[#orange]>o local :
-
-
-				 [-[#red]>x local :<<input>>
-				 local x<[#blue]-] :<<output>>
-				 [-[#orange]>o local :<<forward>>
-				 local x<[#orange]-] :<<forward>>
+				 subnet -[#red]> local :
+				 local -[#blue]> subnet :
+				 subnet -[#orange]>o local :
 	 @enduml
  #+END_SRC
 
