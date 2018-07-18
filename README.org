@@ -106,69 +106,84 @@ Configuration variables follow the following standard syntax.
 The configuration variables can be used by the scripts to build iptables rules
 quickly.
 
-| Config Variable   | Represents                                                                    | Examples                                 |
-|-------------------+-------------------------------------------------------------------------------+------------------------------------------|
-| =IPTABLES=        | The location of the iptables binary                                           | IPTABLES=/sbin/iptables                  |
-| =IPTABLES_6=      | The location of the ip6tables binary                                          | /sbin/ip6tables                          |
-| =${VAR}_6=        | Any variable with a _6 suffix will use an ip6tables version.                  | LOCAL_lo_6=::1/128                       |
-|-------------------+-------------------------------------------------------------------------------+------------------------------------------|
-| =IF=              | The interface that is being used                                              | lo, tun0, wlan0, enp12s0                 |
-| =LOCAL_${IF}=     | The ip address of the localhost on interface                                  | LOCAL_lo=127.0.0.1                       |
-| =SUBNET_${IF}=    | The ip address subnet connected to interface                                  | SUBNET_wlan0=192.168.1.1/24              |
-| =GATEWAY_${IF}=   | The ip address of your gateway for interface                                  | GATEWAY_wlan0=192.168.1.1                |
-|-------------------+-------------------------------------------------------------------------------+------------------------------------------|
-| =CHAIN=           | The name of iptables chain                                                    | output,input,postrouting                 |
-| =TABLE=           | The name of an iptables table.                                                | filter,nat,mangle,raw                    |
-| =POLICY=          | The default POLICY for a new rule.                                            |                                          |
-| =JUMP=            | The default JUMP location for a new rule.                                     |                                          |
-| =JUMP_${CHAIN}=   | The default jump location for $chain (default rules)                          |                                          |
-| =POLICY_${CHAIN}= | The default policy for a chain (and final rule)                               | ACCEPT,DROP,REJECT                       |
-| =POLICY_${IF}=    | The default policy for an interface.                                          |                                          |
-|-------------------+-------------------------------------------------------------------------------+------------------------------------------|
-| =${CHAIN}=        | A short way to write "iptables --append ${CHAIN}"                             | ${OUTPUT} --sport 22 -j ACCEPT           |
-| =I_${CHAIN}=      | A short way to write "iptables --insert ${CHAIN}"                             | ${I_OUTPUT} -j ACCEPT (bypass firewall)  |
-|-------------------+-------------------------------------------------------------------------------+------------------------------------------|
-| =MASQ_IN_${IF}=   | Allows masquerading from this interface when executed with mark.              |                                          |
-|                   | iptables -A PREROUTING -t mangle -i $NATIF -j MARK --set-mark $MARK           | ${MASQ_IN_eth0} 12                       |
-| =MASQ_OUT_${IF}=  | Allows masquerading out of this interface when executed with mark.            |                                          |
-|                   | iptables -A POSTROUTING -o ${IF} -t nat -m mark -j MASQUERADE --mark $MARK    | ${MASQ_OUT_wlan0} 12                     |
-|                   | * You will require `echo "1" > /proc/sys/net/ipv4/ip_forward`   also.         |                                          |
-|-------------------+-------------------------------------------------------------------------------+------------------------------------------|
-| =PING_REQUEST=    | Options to allow a ping request.                                              | --protocol icmp --icmp-type echo-request |
-| =PING_REPLY=      | Options to allow a ping reply.                                                | --protocol icmp --icmp-type echo-reply   |
-|-------------------+-------------------------------------------------------------------------------+------------------------------------------|
-| =RULES=           | A local variable array containing every instance of an iptables rule for mod. |                                          |
-|-------------------+-------------------------------------------------------------------------------+------------------------------------------|
+| Config Variable   | Represents                               | Examples                         |
+|-------------------+------------------------------------------+----------------------------------|
+| =IPTABLES=        | location of the iptables binary          | =IPTABLES=/sbin/iptables=        |
+| =IPTABLES_6=      | location of the ip6tables binary         | =/sbin/ip6tables=                |
+| =${VAR}_6=        | Any variable with a _6 suffix            | =LOCAL_lo_6=::1/128=             |
+|                   | will use an ip6tables version.           |                                  |
+|-------------------+------------------------------------------+----------------------------------|
+| =IF=              | interface that is being used             | lo, tun0, wlan0, enp12s0         |
+| =LOCAL_${IF}=     | ip address of the localhost on interface | =LOCAL_lo=127.0.0.1=             |
+| =SUBNET_${IF}=    | ip address subnet connected to interface | =SUBNET_wlan0=192.168.1.1/24=    |
+| =GATEWAY_${IF}=   | ip address of your gateway for interface | =GATEWAY_wlan0=192.168.1.1=      |
+|-------------------+------------------------------------------+----------------------------------|
+| =CHAIN=           | name of iptables chain                   | output,input,postrouting         |
+| =TABLE=           | name of an iptables table.               | filter,nat,mangle,raw            |
+| =POLICY=          | default POLICY for a new rule.           |                                  |
+| =JUMP=            | default JUMP location for a new rule.    |                                  |
+| =JUMP_${CHAIN}=   | default jump location for $chain         |                                  |
+| =POLICY_${CHAIN}= | default policy for a chain               | ACCEPT,DROP,REJECT               |
+| =POLICY_${IF}=    | default policy for an interface.         |                                  |
+|-------------------+------------------------------------------+----------------------------------|
+| =${CHAIN}=        | Shorthand ="iptables=                    | =${OUTPUT} --sport 22 -j ACCEPT= |
+|                   | =--append ${CHAIN}"=                     |                                  |
+| =I_${CHAIN}=      | Shorthand ="iptables=                    | =${I_OUTPUT} -j ACCEPT= (bypass) |
+|                   | =--insert ${CHAIN}"=                     |                                  |
+|-------------------+------------------------------------------+----------------------------------|
+| =MASQ_IN_${IF}=   | Allows masquerading from this            |                                  |
+|                   | interface when executed with mark.       |                                  |
+|                   | =`iptables -A PREROUTING -t mangle=      | =${MASQ_IN_eth0} 12=             |
+|                   | =-i $NATIF -j MARK --set-mark $MARK`=    |                                  |
+| =MASQ_OUT_${IF}=  | Allows masquerading out of this          |                                  |
+|                   | interface when executed with mark.       |                                  |
+|                   | =`iptables -A POSTROUTING -o ${IF}=      | =${MASQ_OUT_wlan0} 12=           |
+|                   | =-t nat -m mark -j MASQUERADE=           |                                  |
+|                   | =--mark ${MARK}`=                        |                                  |
+|                   | * To enable ip forwarding                |                                  |
+|                   | =`echo "1" >=                            |                                  |
+|                   | =/proc/sys/net/ipv4/ip_forward`=         |                                  |
+|-------------------+------------------------------------------+----------------------------------|
+| =PING_REQUEST=    | to allow a ping request.                 |                                  |
+|                   | =`--protocol icmp=                       |                                  |
+|                   | =--icmp-type echo-request`=              |                                  |
+| =PING_REPLY=      | to allow a ping reply.                   |                                  |
+|                   | =`--protocol icmp=                       |                                  |
+|                   | =--icmp-type echo-reply`=                |                                  |
+|-------------------+------------------------------------------+----------------------------------|
+| =RULES=           | Array of all module rules.               |                                  |
+|                   |                                          |                                  |
+|-------------------+------------------------------------------+----------------------------------|
 
 
 The following are a list of convenience functions.
-|-----------+-------------------------------------------------------------------------------------+--------------------------|
-| =if_scan=  | Automatically configure all available interfaces.                                   |                          |
-| =new_if=  | Configure a new interface.                                                          |                          |
-| =new_chain= | Configure a new chain. By initiating global variables as above.                     | iptables --new-chain     |
-|-----------+-------------------------------------------------------------------------------------+--------------------------|
-| =two_way= | Configure a rule for sending and receiving.                                         | two_way ${CHAIN} ${ARGS} |
-|           | For each chain:  "out" and "in" will be swapped, etc.                               | ${OUTPUT} --sport 22     |
-|           | Whilst for each argument. "-d" and "-s" will be swapped. etc.                       | ${INPUT} --dport 22      |
-|           | (This allows for quickly establishing a two way connection, primarily for servers.) |                          |
-|-----------+-------------------------------------------------------------------------------------+--------------------------|
+|-------------+---------------------------------------------+
+| =if_scan=   | Automatically configure interfaces.         |
+| =new_if=    | Configure a new interface.                  |
+| =new_chain= | Configure a new chain.                      |
+|-------------+---------------------------------------------+
+| =two_way=   | Configure a rule for sending and receiving. |
+|             | ${OUTPUT} --sport 22                        |
+|             | ${INPUT} --dport 22                         |
+|-------------+---------------------------------------------+
+
 
 Local variables for each module script.
-| Variable | Argument           | Description                                          | Example                |
-|----------+--------------------+------------------------------------------------------+------------------------|
-| PORT     | -p XX, --port      | Specifies the port for the module                    | -p 22                  |
-| SRC      | -s XX, --src       | Specifies an ip address range for module             | -s 192.168.1.1/24      |
-| DEST     | -d XX, --dest      | Destination ip address range                         | -d 192.168.2.1/24      |
-| CTSTATE  | -c XX, --ctstate   | Specify a ctstate for connection                     | -c ESTABLISHED,RELATED |
-| PROTOCOL | -P XX, --protocol  | Specify a protocol udp, tcp.                         | -P tcp,udp             |
-| IF       | -i XX, --interface | Specify an interface to operate over.                | -i wlan0               |
-| MODE     | -m XX, --mode      | Specify a mode, server or client.                    | -m server              |
-|          |                    | (More than one may be selected.)                     |                        |
-| JUMP     | -j XX, --jump      | Specify the modules jump target.                     | -j ACCEPT              |
-| HOST     | -h XX, --host      | Specify the hostname.                                | -h localhost           |
-| LOG      | -l , --log         | Specifies enabling logging.                          | -l                     |
-| VERBOSE  | -v                 | Verbosely executes script.                           | -v                     |
-|----------+--------------------+------------------------------------------------------+------------------------|
+| Variable | Argument           | Description                              | Example           |
+|----------+--------------------+------------------------------------------+-------------------|
+| PORT     | -p XX, --port      | Specifies the port for the module        | -p 22             |
+| SRC      | -s XX, --src       | Specifies an ip address range for module | -s 192.168.1.1/24 |
+| DEST     | -d XX, --dest      | Destination ip address range             | -d 192.168.2.1/24 |
+| CTSTATE  | -c XX, --ctstate   | Specify a ctstate for connection         | -c ESTABLISHED    |
+| PROTOCOL | -P XX, --protocol  | Specify a protocol udp, tcp.             | -P tcp,udp        |
+| IF       | -i XX, --interface | Specify an interface to operate over.    | -i wlan0          |
+| MODE     | -m XX, --mode      | Specify a mode, server or client.        | -m server         |
+|          |                    | (More than one may be selected.)         |                   |
+| JUMP     | -j XX, --jump      | Specify the modules jump target.         | -j ACCEPT         |
+| HOST     | -h XX, --host      | Specify the hostname.                    | -h localhost      |
+| LOG      | -l , --log         | Specifies enabling logging.              | -l                |
+| VERBOSE  | -v                 | Verbosely executes script.               | -v                |
+|----------+--------------------+------------------------------------------+-------------------|
 
 Default modules.
 | Module | Description                                                    |
