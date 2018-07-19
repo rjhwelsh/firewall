@@ -231,6 +231,10 @@ start() {
 	done
 }
 
+stop()  {
+	start "d"
+}
+
 # Declare arrays
 declare -a CONF_VARS
 
