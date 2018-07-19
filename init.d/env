@@ -40,6 +40,7 @@ load_if() {
 	GATEWAY_6[$IF]=$(ip -o -$IPV route | grep " ${IF} " | grep " via " | awk '{print $3}')
 
 	load_if_masq
+	load_if_policy
 }
 
 load_if_masq() {
@@ -54,4 +55,7 @@ load_args_ping() {
 	PING_REPLY="--protocol icmp --icmp-type echo-reply"
 }
 
+load_if_policy() {
+	POLICY[$IF]=${DEFAULT_POLICY}
+	}
 load_env
