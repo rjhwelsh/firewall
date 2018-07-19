@@ -52,11 +52,11 @@ load_env() {
 	load_args_ping
 
 	DEFAULT_CHAINS=(
-		output
-		input
-		postrouting
-		prerouting
-		forward
+		OUTPUT
+		INPUT
+		POSTROUTING
+		PREROUTING
+		FORWARD
 	)
 
 	local C
