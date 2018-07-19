@@ -14,7 +14,7 @@ echo "IPTABLES_6=${IPTABLES_6}"
 
 local INTERFACES="$(netstat -i | tail -n+3 | awk '{print $1}')"
 
-for IF in $INTERFACES; do
+for local IF in $INTERFACES; do
 	load_if
 	echo "LOCAL[$IF]=${LOCAL[$IF]}"
 	echo "SUBNET[$IF]=${SUBNET[$IF]}"
