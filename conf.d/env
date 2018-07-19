@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Variables for env script.
+
+DEFAULT_POLICY="ACCEPT"
+DEFAULT_JUMP="ACCEPT"
+
+DEFAULT_POLICY_6="DROP"
+DEFAULT_JUMP_6="DROP"
