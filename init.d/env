@@ -272,6 +272,7 @@ panic() {
 	for C in "${DEFAULT_CHAINS[@]}"; do
 		load_chain "$C"
 	done
+	set_policy
 }
 
 status() {
