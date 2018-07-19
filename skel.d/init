@@ -3,22 +3,9 @@
 # A template for creating init scripts for iptables.
 source env
 
-start() {
-}
+# Empty arrays
+RULES=()
+RULES_TGT=()
 
-stop() {
-}
-
-panic() {
-}
-
-lock() {
-	}
-
-reload() {
-}
-
-log() {
-}
-
-main $@
+# Execute function
+$@
