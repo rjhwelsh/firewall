@@ -199,7 +199,7 @@ rule_gen() {
 	[[ $n == "c" ]] && arrtype="CHECK" && unset n
 
 	# Return a string to stdin
-	echo "\$${arrtype}${ip6}[${chain}] $n ${rule[*]} ${tgt}" &&
+	echo "\${${arrtype}${ip6}['${chain}']} $n ${rule[*]} ${tgt}" &&
 		return 0
 	}
 
