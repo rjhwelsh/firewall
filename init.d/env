@@ -96,18 +96,18 @@ load_chain() {
 	CHAIN="${CHAIN^^}"
 	JUMP[$CHAIN]=${DEFAULT_JUMP}
 	POLICY[$CHAIN]=${DEFAULT_POLICY}
-	A[${CHAIN}]="${IPTABLES} --append ${CHAIN}"
-	I[${CHAIN}]="${IPTABLES} --insert ${CHAIN}"
-	D[${CHAIN}]="${IPTABLES} --delete ${CHAIN}"
-	C[${CHAIN}]="${IPTABLES} --check ${CHAIN}"
+	APPEND[${CHAIN}]="${IPTABLES} --append ${CHAIN}"
+	INSERT[${CHAIN}]="${IPTABLES} --insert ${CHAIN}"
+	DELETE[${CHAIN}]="${IPTABLES} --delete ${CHAIN}"
+	CHECK[${CHAIN}]="${IPTABLES} --check ${CHAIN}"
 
 	# IPv6
 	JUMP_6[$CHAIN]=${DEFAULT_JUMP_6}
 	POLICY_6[$CHAIN]=${DEFAULT_POLICY_6}
-	A_6[${CHAIN}]="${IPTABLES_6} --append ${CHAIN}"
-	I_6[${CHAIN}]="${IPTABLES_6} --insert ${CHAIN}"
-	D_6[${CHAIN}]="${IPTABLES_6} --delete ${CHAIN}"
-	C_6[${CHAIN}]="${IPTABLES_6} --check ${CHAIN}"
+	APPEND_6[${CHAIN}]="${IPTABLES_6} --append ${CHAIN}"
+	INSERT_6[${CHAIN}]="${IPTABLES_6} --insert ${CHAIN}"
+	DELETE_6[${CHAIN}]="${IPTABLES_6} --delete ${CHAIN}"
+	CHECK_6[${CHAIN}]="${IPTABLES_6} --check ${CHAIN}"
 	}
 
 # Loads default variables for any unset values.
@@ -191,12 +191,12 @@ rule_gen() {
 
 	# Match the array type
 	local arrtype
-	arrtype="A"
-  [[ -z $n ]] && arrtype="A"
-	[[ $n == "0" ]] && arrtype="I"
-	[[ $n -gt 0 ]] && arrtype="I"
-	[[ $n == "d" ]] && arrtype="D" && unset n
-	[[ $n == "c" ]] && arrtype="C" && unset n
+	arrtype="APPEND"
+  [[ -z $n ]] && arrtype="APPEND"
+	[[ $n == "0" ]] && arrtype="INSERT"
+	[[ $n -gt 0 ]] && arrtype="INSERT"
+	[[ $n == "d" ]] && arrtype="DELETE" && unset n
+	[[ $n == "c" ]] && arrtype="CHECK" && unset n
 
 	# Return a string to stdin
 	echo "\$${arrtype}${ip6}[${chain}] $n ${rule[*]} ${tgt}" &&
@@ -260,8 +260,8 @@ declare -A MASQ_IN_6 MASQ_OUT_6
 declare -A SUBNET LOCAL GATEWAY
 declare -A SUBNET_6 LOCAL_6 GATEWAY_6
 
-declare -A JUMP POLICY I A D C
-declare -A JUMP_6 POLICY_6 I_6 A_6 D_6 C_6
+declare -A JUMP POLICY INSERT APPEND DELETE CHECK
+declare -A JUMP_6 POLICY_6 INSERT_6 APPEND_6 DELETE_6 CHECK_6
 
 load_env
 source "${CONF_BASE}"
