@@ -127,7 +127,7 @@ flush() {
 			# If a chain is specified, only flush and delete the chain.
 			if [[ -n "${CHAIN[*]}" ]];
 			then
-				echo "${CHAIN[*]}"
+				local C
 				for C in "${CHAIN[@]}"
 				do
 					${IPT} -w -F -t $T $C
