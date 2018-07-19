@@ -51,9 +51,16 @@ load_env() {
 
 	load_args_ping
 
-	local CHAINS="output input postrouting prerouting forward"
+	DEFAULT_CHAINS=(
+		output
+		input
+		postrouting
+		prerouting
+		forward
+	)
+
 	local C
-	for C in $CHAINS; do
+	for C in "${DEFAULT_CHAINS[@]}"; do
 		load_chain "$C"
 	done
 }
