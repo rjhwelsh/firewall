@@ -217,7 +217,7 @@ rule_gen() {
 
 	# Return a string to stdin
 	echo "\${${arrtype}${ip6}['${chain}']} $n ${rule[*]} ${tgt}" &&
-		return 0
+		return 0 || return 1
 	}
 
 
