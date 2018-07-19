@@ -43,6 +43,7 @@ load_env() {
 	load_args_ping
 
 	local CHAINS="output input postrouting prerouting forward"
+	local C
 	for C in $CHAINS; do
 		load_chain "$C"
 	done
@@ -105,6 +106,43 @@ load_defaults() {
 			eval $VAR="\${DEFAULT_${VAR}}" ;
 	done
 }
+
+# Actions
+flush() {
+	local TABLE="$1"
+	shift
+	local CHAIN=( "$@" )
+
+	# Load all tables, if value is nil
+	[[ -z "$TBL" ]] && TABLE=( "${TABLES[@]}" )
+
+	local IPT=""
+	# Flush ipv4 and ipv6
+	for IPT in "${IPTABLES}" "${IPTABLES_6}";
+	do
+
+		for T in "${TABLE[@]}";
+		do
+
+			# If a chain is specified, only flush and delete the chain.
+			if [[ -n "${CHAIN[*]}" ]];
+			then
+				echo "${CHAIN[*]}"
+				for C in "${CHAIN[@]}"
+				do
+					${IPT} -w -F -t $T $C
+					${IPT} -w -X -t $T $C
+				done
+		  else
+				${IPT} -w -F -t $T
+				${IPT} -w -X -t $T
+			fi
+
+		done
+
+	done
+}
+
 
 # Declare arrays
 declare -a CONF_VARS
