@@ -96,14 +96,14 @@ load_chain() {
 	CHAIN="${CHAIN^^}"
 	JUMP[$CHAIN]=${DEFAULT_JUMP}
 	POLICY[$CHAIN]=${DEFAULT_POLICY}
-	I[${CHAIN}]="${IPTABLES} --append ${CHAIN}"
-	A[${CHAIN}]="${IPTABLES} --insert ${CHAIN}"
+	A[${CHAIN}]="${IPTABLES} --append ${CHAIN}"
+	I[${CHAIN}]="${IPTABLES} --insert ${CHAIN}"
 
 	# IPv6
 	JUMP_6[$CHAIN]=${DEFAULT_JUMP_6}
 	POLICY_6[$CHAIN]=${DEFAULT_POLICY_6}
-	I_6[${CHAIN}]="${IPTABLES_6} --append ${CHAIN}"
-	A_6[${CHAIN}]="${IPTABLES_6} --insert ${CHAIN}"
+	A_6[${CHAIN}]="${IPTABLES_6} --append ${CHAIN}"
+	I_6[${CHAIN}]="${IPTABLES_6} --insert ${CHAIN}"
 	}
 
 # Loads default variables for any unset values.
