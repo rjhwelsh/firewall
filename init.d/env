@@ -211,7 +211,7 @@ rule_gen() {
 	then
 		unset arrtype
 		unset n
-		echo "echo \"${chain} \$(( \$(\${IPTABLES${ip6}} -S '${chain}' | grep -n -- '${rule[*]} ${tgt}'| awk 'BEGIN{FS=\":\"}{print \$1}') - 1 ))\"" &&
+		echo "echo \"'\${IPTABLES${ip6}}' ${chain} \$(( \$(\${IPTABLES${ip6}} -S '${chain}' | grep -n -- '${rule[*]} ${tgt}'| awk 'BEGIN{FS=\":\"}{print \$1}') - 1 ))\"" &&
 			return 0 || return 1
 	fi
 
