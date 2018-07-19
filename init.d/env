@@ -58,4 +58,14 @@ load_args_ping() {
 load_if_policy() {
 	POLICY[$IF]=${DEFAULT_POLICY}
 	}
+# Declare arrays
+declare -A MASQ_IN MASQ_OUT
+declare -A MASQ_IN_6 MASQ_OUT_6
+
+declare -A SUBNET LOCAL GATEWAY
+declare -A SUBNET_6 LOCAL_6 GATEWAY_6
+
+declare -A JUMP POLICY I A
+declare -A JUMP_6 POLICY_6 I_6 A_6
+
 load_env
