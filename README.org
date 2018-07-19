@@ -179,7 +179,7 @@ Local variables for each module script.
 | IF       | -i XX, --interface | Specify an interface to operate over.    | -i wlan0          |
 | MODE     | -m XX, --mode      | Specify a mode, server or client.        | -m server         |
 |          |                    | (More than one may be selected.)         |                   |
-| JUMP     | -j XX, --jump      | Specify the modules jump target.         | -j ACCEPT         |
+| TARGET   | -j XX, --jump      | Specify the modules jump target.         | -j ACCEPT         |
 | HOST     | -h XX, --host      | Specify the hostname.                    | -h localhost      |
 | LOG      | -l , --log         | Specifies enabling logging.              | -l                |
 | VERBOSE  | -v                 | Verbosely executes script.               | -v                |
