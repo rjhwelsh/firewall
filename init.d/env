@@ -169,6 +169,37 @@ set_policy() {
 }
 
 
+rule_gen() {
+	local rule
+	local tgt
+  local n
+  local c
+	local ip6
+
+	ip6=""
+	rule=( $1 )
+	tgt="$2"
+	n="$3"
+	c=0
+
+	# Record ipvX value
+	[[ ${rule[0]} == "6" ]] && ip6="_6" && unset rule[0] && ((c++))
+	[[ ${rule[0]} == "4" ]] && unset rule[0] && ((c++))
+
+	# Extract the specified chain
+	chain=${rule[$c]} && unset rule[$c]
+
+	# Match the array type
+	local arrtype
+  [[ -z $n ]] && arrtype="A"
+	[[ $n -eq 0 ]] && arrtype="I"
+	[[ $n -gt 0 ]] && arrtype="I"
+	[[ $n == "d" ]] && arrtype="D"
+
+	# Return a string to stdin
+	echo "${arrtype}${ip6}[${chain}] ${rule[*]} ${tgt}" &&
+		return 0
+	}
 # Declare arrays
 declare -a CONF_VARS
 
