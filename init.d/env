@@ -260,6 +260,19 @@ log() {
 	done
 }
 
+panic() {
+	# Completely remove all rules and chains.
+	flush
+
+	# Set every default chain policy to drop
+	local C
+	DEFAULT_POLICY="DROP"
+	DEFAULT_POLICY_6="DROP"
+	for C in "${DEFAULT_CHAINS[@]}"; do
+		load_chain "$C"
+	done
+}
+
 status() {
 	local RULE
 	local TGT
