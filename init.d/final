@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # Create final rule
-
-source ./env
+ENV_FILE=`dirname "$(dirname \
+					 "$(readlink -e "$0" )")"`/init.d/env
+source "${ENV_FILE}" "$@" || exit 1
 
 RULES=()
 RULES_TGT=()

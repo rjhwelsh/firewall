@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # A template for creating init scripts for iptables.
-source env
+ENV_FILE=`dirname "$(dirname \
+					 "$(readlink -e "$0" )")"`/init.d/env
+source "${ENV_FILE}" "$@" || exit 1
 
 # Empty arrays
 RULES=()
