@@ -192,12 +192,12 @@ rule_gen() {
 	# Match the array type
 	local arrtype
   [[ -z $n ]] && arrtype="A"
-	[[ $n -eq 0 ]] && arrtype="I"
+	[[ $n == "0" ]] && arrtype="I"
 	[[ $n -gt 0 ]] && arrtype="I"
-	[[ $n == "d" ]] && arrtype="D"
+	[[ $n == "d" ]] && arrtype="D" && unset n
 
 	# Return a string to stdin
-	echo "${arrtype}${ip6}[${chain}] ${rule[*]} ${tgt}" &&
+	echo "\$${arrtype}${ip6}[${chain}] $n ${rule[*]} ${tgt}" &&
 		return 0
 	}
 # Declare arrays
