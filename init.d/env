@@ -244,6 +244,7 @@ start() {
 	for RULE in "${RULES[@]}";
 	do
 		TGT="${RULES_TGT[$i]}"
+		local CMD
 		CMD=`rule_gen "$RULE" "$TGT" "$1"`
 		eval $CMD
 		((i++))
@@ -263,6 +264,7 @@ log() {
 	do
 		TGT="-j LOG"
 		CMD=`rule_gen "$RULE" "$TGT" "$1"`
+		local CMD
 		eval $CMD
 		((i++))
 	done
@@ -290,6 +292,8 @@ status() {
 	for RULE in "${RULES[@]}";
 	do
  		TGT="${RULES_TGT[$i]}"
+
+		local CMD
 		CMD=`rule_gen "$RULE" "$TGT" "c"`
 		eval $CMD 2>/dev/null && eval echo "ON : $CMD" || eval echo "OFF: $CMD"
 		((i++))
