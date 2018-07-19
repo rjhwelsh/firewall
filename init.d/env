@@ -191,6 +191,7 @@ rule_gen() {
 
 	# Match the array type
 	local arrtype
+	arrtype="A"
   [[ -z $n ]] && arrtype="A"
 	[[ $n == "0" ]] && arrtype="I"
 	[[ $n -gt 0 ]] && arrtype="I"
