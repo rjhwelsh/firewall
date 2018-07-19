@@ -200,6 +200,21 @@ rule_gen() {
 	echo "\$${arrtype}${ip6}[${chain}] $n ${rule[*]} ${tgt}" &&
 		return 0
 	}
+
+
+print() {
+	local RULE
+	local TGT
+  local i
+
+	i=0
+	for RULE in "${RULES[@]}";
+	do
+		TGT="${RULES_TGT[$i]}"
+		rule_gen "$RULE" "$TGT" "$1"
+		((i++))
+	done
+}
 # Declare arrays
 declare -a CONF_VARS
 
