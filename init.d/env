@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# This script initializes the configuration environment varibles.
+
+load_env() {
+IPTABLES=`which iptables 2>/dev/null` ||
+	IPTABLES=/sbin/iptables
+
+IPTABLES_6=`which ip6tables 2>/dev/null` ||
+	IPTABLES_6=/sbin/ip6tables
+
+echo "IPTABLES=${IPTABLES}"
+echo "IPTABLES_6=${IPTABLES_6}"
+
+local INTERFACES="$(netstat -i | tail -n+3 | awk '{print $1}')"
+
+for IF in $INTERFACES; do
+	load_if
+	echo "LOCAL[$IF]=${LOCAL[$IF]}"
+	echo "SUBNET[$IF]=${SUBNET[$IF]}"
+	echo "GATEWAY[$IF]=${GATEWAY[$IF]}"
+	echo "LOCAL_6[$IF]=${LOCAL_6[$IF]}"
+	echo "SUBNET_6[$IF]=${SUBNET_6[$IF]}"
+	echo "GATEWAY_6[$IF]=${GATEWAY_6[$IF]}"
+done
+}
+
+load_if() {
+	local IPV=4
+	local SEP="/"
+	SUBNET[$IF]=$(ip -o -$IPV address | grep " ${IF} "  | awk '{print $4}')
+	LOCAL[$IF]=${SUBNET[$IF]%${SEP}*}
+	GATEWAY[$IF]=$(ip -o -$IPV route | grep " ${IF} " | grep " via " | awk '{print $3}')
+
+	IPV=6
+	SUBNET_6[$IF]=$(ip -o -$IPV address | grep " ${IF} "  | awk '{print $4}')
+	LOCAL_6[$IF]=${SUBNET_6[$IF]%${SEP}*}
+	GATEWAY_6[$IF]=$(ip -o -$IPV route | grep " ${IF} " | grep " via " | awk '{print $3}')
+}
+
+load_env
