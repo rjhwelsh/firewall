@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # This script initializes the configuration environment varibles.
-
+ENV=env
 load_env() {
 	DIR_BASE=$(readlink -e `dirname $0`/..)
 	CONF_BASE="${DIR_BASE}/conf.d/$( basename $(readlink -e $0))"
-	source "${CONF_BASE}"
+	ENV_BASE="${DIR_BASE}/conf.d/env"
+	source "${ENV_BASE}"
 
 	IPTABLES=`which iptables 2>/dev/null` ||
 		IPTABLES=/sbin/iptables
@@ -85,3 +86,4 @@ declare -A JUMP POLICY I A
 declare -A JUMP_6 POLICY_6 I_6 A_6
 
 load_env
+source "${CONF_BASE}"
