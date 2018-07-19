@@ -99,13 +99,15 @@ load_chain() {
 	A[${CHAIN}]="${IPTABLES} --append ${CHAIN}"
 	I[${CHAIN}]="${IPTABLES} --insert ${CHAIN}"
 	D[${CHAIN}]="${IPTABLES} --delete ${CHAIN}"
+	C[${CHAIN}]="${IPTABLES} --check ${CHAIN}"
 
 	# IPv6
 	JUMP_6[$CHAIN]=${DEFAULT_JUMP_6}
 	POLICY_6[$CHAIN]=${DEFAULT_POLICY_6}
 	A_6[${CHAIN}]="${IPTABLES_6} --append ${CHAIN}"
 	I_6[${CHAIN}]="${IPTABLES_6} --insert ${CHAIN}"
-	D_6[${CHAIN}]="${IPTABLES} --delete ${CHAIN}"
+	D_6[${CHAIN}]="${IPTABLES_6} --delete ${CHAIN}"
+	C_6[${CHAIN}]="${IPTABLES_6} --check ${CHAIN}"
 	}
 
 # Loads default variables for any unset values.
@@ -176,8 +178,8 @@ declare -A MASQ_IN_6 MASQ_OUT_6
 declare -A SUBNET LOCAL GATEWAY
 declare -A SUBNET_6 LOCAL_6 GATEWAY_6
 
-declare -A JUMP POLICY I A
-declare -A JUMP_6 POLICY_6 I_6 A_6
+declare -A JUMP POLICY I A D C
+declare -A JUMP_6 POLICY_6 I_6 A_6 D_6 C_6
 
 load_env
 source "${CONF_BASE}"
