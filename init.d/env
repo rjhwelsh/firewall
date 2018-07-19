@@ -167,6 +167,7 @@ flush() {
 
 set_policy() {
 	local TABLE="$1"
+	[[ -z "$TABLE" ]] && TABLE=filter
 	shift
 	local CHAIN=( "$@" )
   local C
