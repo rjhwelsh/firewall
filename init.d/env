@@ -207,6 +207,14 @@ rule_gen() {
 	[[ $n == "d" ]] && arrtype="DELETE" && unset n
 	[[ $n == "c" ]] && arrtype="CHECK" && unset n
 
+	if [[ $n == "n" ]];
+	then
+		unset arrtype
+		unset n
+		echo "\${IPTABLES${ip6}} -S '${chain}' | grep -n -- '${rule[*]} ${tgt}'| awk 'BEGIN{FS=\":\"}{print \$1}'" &&
+			return 0 || return 1
+	fi
+
 	# Return a string to stdin
 	echo "\${${arrtype}${ip6}['${chain}']} $n ${rule[*]} ${tgt}" &&
 		return 0
