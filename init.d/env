@@ -5,14 +5,23 @@ load_env() {
 	ENV=env
 	CONF_VARS=(
 		'PORT'
+		'PORT_6'
 		'SRC'
+		'SRC_6'
 		'DEST'
+		'DEST_6'
 		'CTSTATE'
+		'CTSTATE_6'
 		'PROTOCOL'
+		'PROTOCOL_6'
 		'IF'
+		'IF_6'
 		'TARGET'
+		'TARGET_6'
 		'HOST'
+		'HOST_6'
 		'LOG'
+		'LOG_6'
 		'VERBOSE'
 	)
 	DIR_BASE=$(readlink -e `dirname $0`/..)
