@@ -36,6 +36,13 @@ load_if() {
 	SUBNET_6[$IF]=$(ip -o -$IPV address | grep " ${IF} "  | awk '{print $4}')
 	LOCAL_6[$IF]=${SUBNET_6[$IF]%${SEP}*}
 	GATEWAY_6[$IF]=$(ip -o -$IPV route | grep " ${IF} " | grep " via " | awk '{print $3}')
+
+	load_if_masq
+}
+
+load_if_masq() {
+  MASQ_IN[$IF]="${IPTABLES} -A prerouting -t mangle -i ${IF} -j MARK --set-mark"
+	MASQ_OUT[$IF]="${IPTABLES} -A postrouting -t nat -o ${IF} -m mark -j MASQUERADE --mark"
 }
 
 load_env
