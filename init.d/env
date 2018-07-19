@@ -267,6 +267,24 @@ status() {
 	done
 }
 
+check_call() {
+	VALID_CALLS=(
+		print
+		start
+		stop
+		flush
+		log
+		status
+		)
+	CALL="$1"
+  local V
+	for V in "${VALID_CALLS[@]}";
+	do
+		[[ "$CALL" == "$V" ]] && return 0
+	done
+	return 1
+}
+
 # Declare arrays
 declare -a CONF_VARS
 
@@ -282,3 +300,5 @@ declare -A JUMP_6 FINAL_JUMP_6 POLICY_6 INSERT_6 APPEND_6 DELETE_6 CHECK_6
 load_env
 source "${CONF_BASE}"
 load_defaults
+
+check_call "$@" || ( echo "BAD ARGUMENT" ; exit 1 )
