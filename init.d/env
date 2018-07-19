@@ -235,6 +235,20 @@ stop()  {
 	start "d"
 }
 
+log() {
+	local RULE
+	local TGT
+  local i
+	i=0
+	for RULE in "${RULES[@]}";
+	do
+		TGT="-j LOG"
+		CMD=`rule_gen "$RULE" "$TGT" "$1"`
+		eval $CMD
+		((i++))
+	done
+}
+
 # Declare arrays
 declare -a CONF_VARS
 
