@@ -26,6 +26,14 @@ load_env() {
 	IPTABLES_6=`which ip6tables 2>/dev/null` ||
 		IPTABLES_6=/sbin/ip6tables
 
+	TABLES=(
+		'raw'
+		'filter'
+		'nat'
+		'mangle'
+		'security'
+	)
+
 	local INTERFACES="$(netstat -i | tail -n+3 | awk '{print $1}')"
 	local F
 	for F in $INTERFACES; do
