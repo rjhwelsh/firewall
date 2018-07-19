@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Create final rule
+
+source ./env
+
+RULES=()
+RULES_TGT=()
+
+local i
+i=0;
+for CHAIN in INPUT OUTPUT FORWARD;
+do
+	RULES[i]="$CHAIN"
+	RULES_TGT[i]="-j ${FINAL_JUMP[$CHAIN]}"
+  ((i++))
+	RULES[i]="6 $CHAIN"
+	RULES_TGT[i]="-j ${FINAL_JUMP[$CHAIN]}"
+  ((i++))
+done
+
+$@
