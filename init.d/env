@@ -295,6 +295,7 @@ check_call() {
 		flush
 		log
 		status
+		panic
 		)
 	CALL="$1"
   local V
