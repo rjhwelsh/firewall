@@ -143,6 +143,18 @@ flush() {
 	done
 }
 
+set_policy() {
+	local TABLE="$1"
+	shift
+	local CHAIN=( "$@" )
+  local C
+	for C in "${CHAIN[@]}";
+	do
+		"${IPTABLES}" -w -t "${TABLE}" -P "$C" "${POLICY[$C]}"
+		"${IPTABLES_6}" -w -t "${TABLE}" -P "$C" "${POLICY_6[$C]}"
+	done
+}
+
 
 # Declare arrays
 declare -a CONF_VARS
