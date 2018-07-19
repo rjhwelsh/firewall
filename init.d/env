@@ -45,4 +45,9 @@ load_if_masq() {
 	MASQ_OUT[$IF]="${IPTABLES} -A postrouting -t nat -o ${IF} -m mark -j MASQUERADE --mark"
 }
 
+load_args_ping() {
+	PING_REQUEST="--protocol icmp --icmp-type echo-request"
+	PING_REPLY="--protocol icmp --icmp-type echo-reply"
+}
+
 load_env
