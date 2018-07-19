@@ -217,6 +217,65 @@ two_way ${OUTPUT} --dport 443 -j ACCEPT
 # ${INPUT} --sport 443 -j ACCEPT
 #+END_EXAMPLE
 
+** Artifacts
+
+#+BEGIN_SRC plantuml :file uml/artifacts.png :exports none
+		@startuml
+	title Source Layout
+		 folder hosts.d {
+					artifact localhost
+					artifact host1
+					artifact host2
+					}
+
+		 folder skel.d {
+					artifact host as skel.host
+					artifact init as skel.init
+					}
+note top
+Provides templates
+for hosts and
+scripts.
+end note
+
+
+		 folder init.d {
+			 artifact env as init.env
+		 }
+note right
+Sources corresponding
+config file in conf.d
+end note
+
+
+		 folder conf.d {
+			 artifact env as conf.env
+		 }
+
+		 artifact setup.sh as s
+note left
+Runs host script
+or an alternative
+script from init.d
+end note
+	   s --> hosts.d
+     s --> init.d
+     localhost --> init.env
+     init.env --> conf.env
+     skel.host --> host1
+     skel.init --> init.env
+
+		@enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:uml/artifacts.png]]
+
+ #+NAME: The source directory fig:artifacts
+ #+CAPTION: The source directory structure.
+ #+ATTR_ORG: :width 100%
+ #+ATTR_LATEX: :options scale=0.5
+	file:uml/artifacts.png
 
 * Base functions
 Configure all the variables required for the module.
