@@ -4,7 +4,6 @@
 
 load_env() {
 	DIR_BASE=$(readlink -e `dirname $0`/..)
-	echo "DIR_BASE=${DIR_BASE}"
 	CONF_BASE="${DIR_BASE}/conf.d/$( basename $(readlink -e $0))"
 	source "${CONF_BASE}"
 
@@ -14,19 +13,10 @@ load_env() {
 	IPTABLES_6=`which ip6tables 2>/dev/null` ||
 		IPTABLES_6=/sbin/ip6tables
 
-	echo "IPTABLES=${IPTABLES}"
-	echo "IPTABLES_6=${IPTABLES_6}"
-
 	local INTERFACES="$(netstat -i | tail -n+3 | awk '{print $1}')"
 	local IF
 	for IF in $INTERFACES; do
 		load_if
-		echo "LOCAL[$IF]=${LOCAL[$IF]}"
-		echo "SUBNET[$IF]=${SUBNET[$IF]}"
-		echo "GATEWAY[$IF]=${GATEWAY[$IF]}"
-		echo "LOCAL_6[$IF]=${LOCAL_6[$IF]}"
-		echo "SUBNET_6[$IF]=${SUBNET_6[$IF]}"
-		echo "GATEWAY_6[$IF]=${GATEWAY_6[$IF]}"
 	done
 
 	load_args_ping
@@ -35,7 +25,6 @@ load_env() {
 	for C in $CHAINS; do
 		load_chain "$C"
 	done
-
 }
 
 load_if() {
