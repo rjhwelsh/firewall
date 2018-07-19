@@ -27,9 +27,9 @@ load_env() {
 		IPTABLES_6=/sbin/ip6tables
 
 	local INTERFACES="$(netstat -i | tail -n+3 | awk '{print $1}')"
-	local IF
-	for IF in $INTERFACES; do
-		load_if
+	local F
+	for F in $INTERFACES; do
+		load_if "${F}"
 	done
 
 	load_args_ping
@@ -41,6 +41,7 @@ load_env() {
 }
 
 load_if() {
+	local IF="$1"
 	local IPV=4
 	local SEP="/"
 	SUBNET[$IF]=$(ip -o -$IPV address | grep " ${IF} "  | awk '{print $4}')
