@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# A template for creating init scripts for iptables.
+source env
+
+start() {
+}
+
+stop() {
+}
+
+panic() {
+}
+
+lock() {
+	}
+
+reload() {
+}
+
+log() {
+}
+
+main $@
