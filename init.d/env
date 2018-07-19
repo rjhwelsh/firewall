@@ -196,6 +196,7 @@ rule_gen() {
 	[[ $n == "0" ]] && arrtype="I"
 	[[ $n -gt 0 ]] && arrtype="I"
 	[[ $n == "d" ]] && arrtype="D" && unset n
+	[[ $n == "c" ]] && arrtype="C" && unset n
 
 	# Return a string to stdin
 	echo "\$${arrtype}${ip6}[${chain}] $n ${rule[*]} ${tgt}" &&
