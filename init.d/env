@@ -288,14 +288,23 @@ status() {
 	local RULE
 	local TGT
   local i
+	local ruleno
 	i=0
 	for RULE in "${RULES[@]}";
 	do
  		TGT="${RULES_TGT[$i]}"
 
 		local CMD
+		local CMD2
+
 		CMD=`rule_gen "$RULE" "$TGT" "c"`
-		eval $CMD 2>/dev/null && eval echo "ON : $CMD" || eval echo "OFF: $CMD"
+		CMD2=`rule_gen "$RULE" "$TGT" "n"`
+		ruleno=( `eval $CMD2` )
+
+		eval $CMD 2>/dev/null &&
+			eval echo "ON : $CMD" &&
+			${ruleno[0]} -xvnL ${ruleno[1]} ${ruleno[2]} ||
+				eval echo "OFF: $CMD"
 		((i++))
 	done
 }
