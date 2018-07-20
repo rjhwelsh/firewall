@@ -335,6 +335,82 @@ check_call() {
 	return 1
 }
 
+usage() {
+	echo "Usage: $0 [-4 -6] [-P tcp|udp|icmp] [-p PORTS] [-s SRC] [-d DEST] [-c CTSTATE] [-i IF] [-o IF] [-m MARK] [-j TARGET] [-C CHAINS] [ -t TABLES ] -l -v" 1>&2;
+	exit 1;
+}
+
+argparse() {
+	local o
+	local ipv6
+	while getopts ":C:t:P:p:s:d:c:i:o:m:j:lv46" o;
+	do
+		case "${o}" in
+			C)
+				CHAIN="${OPTARG}"
+				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""
+			  ;;
+			t)
+				TABLE="${OPTARG}"
+				[[ -n $VERBOSE ]] && echo "TABLE=\"${OPTARG}\""
+			  ;;
+			P)
+				PROTOCOL="${OPTARG}"
+				[[ -n $VERBOSE ]] && echo "PROTOCOL=\"${OPTARG}\""
+			  ;;
+			p)
+				PORT="${OPTARG}"
+				[[ -n $VERBOSE ]] && echo "PORT=\"${OPTARG}\""
+				;;
+			s)
+				[[ -z $IPV6 ]] && SRC="${OPTARG}" || SRC_6="${OPTARG}" ;
+				[[ -n $VERBOSE ]] && echo "SRC$IPV6=\"${OPTARG}\""
+				;;
+			d)
+				[[ -z $IPV6 ]] && DEST="${OPTARG}" || DEST_6="${OPTARG}" ;
+				[[ -n $VERBOSE ]] && echo "DEST$IPV6=\"${OPTARG}\""
+				;;
+			c)
+				[[ -z $IPV6 ]] && CTSTATE="${OPTARG}" || CTSTATE_6="${OPTARG}" ;
+				[[ -n $VERBOSE ]] && echo "CTSTATE$IPV6=\"${OPTARG}\""
+				;;
+			i)
+				[[ -z $IPV6 ]] && IF="${OPTARG}" || IF_6="${OPTARG}" ;
+				[[ -n $VERBOSE ]] && echo "IF$IPV6=\"${OPTARG}\""
+				;;
+			o)
+				[[ -z $IPV6 ]] && OF="${OPTARG}" || OF_6="${OPTARG}" ;
+				[[ -n $VERBOSE ]] && echo "OF$IPV6=\"${OPTARG}\""
+				;;
+			m)
+				[[ -z $IPV6 ]] && MARK="${OPTARG}" || MARK_6="${OPTARG}" ;
+				[[ -n $VERBOSE ]] && echo "MARK$IPV6=\"${OPTARG}\""
+				;;
+			j)
+				[[ -z $IPV6 ]] && TARGET="${OPTARG}" || TARGET_6="${OPTARG}" ;
+				[[ -n $VERBOSE ]] && echo "TARGET$IPV6=\"${OPTARG}\""
+				;;
+			l)
+				[[ -z $IPV6 ]] && LOG=1 || LOG_6=1
+				[[ -n $VERBOSE ]] && echo "LOG=1"
+				;;
+			v)
+				VERBOSE=1
+				[[ -n $VERBOSE ]] && echo "VERBOSE=1"
+				;;
+			4)
+				IPV6=""
+				;;
+			6)
+				IPV6="_6"
+				;;
+			*)
+				usage
+				;;
+		esac
+	done
+	}
+
 # Declare arrays
 declare -a CONF_VARS
 
@@ -352,3 +428,5 @@ source "${CONF_BASE}"
 load_defaults
 
 check_call "$@" || ( echo "BAD ARGUMENT" ; exit 1 )
+shift
+argparse "$@"
