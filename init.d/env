@@ -95,8 +95,8 @@ load_args_ping() {
 }
 
 load_if_policy() {
-	JUMP[$IF]=${DEFAULT_POLICY}
-	JUMP_6[$IF]=${DEFAULT_POLICY_6}
+	JUMP[$IF]=${DEFAULT_INTERFACE_JUMP}
+	JUMP_6[$IF]=${DEFAULT_INTERFACE_JUMP_6}
 	}
 
 load_chain() {
