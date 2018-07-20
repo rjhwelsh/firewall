@@ -40,4 +40,4 @@ status() {
 	done
 	}
 # Execute function
-$@
+$1
