@@ -3,6 +3,7 @@
 # This script initializes the configuration environment varibles.
 load_env() {
 	ENV=env
+	NULL="." # Used to specify nil values for options in scripts.
 	CONF_VARS=(
 		'PORT'
 		'PORT_6'
@@ -348,6 +349,8 @@ argparse() {
 	local ipv6
 	while getopts ":I:C:D:t:P:p:s:d:c:i:o:m:j:lv46" o;
 	do
+		# Anything passing the null value is removed.
+		[[ ${OPTARG} == $NULL ]] && OPTARG=""
 		case "${o}" in
 			I)
 				RULE_TYPE="${OPTARG}"
