@@ -12,14 +12,22 @@ RULES_TGT=()
 
 i=0
 # Only the filter table is valid for adjusting policy
-T="filter"
-for C in "${DEFAULT_CHAINS[@]}"; do
-	RULES[$i]="NIL ${IPTABLES} -w -t ${T} -P $C ${POLICY[${C}]}"
-	RULES_TGT[$i]=""
-	((i++))
-	RULES[$i]="6 NIL ${IPTABLES_6} -w -t ${T} -P $C ${POLICY_6[${C}]}"
-	RULES_TGT[$i]=""
-	((i++))
+
+for T in "${TABLE[@]}"; do
+	for C in "${CHAIN[@]}"; do
+		RULES[$i]="NIL ${IPTABLES} -w -t ${T} -P ${C} ${POLICY[${C}]}"
+		RULES_TGT[$i]=""
+		((i++))
+	done
+done
+
+# IPv6
+for T in "${TABLE_6[@]}"; do
+	for C in "${CHAIN_6[@]}"; do
+		RULES[$i]="6 NIL ${IPTABLES_6} -w -t ${T} -P ${C} ${POLICY_6[${C}]}"
+		RULES_TGT[$i]=""
+		((i++))
+	done
 done
 
 # Log function not available
