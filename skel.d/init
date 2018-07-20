@@ -10,4 +10,4 @@ RULES=()
 RULES_TGT=()
 
 # Execute function
-$@
+$1
