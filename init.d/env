@@ -210,7 +210,7 @@ rule_gen() {
 	local arrtype
 	arrtype="APPEND"
   [[ -z $n ]] && arrtype="APPEND"
-	[[ $n == "^[0-9]+$" ]] && arrtype="INSERT"
+	[[ $n == [0-9] || $n == [0-9][0-9]* ]] && arrtype="INSERT"
 	[[ $n == "d" ]] && arrtype="DELETE" && unset n
 	[[ $n == "c" ]] && arrtype="CHECK" && unset n
 
