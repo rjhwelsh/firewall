@@ -25,6 +25,10 @@ load_env() {
 		'LOG'
 		'LOG_6'
 		'VERBOSE'
+		'CHAIN'
+		'CHAIN_6'
+		'TABLE'
+		'TABLE_6'
 	)
 	DIR_BASE=$(readlink -e `dirname $0`/..)
 	CONF_BASE="${DIR_BASE}/conf.d/$( basename $(readlink -e $0))"
