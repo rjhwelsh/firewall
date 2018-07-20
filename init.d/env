@@ -169,15 +169,15 @@ flush() {
 }
 
 set_policy() {
-	local TABLE="$1"
-	[[ -z "$TABLE" ]] && TABLE=filter
+	local table="$1"
+	[[ -z "$table" ]] && table=filter
 	shift
-	local CHAIN=( "$@" )
+	local chain=( "$@" )
   local C
-	for C in "${CHAIN[@]}";
+	for C in "${chain[@]}";
 	do
-		"${IPTABLES}" -w -t "${TABLE}" -P "$C" "${POLICY[$C]}"
-		"${IPTABLES_6}" -w -t "${TABLE}" -P "$C" "${POLICY_6[$C]}"
+		"${IPTABLES}" -w -t "${table}" -P "$C" "${POLICY[$C]}"
+		"${IPTABLES_6}" -w -t "${table}" -P "$C" "${POLICY_6[$C]}"
 	done
 }
 
