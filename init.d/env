@@ -134,26 +134,26 @@ load_defaults() {
 
 # Actions
 flush() {
-	local TABLE="$1"
+	local tables="$1"
 	shift
-	local CHAIN=( "$@" )
+	local chains=( "$@" )
 
 	# Load all tables, if value is nil
-	[[ -z "$TBL" ]] && TABLE=( "${TABLES[@]}" )
+	[[ -z "$tables" ]] && tables=( "${TABLES[@]}" )
 
 	local IPT=""
 	# Flush ipv4 and ipv6
 	for IPT in "${IPTABLES}" "${IPTABLES_6}";
 	do
 
-		for T in "${TABLE[@]}";
+		for T in "${tables[@]}";
 		do
 
 			# If a chain is specified, only flush and delete the chain.
-			if [[ -n "${CHAIN[*]}" ]];
+			if [[ -n "${chains[*]}" ]];
 			then
 				local C
-				for C in "${CHAIN[@]}"
+				for C in "${chains[@]}"
 				do
 					${IPT} -w -F -t $T $C
 					${IPT} -w -X -t $T $C
