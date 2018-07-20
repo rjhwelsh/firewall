@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# A template for creating init scripts for iptables.
+ENV_FILE=`dirname "$(dirname \
+					 "$(readlink -e "$0" )")"`/init.d/env
+source "${ENV_FILE}" "$@" || exit 1
+
+# Empty arrays
+RULES=()
+RULES_TGT=()
+
+# Optional singular arguments
+# interfaces
+[[ -n $IF ]] &&
+	xOF="-o $IF" &&
+	IF="-i $IF"
+
+# protocol
+[[ -n $PROTOCOL ]] && PROTOCOL="-p $PROTOCOL"
+
+# ctstate
+[[ -n $CTSTATE ]] && CTSTATE="-m conntrack --ctstate $CTSTATE"
+
+# Address restrictions
+[[ -n $DEST ]] &&
+	xSRC="-s $DEST" &&
+	DEST="-d $DEST"
+
+# ports
+[[ -n $PORT ]] &&
+	dport="--dport $PORT" &&
+	sport="--sport $PORT"
+
+# target (use default if unspecified)
+[[ -z $TARGET ]] &&
+	TARGET=JUMP[$DCHAIN]
+
+# OUTPUT
+RULES[0]="$DCHAIN $xOF $PROTOCOL ${DEST} $dport"
+RULES_TGT[0]="-j $TARGET"
+
+# RETURN
+RULES[1]="$CHAIN $IF $PROTOCOL $CTSTATE ${xSRC} $sport"
+RULES_TGT[1]="-j $TARGET"
+
+# Execute function
+$1
