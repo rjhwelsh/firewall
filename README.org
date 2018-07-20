@@ -205,25 +205,43 @@ Default functions.
 |--------+-------------------------------------------------------------------|
 
 Some examples for a module.
-#+BEGIN_EXAMPLE first_module.sh
-# Arguments are interpreted by the setup script.
-setup.sh ${@}
-${OUTPUT} --dport ${PORT} -j ACCEPT
+#+BEGIN_EXAMPLE first_module
+# First module
 
-# Simple example, allow http traffic out.
-# (Hardcoded ports)
-${OUTPUT} --dport 80 -j ACCEPT
+# This is included in every module.
+ENV_FILE=`dirname "$(dirname \
+					 "$(readlink -e "$0" )")"`/init.d/env
+source "${ENV_FILE}" "$@" || exit 1
+# Empty arrays
+RULES=()
+RULES_TGT=()
 
-# Adding a chain for handling ssh.
-new_chain SSH_OUT
-${OUTPUT} --sport 22 -j SSH_OUT
-${SSH_OUT} -d ${SUBNET_wlan0} -j ACCEPT
-${SSH_OUT} -j ${POLICY_OUTPUT}
+# Accept all packets in output chain.
+# ipv4 by default.
+RULES[0]="OUTPUT "
+RULES_TGT[0]="-j ACCEPT"
 
-# Setting up a server connection
-two_way ${OUTPUT} --dport 443 -j ACCEPT
-# Also sets up (implicitly)..
-# ${INPUT} --sport 443 -j ACCEPT
+# For ipv6 simply prepend a "6"
+RULES[1]="6 OUTPUT "
+RULES_TGT[1]="-j ACCEPT"
+
+# General form :
+# Jump to $TARGET for every packet in $CHAIN
+RULES[2]="${CHAIN} "
+RULES_TGT[2]="-j ${TARGET}"
+# This can be specified on the CLI or in your host file.
+# ./init.d/first_module start -C OUTPUT -j ACCEPT
+
+# Specify options in the RULES[$i] var.
+# RULES_TGT is special to allow for quick replacement. (i.e. in logging).
+# TARGET anything from sport 22 and lan 192.168.1.1/24
+RULES[2]="${CHAIN} --sport 22 -s 192.168.1.1/24"
+RULES_TGT[2]="-j ${TARGET}"
+
+# After all the rules are defined put a '$1' at the end of the script.
+# This will run the required function from 'init.d/env'
+# Execute function
+$1
 #+END_EXAMPLE
 
 ** Artifacts
