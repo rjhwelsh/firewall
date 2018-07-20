@@ -352,19 +352,19 @@ argparse() {
 				[[ -n $VERBOSE ]] && echo "RULE_TYPE=\"${OPTARG}\""
 				;;
 			C)
-				CHAIN="${OPTARG}"
+				[[ -z $IPV6 ]] && CHAIN="${OPTARG}" || CHAIN_6="${OPTARG}"
 				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""
 			  ;;
 			t)
-				TABLE="${OPTARG}"
+				[[ -z $IPV6 ]] && TABLE="${OPTARG}" || TABLE_6="${OPTARG}"				
 				[[ -n $VERBOSE ]] && echo "TABLE=\"${OPTARG}\""
 			  ;;
 			P)
-				PROTOCOL="${OPTARG}"
+				[[ -z $IPV6 ]] && PROTOCOL="${OPTARG}" || PROTOCOL_6="${OPTARG}"				
 				[[ -n $VERBOSE ]] && echo "PROTOCOL=\"${OPTARG}\""
 			  ;;
 			p)
-				PORT="${OPTARG}"
+				[[ -z $IPV6 ]] && PORT="${OPTARG}" || PORT_6="${OPTARG}"				
 				[[ -n $VERBOSE ]] && echo "PORT=\"${OPTARG}\""
 				;;
 			s)
