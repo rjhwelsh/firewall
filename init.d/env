@@ -237,7 +237,7 @@ print() {
 	for RULE in "${RULES[@]}";
 	do
 		TGT="${RULES_TGT[$i]}"
-		rule_gen "$RULE" "$TGT" "$1"
+		rule_gen "$RULE" "$TGT" "$RULE_TYPE"
 		((i++))
 	done
 }
@@ -252,14 +252,15 @@ start() {
 	do
 		TGT="${RULES_TGT[$i]}"
 		local CMD
-		CMD=`rule_gen "$RULE" "$TGT" "$1"`
+		CMD=`rule_gen "$RULE" "$TGT" "$RULE_TYPE"`
 		eval $CMD
 		((i++))
 	done
 }
 
 stop()  {
-	start "d"
+	RULE_TYPE="d"
+	start
 }
 
 log() {
@@ -270,7 +271,7 @@ log() {
 	for RULE in "${RULES[@]}";
 	do
 		TGT="-j LOG"
-		CMD=`rule_gen "$RULE" "$TGT" "$1"`
+		CMD=`rule_gen "$RULE" "$TGT" "$RULE_TYPE"`
 		local CMD
 		eval $CMD
 		((i++))
@@ -336,16 +337,20 @@ check_call() {
 }
 
 usage() {
-	echo "Usage: $0 [-4 -6] [-P tcp|udp|icmp] [-p PORTS] [-s SRC] [-d DEST] [-c CTSTATE] [-i IF] [-o IF] [-m MARK] [-j TARGET] [-C CHAINS] [ -t TABLES ] -l -v" 1>&2;
+	echo "Usage: $0 [-4 -6] [-I RULENO (insert([0-9]+)/delete(d)/ruleno(n)) ]  [-P tcp|udp|icmp] [-p PORTS] [-s SRC] [-d DEST] [-c CTSTATE] [-i IF] [-o IF] [-m MARK] [-j TARGET] [-C CHAINS] [ -t TABLES ] -l -v" 1>&2;
 	exit 1;
 }
 
 argparse() {
 	local o
 	local ipv6
-	while getopts ":C:t:P:p:s:d:c:i:o:m:j:lv46" o;
+	while getopts ":I:C:t:P:p:s:d:c:i:o:m:j:lv46" o;
 	do
 		case "${o}" in
+			I)
+				RULE_TYPE="${OPTARG}"
+				[[ -n $VERBOSE ]] && echo "RULE_TYPE=\"${OPTARG}\""
+				;;
 			C)
 				CHAIN="${OPTARG}"
 				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""
