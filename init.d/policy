@@ -11,16 +11,15 @@ RULES=()
 RULES_TGT=()
 
 i=0
-for T in "${TABLES[@]}"
-do
-	for C in "${DEFAULT_CHAINS[@]}"; do
-		RULES[$i]="NIL ${IPTABLES} -w -t ${T} -P $C ${POLICY[${C}]}"
-		RULES_TGT[$i]=""
-		((i++))
-		RULES[$i]="6 NIL ${IPTABLES_6} -w -t ${T} -P $C ${POLICY_6[${C}]}"
-		RULES_TGT[$i]=""
-		((i++))
-	done
+# Only the filter table is valid for adjusting policy
+T="filter"
+for C in "${DEFAULT_CHAINS[@]}"; do
+	RULES[$i]="NIL ${IPTABLES} -w -t ${T} -P $C ${POLICY[${C}]}"
+	RULES_TGT[$i]=""
+	((i++))
+	RULES[$i]="6 NIL ${IPTABLES_6} -w -t ${T} -P $C ${POLICY_6[${C}]}"
+	RULES_TGT[$i]=""
+	((i++))
 done
 
 # Log function not available
