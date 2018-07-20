@@ -435,7 +435,7 @@ declare -A JUMP FINAL_JUMP POLICY INSERT APPEND DELETE CHECK
 declare -A JUMP_6 FINAL_JUMP_6 POLICY_6 INSERT_6 APPEND_6 DELETE_6 CHECK_6
 
 load_env
-source "${CONF_BASE}"
+[[ -x "${CONF_BASE}" ]] && source "${CONF_BASE}"
 load_defaults
 
 check_call "$@" || ( echo "BAD ARGUMENT" ; exit 1 )
