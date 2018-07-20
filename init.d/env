@@ -16,6 +16,8 @@ load_env() {
 		'PROTOCOL_6'
 		'IF'
 		'IF_6'
+		'OF'
+		'OF_6'
 		'TARGET'
 		'TARGET_6'
 		'HOST'
