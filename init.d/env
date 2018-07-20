@@ -351,63 +351,63 @@ argparse() {
 		case "${o}" in
 			I)
 				RULE_TYPE="${OPTARG}"
-				[[ -n $VERBOSE ]] && echo "RULE_TYPE=\"${OPTARG}\"" || return 0
+				[[ -n $VERBOSE ]] && echo "RULE_TYPE=\"${OPTARG}\"" || [[ 0 ]]
 				;;
 			C)
 				[[ -z $IPV6 ]] && CHAIN="${OPTARG}" || CHAIN_6="${OPTARG}"
-				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""  || [[ 0 ]]
 			  ;;
 			D)
 				[[ -z $IPV6 ]] && DCHAIN="${OPTARG}" || DCHAIN_6="${OPTARG}"
-				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""  || [[ 0 ]]
 			  ;;
 			t)
 				[[ -z $IPV6 ]] && TABLE="${OPTARG}" || TABLE_6="${OPTARG}"
-				[[ -n $VERBOSE ]] && echo "TABLE=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "TABLE=\"${OPTARG}\""  || [[ 0 ]]
 			  ;;
 			P)
 				[[ -z $IPV6 ]] && PROTOCOL="${OPTARG}" || PROTOCOL_6="${OPTARG}"
-				[[ -n $VERBOSE ]] && echo "PROTOCOL=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "PROTOCOL=\"${OPTARG}\""  || [[ 0 ]]
 			  ;;
 			p)
 				[[ -z $IPV6 ]] && PORT="${OPTARG}" || PORT_6="${OPTARG}"
-				[[ -n $VERBOSE ]] && echo "PORT=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "PORT=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			s)
 				[[ -z $IPV6 ]] && SRC="${OPTARG}" || SRC_6="${OPTARG}" ;
-				[[ -n $VERBOSE ]] && echo "SRC$IPV6=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "SRC$IPV6=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			d)
 				[[ -z $IPV6 ]] && DEST="${OPTARG}" || DEST_6="${OPTARG}" ;
-				[[ -n $VERBOSE ]] && echo "DEST$IPV6=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "DEST$IPV6=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			c)
 				[[ -z $IPV6 ]] && CTSTATE="${OPTARG}" || CTSTATE_6="${OPTARG}" ;
-				[[ -n $VERBOSE ]] && echo "CTSTATE$IPV6=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "CTSTATE$IPV6=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			i)
 				[[ -z $IPV6 ]] && IF="${OPTARG}" || IF_6="${OPTARG}" ;
-				[[ -n $VERBOSE ]] && echo "IF$IPV6=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "IF$IPV6=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			o)
 				[[ -z $IPV6 ]] && OF="${OPTARG}" || OF_6="${OPTARG}" ;
-				[[ -n $VERBOSE ]] && echo "OF$IPV6=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "OF$IPV6=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			m)
 				[[ -z $IPV6 ]] && MARK="${OPTARG}" || MARK_6="${OPTARG}" ;
-				[[ -n $VERBOSE ]] && echo "MARK$IPV6=\"${OPTARG}\""  || return 0
+				[[ -n $VERBOSE ]] && echo "MARK$IPV6=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			j)
-				[[ -z $IPV6 ]] && TARGET="${OPTARG}" || TARGET_6="${OPTARG}" ;
-				[[ -n $VERBOSE ]] && echo "TARGET$IPV6=\"${OPTARG}\""  || return 0
+				[[ -z $IPV6 ]] && TARGET="-j ${OPTARG}" || TARGET_6="-j ${OPTARG}" ;
+				[[ -n $VERBOSE ]] && echo "TARGET$IPV6=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			l)
 				[[ -z $IPV6 ]] && LOG=1 || LOG_6=1
-				[[ -n $VERBOSE ]] && echo "LOG=1"  || return 0
+				[[ -n $VERBOSE ]] && echo "LOG=1"  || [[ 0 ]]
 				;;
 			v)
 				VERBOSE=1
-				[[ -n $VERBOSE ]] && echo "VERBOSE=1"  || return 0
+				[[ -n $VERBOSE ]] && echo "VERBOSE=1"  || [[ 0 ]]
 				;;
 			4)
 				IPV6=""
