@@ -27,6 +27,8 @@ load_env() {
 		'VERBOSE'
 		'CHAIN'
 		'CHAIN_6'
+		'DCHAIN'
+		'DCHAIN_6'
 		'TABLE'
 		'TABLE_6'
 	)
@@ -337,14 +339,14 @@ check_call() {
 }
 
 usage() {
-	echo "Usage: $0 [-4 -6] [-I RULENO (insert([0-9]+)/delete(d)/ruleno(n)) ]  [-P tcp|udp|icmp] [-p PORTS] [-s SRC] [-d DEST] [-c CTSTATE] [-i IF] [-o IF] [-m MARK] [-j TARGET] [-C CHAINS] [ -t TABLES ] -l -v" 1>&2;
+	echo "Usage: $0 [-4 -6] [-I RULENO (insert([0-9]+)/delete(d)/ruleno(n)) ]  [-P tcp|udp|icmp] [-p PORTS] [-s SRC] [-d DEST] [-c CTSTATE] [-i IF] [-o IF (out)] [-m MARK] [-j TARGET] [-C CHAINS] [-D CHAIN (out)] [ -t TABLES ] -l -v" 1>&2;
 	exit 1;
 }
 
 argparse() {
 	local o
 	local ipv6
-	while getopts ":I:C:t:P:p:s:d:c:i:o:m:j:lv46" o;
+	while getopts ":I:C:D:t:P:p:s:d:c:i:o:m:j:lv46" o;
 	do
 		case "${o}" in
 			I)
@@ -353,6 +355,10 @@ argparse() {
 				;;
 			C)
 				[[ -z $IPV6 ]] && CHAIN="${OPTARG}" || CHAIN_6="${OPTARG}"
+				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""  || return 0
+			  ;;
+			D)
+				[[ -z $IPV6 ]] && DCHAIN="${OPTARG}" || DCHAIN_6="${OPTARG}"
 				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""  || return 0
 			  ;;
 			t)
