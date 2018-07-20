@@ -3,7 +3,11 @@
 # Configuration for interface rules
 
 IF="lo"
+OF="lo"
+IF_6="lo"
+OF_6="lo"
 TARGET="ACCEPT"
+TARGET_6="ACCEPT"
 
 # Specify input/output chains.
 # Leave blank to exclude.

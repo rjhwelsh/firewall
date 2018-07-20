@@ -22,14 +22,14 @@ done
 
 for C in $CHAIN_6;
 do
-	RULES[$i]="6 $C -i $IF "
-	RULES_TGT[$i]="-j $TARGET"
+	RULES[$i]="6 $C -i $IF_6 "
+	RULES_TGT[$i]="-j $TARGET_6"
 	((i++))
 done
 
 for C in $DCHAIN;
 do
-	RULES[$i]="$C -o $IF "
+	RULES[$i]="$C -o $OF "
 	RULES_TGT[$i]="-j $TARGET"
 	((i++))
 done
@@ -37,8 +37,8 @@ done
 
 for C in $DCHAIN_6
 do
-	RULES[$i]="6 $C -o $IF "
-	RULES_TGT[$i]="-j $TARGET"
+	RULES[$i]="6 $C -o $OF_6 "
+	RULES_TGT[$i]="-j $TARGET_6"
 	((i++))
 done
 
