@@ -169,31 +169,40 @@ The following are a list of convenience functions.
 
 
 Local variables for each module script.
-| Variable | Argument           | Description                              | Example           |
-|----------+--------------------+------------------------------------------+-------------------|
-| PORT     | -p XX, --port      | Specifies the port for the module        | -p 22             |
-| SRC      | -s XX, --src       | Specifies an ip address range for module | -s 192.168.1.1/24 |
-| DEST     | -d XX, --dest      | Destination ip address range             | -d 192.168.2.1/24 |
-| CTSTATE  | -c XX, --ctstate   | Specify a ctstate for connection         | -c ESTABLISHED    |
-| PROTOCOL | -P XX, --protocol  | Specify a protocol udp, tcp.             | -P tcp,udp        |
-| IF       | -i XX, --interface | Specify an interface to operate over.    | -i wlan0          |
-| MODE     | -m XX, --mode      | Specify a mode, server or client.        | -m server         |
-|          |                    | (More than one may be selected.)         |                   |
-| TARGET   | -j XX, --jump      | Specify the modules jump target.         | -j ACCEPT         |
-| HOST     | -h XX, --host      | Specify the hostname.                    | -h localhost      |
-| LOG      | -l , --log         | Specifies enabling logging.              | -l                |
-| VERBOSE  | -v                 | Verbosely executes script.               | -v                |
-|----------+--------------------+------------------------------------------+-------------------|
+| Variable  | Argument | Description                                          | Example           |
+|-----------+----------+------------------------------------------------------+-------------------|
+| IPV6      | -4, -6   | Specify whether to use ipv4 or ipv6                  | -6                |
+| RULE_TYPE | -I       | Specify the rule type, APPEND, INSERT, DELETE, CHECK | -I 0              |
+| PROTOCOL  | -P XX,   | Specify a protocol udp, tcp.                         | -P tcp,udp        |
+| PORT      | -p XX,   | Specifies the port for the module                    | -p 22             |
+| SRC       | -s XX,   | Specifies an ip address range for module             | -s 192.168.1.1/24 |
+| DEST      | -d XX,   | Destination ip address range                         | -d 192.168.2.1/24 |
+| CTSTATE   | -c XX,   | Specify a ctstate for connection                     | -c ESTABLISHED    |
+| IF        | -i XX,   | Specify an interface to operate over.                | -i wlan0          |
+| OF        | -o XX,   | Specify an output interface.                         | -o eth0           |
+| MARK      | -m XX,   | Specify a value for MARK                             | -m 12             |
+| TARGET    | -j XX,   | Specify the modules jump target.                     | -j ACCEPT         |
+| CHAIN     | -C XX,   | Specify the chains to use.                           | -C OUTPUT         |
+| DCHAIN    | -D XX,   | Specify output chains                                | -D POSTROUTING    |
+| TABLE     | -t XX,   | Specify a default routing table.                     | -t FILTER         |
+| LOG       | -l       | Specifies enabling logging rules.                    | -l                |
+| VERBOSE   | -v       | Verbosely executes script.                           | -v                |
+|-----------+----------+------------------------------------------------------+-------------------|
 
 Default functions.
-| Module | Description                                                              |
-|--------+--------------------------------------------------------------------------|
-| start  | Sets up the default firewall profile configuration variables.            |
-| stop   | Removes all iptables chains, tables and rules.                           |
-| reload | start; then stop;                                                        |
-| lock   | Locks down server, except for critical remote/local admin access.        |
-| panic  | Locks out server completely.                                             |
-
+| Module | Description                                                       |
+|--------+-------------------------------------------------------------------|
+| print  | Echos each rule to STDOUT.                                        |
+| start  | Sets up the default firewall profile configuration variables.     |
+| stop   | Removes *specific* iptables chains, tables and rules.             |
+| flush  | Removes *all* iptables chains, tables and rules.                  |
+| log    | Replaces the target of each rule in the module with "-j LOG"      |
+| status | Reports back the status of each rule in the module, and stats.    |
+| panic  | Locks out server completely.                                      |
+|--------+-------------------------------------------------------------------|
+| lock   | Locks down server, except for critical remote/local admin access. |
+|        | (Specific to each host.)                                          |
+|--------+-------------------------------------------------------------------|
 
 Some examples for a module.
 #+BEGIN_EXAMPLE first_module.sh
