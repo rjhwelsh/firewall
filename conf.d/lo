@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Configuration for interface rules
+
+IF="lo"
+TARGET="ACCEPT"
+
+# Specify input/output chains.
+# Leave blank to exclude.
+# CHAINS_IN="INPUT FORWARD PREROUTING"
+# CHAINS_OUT="OUTPUT FORWARD POSTROUTING"
+
+CHAINS_IN="INPUT"
+CHAINS_OUT="OUTPUT"

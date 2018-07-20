@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# This script configures a policy for the local interface.
+# (Adaptable for any interface)
+
+ENV_FILE=`dirname "$(dirname \
+					 "$(readlink -e "$0" )")"`/init.d/env
+source "${ENV_FILE}" "$@" || exit 1
+
+# Empty arrays
+RULES=()
+RULES_TGT=()
+
+i=0
+
+for C in $CHAINS_IN;
+do
+	RULES[$i]="$C -i $IF "
+	RULES_TGT[$i]="-j $TARGET"
+	((i++))
+	RULES[$i]="6 $C -i $IF "
+	RULES_TGT[$i]="-j $TARGET"
+	((i++))
+done
+
+for C in $CHAINS_OUT;
+do
+	RULES[$i]="$C -o $IF "
+	RULES_TGT[$i]="-j $TARGET"
+	((i++))
+	RULES[$i]="6 $C -o $IF "
+	RULES_TGT[$i]="-j $TARGET"
+	((i++))
+done
+
+# Execute function
+$@
