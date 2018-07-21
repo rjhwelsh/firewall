@@ -26,6 +26,10 @@ RULES_TGT=()
 	xSRC="-s $DEST" &&
 	DEST="-d $DEST"
 
+[[ -n $SRC ]] &&
+	xDEST="-d $SRC" &&
+	SRC="-s $SRC"
+
 # ports
 [[ -n $PORT ]] &&
 	dport="--dport $PORT" &&
@@ -36,11 +40,11 @@ RULES_TGT=()
 	TARGET=JUMP[$DCHAIN]
 
 # OUTPUT
-RULES[0]="$DCHAIN $xOF $PROTOCOL ${DEST} $dport"
+RULES[0]="$DCHAIN $xOF $PROTOCOL ${SRC} ${DEST} $dport"
 RULES_TGT[0]="-j $TARGET"
 
 # RETURN
-RULES[1]="$CHAIN $IF $PROTOCOL $CTSTATE ${xSRC} $sport"
+RULES[1]="$CHAIN $IF $PROTOCOL $CTSTATE ${xDEST} ${xSRC} $sport"
 RULES_TGT[1]="-j $TARGET"
 
 # Execute function
