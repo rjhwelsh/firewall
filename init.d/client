@@ -10,7 +10,12 @@ RULES=()
 RULES_TGT=()
 
 # Optional singular arguments
-# interfaces
+# Output interface
+[[ -n $OF ]] &&
+	xIF="-i $OF" &&
+	OF="-o $OF"
+
+# Input interface (FORWARD chains only)
 [[ -n $IF ]] &&
 	xOF="-o $IF" &&
 	IF="-i $IF"
@@ -52,11 +57,11 @@ xdport= && sport=
 	TARGET=JUMP[$DCHAIN]
 
 # OUTPUT
-RULES[0]="$DCHAIN $xOF $PROTOCOL ${SRC} ${DEST} $sport $dport"
+RULES[0]="$DCHAIN $IF $OF $PROTOCOL ${SRC} ${DEST} $sport $dport"
 RULES_TGT[0]="-j $TARGET"
 
 # RETURN
-RULES[1]="$CHAIN $IF $PROTOCOL $CTSTATE ${xDEST} ${xSRC} $xsport $xdport"
+RULES[1]="$CHAIN $xIF $xOF $PROTOCOL $CTSTATE ${xDEST} ${xSRC} $xsport $xdport"
 RULES_TGT[1]="-j $TARGET"
 
 # Execute function
