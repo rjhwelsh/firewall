@@ -13,32 +13,36 @@ RULES_TGT=()
 # Remember to enable ip forwarding in the kernel with.
 # `echo "1" > /proc/sys/net/ipv4/ip_forward`
 
-# TODO:
-# ${IPTABLES} -t nat -A POSTROUTING -o wlp3s0b1 -j MASQUERADE
+# Examples..
+# ${IPTABLES} -t nat -A POSTROUTING -o wlp3s0b1 -j MASQUERADE -m mark --mark 404
+# ${IPTABLES} -t mangle -A PREROUTING -i enp12s0 -j MARK --set-mark 404
 # ${FORWARD} -i enp12s0 -j ACCEPT
 
 i=0
+MASQ_IN="-t mangle -i ${IF} --set-mark"
+MASQ_OUT="-t nat -o ${OF} -m mark --mark"
+MASQ_IN_6="-t mangle -i ${IF_6} --set-mark"
+MASQ_OUT_6="-t nat -o ${OF_6} -m mark --mark"
 
 [[ -n $IF ]] &&
-	RULES[$i]="NIL ${MASQ_IN[$IF]} $MARK" &&
-	RULES_TGT[$i]="" &&
+	RULES[$i]="PREROUTING ${MASQ_IN} $MARK" &&
+	RULES_TGT[$i]="-j MARK" &&
 	(( i++ ))
 
 [[ -n $OF ]] &&
-	RULES[$i]="NIL ${MASQ_OUT[$OF]} $MARK" &&
-	RULES_TGT[$i]="" &&
+	RULES[$i]="POSTROUTING ${MASQ_OUT} $MARK" &&
+	RULES_TGT[$i]="-j MASQUERADE" &&
 	(( i++ ))
 
 [[ -n $IF_6 ]] &&
-	RULES[$i]="6 NIL ${MASQ_IN_6[$IF_6]} $MARK_6" &&
-	RULES_TGT[$i]="" &&
+	RULES[$i]="6 PREROUTING ${MASQ_IN_6} $MARK_6" &&
+	RULES_TGT[$i]="-j MARK" &&
 	(( i++ ))
 
 [[ -n $OF_6 ]] &&
-	RULES[$i]="6 NIL ${MASQ_OUT_6[$OF_6]} $MARK_6" &&
-	RULES_TGT[$i]="" &&
+	RULES[$i]="6 POSTROUTING ${MASQ_OUT_6} $MARK_6" &&
+	RULES_TGT[$i]="-j MASQUERADE" &&
 	(( i++ ))
-
 
 # Execute function
 $1
