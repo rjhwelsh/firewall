@@ -302,7 +302,8 @@ status() {
 		#ruleno=( `eval $CMD2` )
 
 		eval $CMD 2>/dev/null &&
-			eval echo "ON : $CMD"
+			eval echo "ON : $CMD" ||
+				eval echo "OFF: $CMD"
 #			${ruleno[0]} -xvnL ${ruleno[1]} ${ruleno[2]} ||
 #				eval echo "OFF: $CMD"
 		((i++))
