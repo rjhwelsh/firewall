@@ -54,7 +54,7 @@ xdport= && sport=
 
 # target (use default if unspecified)
 [[ -z $TARGET ]] &&
-	TARGET=JUMP[$DCHAIN]
+	TARGET=${JUMP[$DCHAIN]}
 
 # OUTPUT
 RULES[0]="$DCHAIN $IF $OF $PROTOCOL ${SRC} ${DEST} $sport $dport"
