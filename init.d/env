@@ -98,8 +98,8 @@ load_if() {
 load_if_masq() {
   MASQ_IN[$IF]="${IPTABLES} -A prerouting -t mangle -i ${IF} -j MARK --set-mark"
 	MASQ_OUT[$IF]="${IPTABLES} -A postrouting -t nat -o ${IF} -m mark -j MASQUERADE --mark"
-	MASQ_IN[$IF]="${IPTABLES_6} -A prerouting -t mangle -i ${IF} -j MARK --set-mark"
-	MASQ_OUT[$IF]="${IPTABLES_6} -A postrouting -t nat -o ${IF} -m mark -j MASQUERADE --mark"
+	MASQ_IN_6[$IF]="${IPTABLES_6} -A prerouting -t mangle -i ${IF} -j MARK --set-mark"
+	MASQ_OUT_6[$IF]="${IPTABLES_6} -A postrouting -t nat -o ${IF} -m mark -j MASQUERADE --mark"
 }
 
 load_args_ping() {
