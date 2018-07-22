@@ -89,15 +89,7 @@ load_if() {
 	LOCAL_6[$IF]=${SUBNET_6[$IF]%${SEP}*}
 	GATEWAY_6[$IF]=$(ip -o -$IPV route | grep " ${IF} " | grep " via " | awk '{print $3}')
 
-	load_if_masq
 	load_if_policy
-}
-
-load_if_masq() {
-  MASQ_IN[$IF]="${IPTABLES} -A prerouting -t mangle -i ${IF} -j MARK --set-mark"
-	MASQ_OUT[$IF]="${IPTABLES} -A postrouting -t nat -o ${IF} -m mark -j MASQUERADE --mark"
-	MASQ_IN_6[$IF]="${IPTABLES_6} -A prerouting -t mangle -i ${IF} -j MARK --set-mark"
-	MASQ_OUT_6[$IF]="${IPTABLES_6} -A postrouting -t nat -o ${IF} -m mark -j MASQUERADE --mark"
 }
 
 load_if_policy() {
@@ -432,9 +424,6 @@ argparse() {
 
 # Declare arrays
 declare -a CONF_VARS
-
-declare -A MASQ_IN MASQ_OUT
-declare -A MASQ_IN_6 MASQ_OUT_6
 
 declare -A SUBNET LOCAL GATEWAY
 declare -A SUBNET_6 LOCAL_6 GATEWAY_6
