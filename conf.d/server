@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Configuration for client rule.
+# ipv4 client only
+# By default allows all connections out
+# And only established connections back.
+
+PORT=
+CTSTATE=""
+PROTOCOL="tcp"
+TARGET="ACCEPT"
+DCHAIN="INPUT"
+CHAIN="OUTPUT"
+DEST=
+SRC=
