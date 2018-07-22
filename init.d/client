@@ -30,21 +30,33 @@ RULES_TGT=()
 	xDEST="-d $SRC" &&
 	SRC="-s $SRC"
 
-# ports
+# Just specify destination port
+# with respect to client
 [[ -n $PORT ]] &&
-	dport="--dport $PORT" &&
-	sport="--sport $PORT"
+dport="--dport $PORT" &&
+xsport="--sport $PORT" &&
+xdport= && sport=
+
+# Specify source port and destination port
+# OVERRIDES PORT
+# with respect to client
+[[ -n $DPORT ]] &&
+	dport="--dport ${DPORT}" &&
+	xsport="--sport ${DPORT}"
+[[ -n $SPORT ]] &&
+	xdport="--dport ${SPORT}" &&
+	sport="--sport ${SPORT}"
 
 # target (use default if unspecified)
 [[ -z $TARGET ]] &&
 	TARGET=JUMP[$DCHAIN]
 
 # OUTPUT
-RULES[0]="$DCHAIN $xOF $PROTOCOL ${SRC} ${DEST} $dport"
+RULES[0]="$DCHAIN $xOF $PROTOCOL ${SRC} ${DEST} $sport $dport"
 RULES_TGT[0]="-j $TARGET"
 
 # RETURN
-RULES[1]="$CHAIN $IF $PROTOCOL $CTSTATE ${xDEST} ${xSRC} $sport"
+RULES[1]="$CHAIN $IF $PROTOCOL $CTSTATE ${xDEST} ${xSRC} $xsport $xdport"
 RULES_TGT[1]="-j $TARGET"
 
 # Execute function
