@@ -19,24 +19,24 @@ RULES_TGT=()
 # ${FORWARD} -i enp12s0 -j ACCEPT
 
 i=0
-MASQ_IN="-t mangle -i ${IF} --set-mark"
-MASQ_OUT="-t nat -o ${OF} -m mark --mark"
-MASQ_IN_6="-t mangle -i ${IF_6} --set-mark"
-MASQ_OUT_6="-t nat -o ${OF_6} -m mark --mark"
+MASQ_IN="-t mangle -i ${IF}"
+MASQ_OUT="-t nat -o ${OF} -m mark --mark $MARK"
+MASQ_IN_6="-t mangle -i ${IF_6}"
+MASQ_OUT_6="-t nat -o ${OF_6} -m mark --mark $MARK_6"
 
 [[ -n $IF ]] &&
-	RULES[$i]="PREROUTING ${MASQ_IN} $MARK" &&
-	RULES_TGT[$i]="-j MARK" &&
+	RULES[$i]="PREROUTING ${MASQ_IN}" &&
+	RULES_TGT[$i]="-j MARK --set-mark $MARK" &&
 	(( i++ ))
 
 [[ -n $OF ]] &&
-	RULES[$i]="POSTROUTING ${MASQ_OUT} $MARK" &&
+	RULES[$i]="POSTROUTING ${MASQ_OUT}" &&
 	RULES_TGT[$i]="-j MASQUERADE" &&
 	(( i++ ))
 
 [[ -n $IF_6 ]] &&
-	RULES[$i]="6 PREROUTING ${MASQ_IN_6} $MARK_6" &&
-	RULES_TGT[$i]="-j MARK" &&
+	RULES[$i]="6 PREROUTING ${MASQ_IN_6}" &&
+	RULES_TGT[$i]="-j MARK --set-mark $MARK_6" &&
 	(( i++ ))
 
 [[ -n $OF_6 ]] &&
