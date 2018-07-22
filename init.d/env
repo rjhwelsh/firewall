@@ -337,7 +337,7 @@ check_call() {
 }
 
 usage() {
-	echo "Usage: $0 [-4 -6] [-I RULENO (insert([0-9]+)/delete(d)/ruleno(n)) ]  [-P tcp|udp|icmp] [-p PORTS -D DPORT -S SPORT]  [-s SRC] [-d DEST] [-c CTSTATE] [-i IF] [-o IF (out)] [-m MARK] [-j TARGET] [-C CHAINS] [-E CHAIN (out)] [ -t TABLES ] -l -v" 1>&2;
+	echo "Usage: $0 [-4 -6] [-I RULENO (insert([0-9]+)/delete(d)/ruleno(n)) ]  [-P tcp|udp|icmp] [-p PORTS -D DPORT -S SPORT]  [-s SRC] [-d DEST] [-c CTSTATE] [-i IF] [-o IF (out)] [-m MARK] [-j TARGET] [-C CHAIN] [-E CHAIN (out)] [ -t TABLES ] -l -v" 1>&2;
 	exit 1;
 }
 
