@@ -38,7 +38,7 @@ load_env() {
 		'TABLE_6'
 	)
 	DIR_BASE=$(readlink -e `dirname $0`/..)
-	CONF_BASE="${DIR_BASE}/conf.d/$( basename $(readlink -e $0))"
+	CONF_BASE="${DIR_BASE}/conf.d/"`basename $0`
 	ENV_BASE="${DIR_BASE}/conf.d/env"
 	source "${ENV_BASE}"
 
