@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# A template for creating init scripts for iptables.
+ENV_FILE=`dirname "$(dirname \
+					 "$(readlink -e "$0" )")"`/init.d/env
+source "${ENV_FILE}" "$@" || exit 1
+
+# Empty arrays
+RULES=()
+RULES_TGT=()
+
+# Allow masquerading between interfaces.
+# Remember to enable ip forwarding in the kernel with.
+# `echo "1" > /proc/sys/net/ipv4/ip_forward`
+
+# TODO:
+# ${IPTABLES} -t nat -A POSTROUTING -o wlp3s0b1 -j MASQUERADE
+# ${FORWARD} -i enp12s0 -j ACCEPT
+
+i=0
+
+[[ -n $IF ]] &&
+	RULES[$i]="NIL ${MASQ_IN[$IF]} $MARK" &&
+	RULES_TGT[$i]="" &&
+	(( i++ ))
+
+[[ -n $OF ]] &&
+	RULES[$i]="NIL ${MASQ_OUT[$OF]} $MARK" &&
+	RULES_TGT[$i]="" &&
+	(( i++ ))
+
+[[ -n $IF_6 ]] &&
+	RULES[$i]="6 NIL ${MASQ_IN_6[$IF_6]} $MARK_6" &&
+	RULES_TGT[$i]="" &&
+	(( i++ ))
+
+[[ -n $OF_6 ]] &&
+	RULES[$i]="6 NIL ${MASQ_OUT_6[$OF_6]} $MARK_6" &&
+	RULES_TGT[$i]="" &&
+	(( i++ ))
+
+
+# Execute function
+$1
