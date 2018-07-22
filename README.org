@@ -131,26 +131,6 @@ quickly.
 | =I_${CHAIN}=      | Shorthand ="iptables=                    | =${I_OUTPUT} -j ACCEPT= (bypass) |
 |                   | =--insert ${CHAIN}"=                     |                                  |
 |-------------------+------------------------------------------+----------------------------------|
-| =MASQ_IN_${IF}=   | Allows masquerading from this            |                                  |
-|                   | interface when executed with mark.       |                                  |
-|                   | =`iptables -A PREROUTING -t mangle=      | =${MASQ_IN_eth0} 12=             |
-|                   | =-i $NATIF -j MARK --set-mark $MARK`=    |                                  |
-| =MASQ_OUT_${IF}=  | Allows masquerading out of this          |                                  |
-|                   | interface when executed with mark.       |                                  |
-|                   | =`iptables -A POSTROUTING -o ${IF}=      | =${MASQ_OUT_wlan0} 12=           |
-|                   | =-t nat -m mark -j MASQUERADE=           |                                  |
-|                   | =--mark ${MARK}`=                        |                                  |
-|                   | * To enable ip forwarding                |                                  |
-|                   | =`echo "1" >=                            |                                  |
-|                   | =/proc/sys/net/ipv4/ip_forward`=         |                                  |
-|-------------------+------------------------------------------+----------------------------------|
-| =PING_REQUEST=    | to allow a ping request.                 |                                  |
-|                   | =`--protocol icmp=                       |                                  |
-|                   | =--icmp-type echo-request`=              |                                  |
-| =PING_REPLY=      | to allow a ping reply.                   |                                  |
-|                   | =`--protocol icmp=                       |                                  |
-|                   | =--icmp-type echo-reply`=                |                                  |
-|-------------------+------------------------------------------+----------------------------------|
 | =RULES=           | Array of all module rules.               |                                  |
 |                   |                                          |                                  |
 |-------------------+------------------------------------------+----------------------------------|
