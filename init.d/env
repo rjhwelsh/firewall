@@ -7,6 +7,10 @@ load_env() {
 	CONF_VARS=(
 		'PORT'
 		'PORT_6'
+		'SPORT'
+		'SPORT_6'
+		'DPORT'
+		'DPORT_6'
 		'SRC'
 		'SRC_6'
 		'DEST'
@@ -340,14 +344,14 @@ check_call() {
 }
 
 usage() {
-	echo "Usage: $0 [-4 -6] [-I RULENO (insert([0-9]+)/delete(d)/ruleno(n)) ]  [-P tcp|udp|icmp] [-p PORTS] [-s SRC] [-d DEST] [-c CTSTATE] [-i IF] [-o IF (out)] [-m MARK] [-j TARGET] [-C CHAINS] [-D CHAIN (out)] [ -t TABLES ] -l -v" 1>&2;
+	echo "Usage: $0 [-4 -6] [-I RULENO (insert([0-9]+)/delete(d)/ruleno(n)) ]  [-P tcp|udp|icmp] [-p PORTS -D DPORT -S SPORT]  [-s SRC] [-d DEST] [-c CTSTATE] [-i IF] [-o IF (out)] [-m MARK] [-j TARGET] [-C CHAINS] [-E CHAIN (out)] [ -t TABLES ] -l -v" 1>&2;
 	exit 1;
 }
 
 argparse() {
 	local o
 	local ipv6
-	while getopts ":I:C:D:t:P:p:s:d:c:i:o:m:j:lv46" o;
+	while getopts "I:C:E:t:P:p:D:S:s:d:c:i:o:m:j:lv46" o;
 	do
 		# Anything passing the null value is removed.
 		[[ ${OPTARG} == $NULL ]] && OPTARG=""
@@ -360,7 +364,7 @@ argparse() {
 				[[ -z $IPV6 ]] && CHAIN="${OPTARG}" || CHAIN_6="${OPTARG}"
 				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""  || [[ 0 ]]
 			  ;;
-			D)
+			E)
 				[[ -z $IPV6 ]] && DCHAIN="${OPTARG}" || DCHAIN_6="${OPTARG}"
 				[[ -n $VERBOSE ]] && echo "CHAIN=\"${OPTARG}\""  || [[ 0 ]]
 			  ;;
@@ -375,6 +379,14 @@ argparse() {
 			p)
 				[[ -z $IPV6 ]] && PORT="${OPTARG}" || PORT_6="${OPTARG}"
 				[[ -n $VERBOSE ]] && echo "PORT=\"${OPTARG}\""  || [[ 0 ]]
+				;;
+			D)
+				[[ -z $IPV6 ]] && DPORT="${OPTARG}" || DPORT_6="${OPTARG}"
+				[[ -n $VERBOSE ]] && echo "FPORT=\"${OPTARG}\""  || [[ 0 ]]
+				;;
+			S)
+				[[ -z $IPV6 ]] && SPORT="${OPTARG}" || SPORT_6="${OPTARG}"
+				[[ -n $VERBOSE ]] && echo "FPORT=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			s)
 				[[ -z $IPV6 ]] && SRC="${OPTARG}" || SRC_6="${OPTARG}" ;
