@@ -164,6 +164,20 @@ flush() {
 	done
 }
 
+panic() {
+	# Completely remove all rules and chains.
+	flush
+
+	# Set every default chain policy to drop
+	local C
+	DEFAULT_POLICY="DROP"
+	DEFAULT_POLICY_6="DROP"
+	for C in "OUTPUT" "INPUT" "FORWARD"; do
+		load_chain "$C"
+		set_policy "" "$C"
+	done
+}
+
 set_policy() {
 	local table="$1"
 	[[ -z "$table" ]] && table=filter
@@ -268,20 +282,6 @@ log() {
 		eval $CMD
 		((i++))
 	done
-}
-
-panic() {
-	# Completely remove all rules and chains.
-	flush
-
-	# Set every default chain policy to drop
-	local C
-	DEFAULT_POLICY="DROP"
-	DEFAULT_POLICY_6="DROP"
-	for C in "${DEFAULT_CHAINS[@]}"; do
-		load_chain "$C"
-	done
-	set_policy
 }
 
 status() {
