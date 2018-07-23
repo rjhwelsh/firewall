@@ -319,6 +319,7 @@ check_call() {
 		log
 		status
 		panic
+		lock
 		)
 	CALL="$1"
   local V
