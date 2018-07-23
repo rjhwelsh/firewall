@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# A default profile for a localhost client
+
+# Intialize environment
+ENV_FILE="$(readlink -e `dirname $0`/..)"/init.d/env
+source "${ENV_FILE}" "$@" || exit 1
+
+# A list of scripts to run.
+RULES=(
+	"policy"
+	"lo"
+	"client"
+	"final"
+)
+
+# Additional arguments for each script.
+RULES_TGT=(
+  ""
+	""
+	""
+	""
+)
+
+iter() {
+  i=0
+	for R in "${RULES[@]}";
+	do
+	  TGT="${RULES_TGT[$i]}"
+		"${DIR_BASE}/init.d/${R}" ${@} ${TGT}
+		((i++))
+	done
+}
+
+start() {
+  iter start $@
+}
+
+stop() {
+  iter stop $@
+}
+
+print() {
+  iter print $@
+}
+
+log() {
+  iter log $@
+}
+
+status() {
+  iter status $@
+}
+
+lock() {
+	echo "Not implemented yet!"
+}
+
+# panic and flush are the same for all rules.
+
+# Execute function and arguments.
+$@
