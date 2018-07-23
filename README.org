@@ -254,18 +254,31 @@ $1
 	note right
 	Sources corresponding
 	config file in conf.d
-  for "env"
-  then for "lo"
-  and then any args
+	for "env"
+	then for "lo"
+	and then any args
 	end note
 				 artifact lo as init.lo
+	note left
+	"lo" can be replaced
+	with any script in
+	the init.d directory
+	end note
+				 artifact client as init.client
+				 artifact policy as init.policy
+				 artifact server as init.server
+				 artifact forward as init.forward
 			 }
 
 
 
 			 folder conf.d {
-				 artifact env as conf.env
-				 artifact lo as conf.lo
+				 artifact "env\n(1st)" as conf.env
+				 artifact "lo\n(2nd)" as conf.lo
+				 artifact client as conf.client
+				 artifact policy as conf.policy
+				 artifact server as conf.server
+				 artifact forward as conf.forward
 			 }
 
 			 artifact setup.sh as s
@@ -274,15 +287,19 @@ $1
 	or an alternative
 	script from init.d
 	end note
+
+		artifact "args\n(3rd)" as args
+
 			 s -[#green]-> hosts.d
 			 s -[#green]-> init.d
 			 localhost --> init.lo
-		   init.lo --> init.env
+			 init.lo --> init.env
 			 init.env --> conf.env
-       init.env --> conf.lo
-			 skel.host -[#blue]-> host1
-			 skel.init -[#blue]-> init.lo
-			 skel.conf -[#blue]-> conf.lo
+			 init.env --> conf.lo
+		   init.env --> args
+			 /' skel.host -[#blue]-> host1 '/
+			 /' skel.init -[#blue]-> init.lo '/
+			 /' skel.conf -[#blue]-> conf.lo '/
 
 			@enduml
 #+END_SRC
