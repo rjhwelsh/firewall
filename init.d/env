@@ -399,7 +399,7 @@ argparse() {
 				[[ -n $VERBOSE ]] && echo "MARK$IPV6=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			j)
-				[[ -z $IPV6 ]] && TARGET="-j ${OPTARG}" || TARGET_6="-j ${OPTARG}" ;
+				[[ -z $IPV6 ]] && TARGET="${OPTARG}" || TARGET_6="${OPTARG}" ;
 				[[ -n $VERBOSE ]] && echo "TARGET$IPV6=\"${OPTARG}\""  || [[ 0 ]]
 				;;
 			l)
