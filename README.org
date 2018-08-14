@@ -4,17 +4,117 @@
 #+STARTUP: inlineimages
 
 \newpage
-* About
-This document aims to document and standardize firewall security modules across
-my domain.
+* Goals
+These scripts are intended to provide an implementation of the python iptables
+bindings, which
+    1) Standardizes firewall configuration across hosts
+		2) Generates values for reporting on firewall state
+		3) Provides a graphical overview of firewall setup (using Plantuml)
+
+* Dependencies
+The old scripts only required bash and iptables to run.
+
+The new python script requires python-iptables to be installed.
+#+BEGIN_SRC sh
+emerge -av dev-python/python-iptables
+#+END_SRC
+
+* Implementation
+This implementation uses python-iptables to manipulate NETFILTER entries in the
+kernel.
+
+An example firewall overview between 3 components.
+#+BEGIN_SRC plantuml :file uml/python_example_network.png :exports none
+	@startuml
+	/' Hosts '/
+	node server
+	interface tun as server_tun
+	interface eth as server_eth
+	server -- server_tun
+	server -[#blue]- server_eth
+
+	node client
+	interface wlan as client_wlan
+	interface tun as client_tun
+	client -[#blue]- client_wlan
+	client -- client_tun
+
+	/' Subnets '/
+	cloud vpn_subnet
+	cloud internet
+
+	/' Applications '/
+	server_tun -0)- client_tun : https
+	server_tun -0)- client_tun : ssh
+	server_tun -0)- client_tun : rsync
+	server_tun -[#green]0)- vpn_subnet : ftp
+	server_tun -[#green]-+ vpn_subnet : ftp
+	server_eth -[#blue](0- internet : openvpn
+	internet -0)- client_wlan : https
+	internet -[#blue]0)- client_wlan : openvpn
+
+	@enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:uml/python_example_network.png]]
 
 
-* Overview
+Clouds illustrate subnets.
+Hosts allow connections to applications through their interfaces.
 
-** Iptables
+Python classes for project.
+#+BEGIN_SRC plantuml :file uml/python_class.png :exports none
+						 @startuml
+						 /' Host class defines the implementation of iptables for a host.  '/
+						 class "Host" as H {
+					 void start()
+					 void stop()
+					 void print()
+					 void log()
+					 void status()
+					 void lock()
+					 void panic()
+		}
+
+						 /' An app describes the required ports between a client and a server to operate. '/
+						 class "App" as A
+
+						 /' A topology describes how to implement rules for a server/client/intermediate node. '/
+						 class "Topology" as T
+
+				 /' A subnet describes a source/destination address for each rule '/
+						 class "Subnet" as S
+
+				/' A physical describes the physical interface for a rule. '/
+						 class "Physical" as P
+
+	/' Rule 64 is a base type used for facilitating combinations of the different types '/
+						 class "Rule64" as R
+
+
+				P -- S : subnet
+				P -- S : router_ip
+				P -- S : my_ip
+				P --o H : interfaces
+				A --o H : applications
+				T --o H : topologies
+
+				R <|-- P
+				R <|-- A
+				R <|-- T
+
+
+						 @enduml
+#+END_SRC
+
+#+RESULTS:
+[[file:uml/python_class.png]]
+
+* Iptables
 Iptables processes packets through chains and tables.
 
-*** Tables
+** Tables
  * filter ::
 		 This default table used for general transmission *to*, *thru* and *from*
 		 the local socket.
@@ -27,7 +127,7 @@ Iptables processes packets through chains and tables.
  * raw ::
 		 This table is for configuring exemptions from connection tracking in
 		 combination with the =NOTRACK= target.
-*** Chains
+** Chains
   * Prerouting ::
 This chain is for rules before making a routing decision.
  * Forward ::
@@ -45,51 +145,56 @@ iptables --new-chain $NAME
 #+END_SRC
 These can allow you to setup a branched structure for your firewall.
 
-*** Diagram
+** Diagram
 
- (Transcribed from
- https://serverfault.com/questions/441615/iptables-snat-eats-packets,
- https://www.frozentux.net/iptables-tutorial/chunkyhtml/index.html,
- Source: Iptables Tutorial 1.2.1 Oskar Andreasson 2006)
+(Transcribed from
+https://serverfault.com/questions/441615/iptables-snat-eats-packets,
+https://www.frozentux.net/iptables-tutorial/chunkyhtml/index.html,
+Source: Iptables Tutorial 1.2.1 Oskar Andreasson 2006)
 
- #+BEGIN_SRC plantuml :file uml/iptables.png :exports none
-	 @startuml
-	 title Iptables Fundamental
+#+BEGIN_SRC plantuml :file uml/iptables.png :exports none
+	@startuml
+	title Iptables Fundamental
 
-	 !include uml/skinparam.plantuml
-	 (*) --> "<<raw>>\nPREROUTING" <<preroute>> <<raw>>
-	 --> "<<mangle>>\nPREROUTING"  <<preroute>> <<mangle>>
-	 --> "<<nat>>\nPREROUTING" <<preroute>> <<nat>>
-	 If "" then
-	 -right-> [forward] "<<mangle>>\nFORWARD" <<forward>> <<mangle>>
-	 --> "<<filter>>\nFORWARD"  as FWD1 <<forward>> <<filter>>
-	 else
-	 -left-> [input] "<<mangle>>\nINPUT" <<input>> <<mangle>>
-	 -left-> "<<filter>>\nINPUT"  <<input>> <<filter>>
-	 -down-> "<<local>>\nPROCESS" <<local>>
-	 -down-> "<<raw>>\nOUTPUT" <<output>> <<raw>>
-	 -right-> "<<mangle>>\nOUTPUT" <<output>> <<mangle>>
-	 -right-> "<<nat>>\nOUTPUT" <<output>> <<nat>>
-	 -right-> "<<filter>>\nOUTPUT" as OUT1 <<output>> <<filter>>
-	 endif
-	 -right-> "<<route>>\nDecision" as POST0 <<route>>
-	 FWD1 -left-> POST0
-	 --> "<<mangle>>\nPOSTROUTING" <<postroute>> <<mangle>>
-	 --> "<<nat>>\nPOSTROUTING" <<postroute>> <<nat>>
-	 --> (*)
-	 @enduml
+	!include uml/skinparam.plantuml
+	(*) --> "<<raw>>\nPREROUTING" <<preroute>> <<raw>>
+	--> "<<mangle>>\nPREROUTING"  <<preroute>> <<mangle>>
+	--> "<<nat>>\nPREROUTING" <<preroute>> <<nat>>
+	If "" then
+	-right-> [forward] "<<mangle>>\nFORWARD" <<forward>> <<mangle>>
+	--> "<<filter>>\nFORWARD"  as FWD1 <<forward>> <<filter>>
+	else
+	-left-> [input] "<<mangle>>\nINPUT" <<input>> <<mangle>>
+	-left-> "<<filter>>\nINPUT"  <<input>> <<filter>>
+	-down-> "<<local>>\nPROCESS" <<local>>
+	-down-> "<<raw>>\nOUTPUT" <<output>> <<raw>>
+	-right-> "<<mangle>>\nOUTPUT" <<output>> <<mangle>>
+	-right-> "<<nat>>\nOUTPUT" <<output>> <<nat>>
+	-right-> "<<filter>>\nOUTPUT" as OUT1 <<output>> <<filter>>
+	endif
+	-right-> "<<route>>\nDecision" as POST0 <<route>>
+	FWD1 -left-> POST0
+	--> "<<mangle>>\nPOSTROUTING" <<postroute>> <<mangle>>
+	--> "<<nat>>\nPOSTROUTING" <<postroute>> <<nat>>
+	--> (*)
+	@enduml
 
- #+END_SRC
+#+END_SRC
 
- #+RESULTS:
- [[file:uml/iptables.png]]
+#+RESULTS:
+[[file:uml/iptables.png]]
 
- #+NAME: Iptables Processing. fig:iptables1
- #+CAPTION: Illustrates how iptables processes internet packets at layer 2.
- #+ATTR_ORG: :width 100%
- #+ATTR_LATEX: :height 0.9\textheight
-	file:uml/iptables.png
+#+NAME: Iptables Processing. fig:iptables1
+#+CAPTION: Illustrates how iptables processes internet packets at layer 2.
+#+ATTR_ORG: :width 100%
+#+ATTR_LATEX: :height 0.9\textheight
+ file:uml/iptables.png
 
+
+
+
+* Bash Implementation
+* Overview
 ** Module Syntax
 
 The modules contained in this repository are a collection of bash scripts for
