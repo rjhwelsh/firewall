@@ -1,0 +1,24 @@
+#+TITLE: Todo List
+#+AUTHOR: Roger J. H. Welsh
+#+EMAIL: rjhwelsh@gmail.com
+
+* Firewall                                       :iptables:firewall:security:
+** TODO IPv6 - Remove _6 variables.
+
+** TODO Implement separate applications framework
+ app.d
+
+** DONE Implement separate hosts framework
+	 :LOGBOOK:
+	 - State "DONE"       from "TODO"       [2018-08-08 Wed 19:58]
+	 :END:
+ Implemented in host.d
+
+** DONE Implement separate logic framework
+	 :LOGBOOK:
+	 - State "DONE"       from "TODO"       [2018-08-08 Wed 19:58]
+	 :END:
+ Implemented in init.d
+** TODO Create a hashlimit script                                 :firewall:
+
+ Add hashlmits to scripts, add arguments, ipv
