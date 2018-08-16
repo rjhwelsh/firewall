@@ -14,9 +14,12 @@ bindings, which
 * Dependencies
 The old scripts only required bash and iptables to run.
 
-The new python script requires python-iptables to be installed.
+The new python script requires the following:
+    - python-iptables
+		- netifaces
 #+BEGIN_SRC sh
 emerge -av dev-python/python-iptables
+emerge -av dev-python/netifaces
 #+END_SRC
 
 * Implementation
