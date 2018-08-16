@@ -25,3 +25,10 @@ class Test_Route(unittest.TestCase):
             self.Address("127.0.0.1"))
 
         self.assertEqual(str(lo_route), "127.0.0.1 -> 127.0.0.1")
+
+    def testIpv46MixingRaises(self):
+        """ Tests mixing ipv4 ipv6 addresses raises error."""
+        with self.assertRaises(ValueError):
+            lo_route = self.Route(
+                self.Address("127.0.0.1"),
+                self.Address("::1"))

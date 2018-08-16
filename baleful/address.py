@@ -32,6 +32,14 @@ class Route:
         dst -- The destination "server" Address
         kwargs -- Additional rules for route.
         """
+
+        # Check src and dst address types match
+        if not isinstance(dst.addr, type(src.addr)):
+            raise(
+                ValueError(
+                    "{} is not an instance of {}".format(
+                        dst.addr, type(src.addr))))
+
         self.src = src
         self.dst = dst
         self.kwargs = kwargs
