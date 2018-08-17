@@ -14,7 +14,7 @@ class Rule:
                     'table': iptc.Table6}}
 
     def __init__(self,
-                 params=dict(),
+                 params=None,
                  target=None,
                  chain=None,
                  table="FILTER",
@@ -38,7 +38,7 @@ class Rule:
         self.target = target
         self.chain = chain
         self.table = table
-        self.params = params
+        self.params = params if params else dict()
         self.kwargs = kwargs
 
     def dict(self):
