@@ -35,7 +35,7 @@ class Route(baleful.rule.Rule):
     See Topo for how routes are handled to produce an iptables rule.
     """
 
-    def __init__(self, src, dst, params=dict(), **kwargs):
+    def __init__(self, src, dst, params=None, **kwargs):
         """Arguments:
         src -- The source "client" Address
         dst -- The destination "server" Address
@@ -51,11 +51,25 @@ class Route(baleful.rule.Rule):
                         "{} is not an instance of {}".format(
                             dst.addr, type(src.addr))))
 
+        # Initialize params if empty
+        if isinstance(params, type(None)):
+            params = dict()
+
+        # Check src and dst are not in params
+        if 'src' in params or 'dst' in params:
+            raise(
+                ValueError(
+                    'src/dst should not be specified in params!'))
+
         self.src = src
         self.dst = dst
 
-        params.update({'src': src,
-                       'dst': dst})
+        if src:
+            params.update({'src': src})
+
+        if dst:
+            params.update({'dst': dst})
+
         super().__init__(params, **kwargs)
 
     def __str__(self):

@@ -37,13 +37,16 @@ class Test_Route(unittest.TestCase):
         """ Tests setting routes with unspecified src/dst. """
 
         # Unspecified routes should be allowed
+        # They should not create values in the rule
 
-        # src_route
-        self.Route(
+        src_route = self.Route(
             self.Address("127.0.0.1"),
             self.Address(""))
 
-        # dst_route
-        self.Route(
+        self.assertNotIn('dst', src_route.params)
+
+        dst_route = self.Route(
             self.Address(""),
             self.Address("127.0.0.1"))
+
+        self.assertNotIn('src', dst_route.params)
