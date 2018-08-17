@@ -20,6 +20,7 @@ class Test_Rule(unittest.TestCase):
     def testRuleCreation(self):
         """ Test rule creation. """
         rule_ssh_client = R.Rule(ipv=4,
+                                 target="ACCEPT",
                                  params={'protocol': 'tcp',
                                          'src': '127.0.0.1'},
                                  tcp={'dport': 22})
