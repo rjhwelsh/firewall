@@ -15,7 +15,7 @@ class Rule:
 
     def __init__(self,
                  params=dict(),
-                 target="ACCEPT",
+                 target=None,
                  chain=None,
                  table="FILTER",
                  ipv=4,
