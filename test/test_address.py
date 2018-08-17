@@ -32,3 +32,18 @@ class Test_Route(unittest.TestCase):
             lo_route = self.Route(
                 self.Address("127.0.0.1"),
                 self.Address("::1"))
+
+    def testUnspecifiedRoutes(self):
+        """ Tests setting routes with unspecified src/dst. """
+
+        # Unspecified routes should be allowed
+
+        # src_route
+        self.Route(
+            self.Address("127.0.0.1"),
+            self.Address(""))
+
+        # dst_route
+        self.Route(
+            self.Address(""),
+            self.Address("127.0.0.1"))
