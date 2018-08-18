@@ -52,9 +52,14 @@ class Rule:
         """ Adds two rules together.
         x + y, where y values take precedence over x values. """
 
-        params = self.params.copy()
-        kwargs = {k: v.copy()
-                  for k, v in self.kwargs.items()}
+        rule = self.copy()
+        params = rule.params
+        kwargs = rule.kwargs
+
+        rule.target = other.target
+        rule.chain = other.chain
+        rule.table = other.table
+        rule.ipv = other.ipv
 
         params.update(other.params)
 
@@ -72,20 +77,15 @@ class Rule:
             else:
                 raise(ValueError("Unexpected Condition!."))
 
-        return Rule(params=params,
-                    target=other.target,
-                    chain=other.chain,
-                    table=other.table,
-                    ipv=other.ipv,
-                    **kwargs)
+        return rule
 
     def __sub__(self, other):
         """ Subtract values of one rule from another.
         x - y, where y values are removed from x. """
 
-        params = self.params.copy()
-        kwargs = {k: v.copy()
-                  for k, v in self.kwargs.items()}
+        rule = self.copy()
+        params = rule.params
+        kwargs = rule.kwargs
 
         def diff(x, y):
             """ x -- dict, y -- dict
@@ -103,12 +103,7 @@ class Rule:
         for key in kwargs:
             kwargs[key] = diff(kwargs[key], other.kwargs[key])
 
-        return Rule(params=params,
-                    target=self.target,
-                    chain=self.chain,
-                    table=self.table,
-                    ipv=self.ipv,
-                    **kwargs)
+        return rule
 
     def dict(self):
         """ Return a dictionary view of rule arguments. """
