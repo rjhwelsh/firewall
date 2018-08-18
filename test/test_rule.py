@@ -88,6 +88,18 @@ class Test_Rule(unittest.TestCase):
         self.assertEqual(
             rule_ssh_client.kwargs['icmp']['icmp_type'], 'echo-request')
 
+    def testRuleAdditionOverrides(self):
+        """ Test rule addition precedence. """
+
+        ssh_client = R.Rule(tcp={'dport': 22})
+        http_client = R.Rule(tcp={'dport': 80})
+
+        ssh = http_client + ssh_client
+        http = ssh_client + http_client
+
+        self.assertEqual(ssh.kwargs['tcp']['dport'], 22)
+        self.assertEqual(http.kwargs['tcp']['dport'], 80)
+
     def testRuleSubtraction(self):
         """ Test rule subtraction. """
         rule_ssh_client_1 = R.Rule(ipv=4,

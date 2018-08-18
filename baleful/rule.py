@@ -53,7 +53,8 @@ class Rule:
         x + y, where y values take precedence over x values. """
 
         params = self.params.copy()
-        kwargs = self.kwargs.copy()
+        kwargs = {k: v.copy()
+                  for k, v in self.kwargs.items()}
 
         params.update(other.params)
 
@@ -67,7 +68,7 @@ class Rule:
             elif key in kwargs:
                 pass
             elif key in other.kwargs:
-                kwargs[key] = other.kwargs[key]
+                kwargs[key] = other.kwargs[key].copy()
             else:
                 raise(ValueError("Unexpected Condition!."))
 
@@ -83,7 +84,8 @@ class Rule:
         x - y, where y values are removed from x. """
 
         params = self.params.copy()
-        kwargs = self.kwargs.copy()
+        kwargs = {k: v.copy()
+                  for k, v in self.kwargs.items()}
 
         def diff(x, y):
             """ x -- dict, y -- dict
