@@ -245,6 +245,13 @@ class RuleArray(list):
             else:
                 self.append(R)
 
+    def copy(self):
+        """ Returns a copy of the Rule Array. """
+        newArray = RuleArray()
+        for R in self:
+            newArray.append(R.copy())
+        return newArray
+
     def __rmul__(self, other):
         """ Adds a rule with every item in Array.
         y * x_arr = z_arr, where values in x_arr take precedence. """
