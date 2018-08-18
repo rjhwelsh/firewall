@@ -48,6 +48,36 @@ class Rule:
         self.params = params if params else dict()
         self.kwargs = kwargs if kwargs else dict()
 
+    def __add__(self, other):
+        """ Adds two rules together.
+        x + y, where y values take precedence over x values. """
+
+        params = self.params.copy()
+        kwargs = self.kwargs.copy()
+
+        params.update(other.params)
+
+        kwarg_keys = set(
+            [k for k in kwargs] +
+            [k for k in other.kwargs])
+
+        for key in kwarg_keys:
+            if key in kwargs and key in other.kwargs:
+                kwargs[key].update(other.kwargs[key])
+            elif key in kwargs:
+                pass
+            elif key in other.kwargs:
+                kwargs[key] = other.kwargs[key]
+            else:
+                raise(ValueError("Unexpected Condition!."))
+
+        return Rule(params=params,
+                    target=other.target,
+                    chain=other.chain,
+                    table=other.table,
+                    ipv=other.ipv,
+                    **kwargs)
+
     def dict(self):
         """ Return a dictionary view of rule arguments. """
         kwargs = self.kwargs.copy()

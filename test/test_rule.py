@@ -60,3 +60,30 @@ class Test_Rule(unittest.TestCase):
         # Test icmp reversal
         self.assertEqual(
             rule_ssh_client.kwargs['icmp']['icmp_type'], 'echo-reply')
+
+    def testRuleAddition(self):
+        """ Test rule addition. """
+
+        rule_ssh_client_1 = R.Rule(ipv=4,
+                                   chain='OUTPUT',
+                                   target="ACCEPT",
+                                   params={'protocol': 'tcp',
+                                           'dst': '127.1.1.0',
+                                           'src': '127.0.0.1'},
+                                   tcp={'dport': 22})
+
+        rule_ssh_client_2 = R.Rule(tcp={'sport': 23},
+                                   icmp={'icmp_type': 'echo-request'})
+
+        rule_ssh_client = rule_ssh_client_1 + rule_ssh_client_2
+
+        # Test matches in rule.
+        self.assertEqual(rule_ssh_client.kwargs['tcp']['dport'], 22)
+        self.assertEqual(rule_ssh_client.kwargs['tcp']['sport'], 23)
+
+        # Test chain reversal
+        self.assertEqual(rule_ssh_client.chain, 'OUTPUT')
+
+        # Test icmp reversal
+        self.assertEqual(
+            rule_ssh_client.kwargs['icmp']['icmp_type'], 'echo-request')
