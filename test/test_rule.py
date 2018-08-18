@@ -87,3 +87,23 @@ class Test_Rule(unittest.TestCase):
         # Test icmp reversal
         self.assertEqual(
             rule_ssh_client.kwargs['icmp']['icmp_type'], 'echo-request')
+
+    def testRuleSubtraction(self):
+        """ Test rule subtraction. """
+        rule_ssh_client_1 = R.Rule(ipv=4,
+                                   chain='OUTPUT',
+                                   target="ACCEPT",
+                                   params={'protocol': 'tcp',
+                                           'dst': '127.1.1.0',
+                                           'src': '127.0.0.1'},
+                                   tcp={'dport': 22,
+                                        'sport': 23})
+
+        rule_ssh_client_2 = R.Rule(tcp={'dport': 22,
+                                        'sport': 24},
+                                   icmp={'icmp_type': 'echo-request'})
+
+        rule_ssh_client = rule_ssh_client_1 - rule_ssh_client_2
+
+        self.assertNotIn('dport', rule_ssh_client.kwargs['tcp'])
+        self.assertIn('sport', rule_ssh_client.kwargs['tcp'])

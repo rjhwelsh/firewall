@@ -78,6 +78,36 @@ class Rule:
                     ipv=other.ipv,
                     **kwargs)
 
+    def __sub__(self, other):
+        """ Subtract values of one rule from another.
+        x - y, where y values are removed from x. """
+
+        params = self.params.copy()
+        kwargs = self.kwargs.copy()
+
+        def diff(x, y):
+            """ x -- dict, y -- dict
+            x - y """
+            p = list()
+            for k, v in x.items():
+                if k in y and v == y[k]:
+                    p.append(k)
+            for i in p:
+                x.pop(i)
+            return x
+
+        params = diff(params, other.params)
+
+        for key in kwargs:
+            kwargs[key] = diff(kwargs[key], other.kwargs[key])
+
+        return Rule(params=params,
+                    target=self.target,
+                    chain=self.chain,
+                    table=self.table,
+                    ipv=self.ipv,
+                    **kwargs)
+
     def dict(self):
         """ Return a dictionary view of rule arguments. """
         kwargs = self.kwargs.copy()
