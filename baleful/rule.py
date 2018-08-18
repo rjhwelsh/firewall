@@ -232,6 +232,6 @@ class RuleArray(list):
         for R in rules:
             if not isinstance(R, Rule):
                 raise(TypeError(
-                    "Only Rule type is allowed."))
+                    "Only type(Rule) is allowed."))
             else:
                 self.append(R)
