@@ -275,3 +275,16 @@ class RuleArray(list):
                 newArray.append(i + j)
         return newArray
 
+    def __rtruediv__(self, other):
+        """ Removes every item in Array from a rule. """
+        rule = other.copy()
+        for r in self:
+            rule -= r
+        return rule
+
+    def __truediv__(self, other):
+        """ Removes a rule from every item in Array. """
+        rarr = self.copy()
+        for i, r in enumerate(rarr):
+            rarr[i] -= other
+        return rarr
