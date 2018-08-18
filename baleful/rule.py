@@ -266,3 +266,12 @@ class RuleArray(list):
         for i, r in enumerate(rarr):
             rarr[i] = r + other
         return rarr
+
+    def __matmul__(self, other):
+        """ Matrix multiplication between two rule arrays. """
+        newArray = RuleArray()
+        for i in self:
+            for j in other:
+                newArray.append(i + j)
+        return newArray
+
