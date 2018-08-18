@@ -70,8 +70,85 @@ class Rule:
 
         # Set match params
         for m, params in self.kwargs.items():
+            # Create match based on keyword
             match = rule.create_match(m)
+            # Create arguments based on value dict.
             for arg, val in params.items():
                 match.__dict__[arg] = str(val)
 
         return rule
+
+    def reverse(self):
+        """ Reverses the iptables rule"""
+
+        REVERSAL_KEYS = self.__REVERSAL_KEYS
+
+        for k0, v0 in REVERSAL_KEYS.items():
+            for k1, v1 in v0.items():
+                if k0 == '':
+                    self.params = self.__reverse_key(k1, v1, self.params)
+                elif k0 in self.kwargs:
+                    self.kwargs[k0] = self.__reverse_key(
+                        k1, v1, self.kwargs[k0])
+
+        REVERSAL_VALS = self.__REVERSAL_VALS
+        for k0, v0 in REVERSAL_VALS.items():
+            if k0 == 'chain':
+                self.chain = self.__reverse_val(self.chain, v0)
+            else:
+                for k1, v1 in v0.items():
+                    if k0 in self.kwargs:
+                        if k1 in self.kwargs[k0]:
+                            value = self.kwargs[k0][k1]
+                            self.kwargs[k0][k1] = self.__reverse_val(value, v1)
+
+    # KEYS and VALUES for reverse method
+    __REVERSAL_KEYS = {'': {'src': 'dst',
+                            'in_interface': 'out_interface'},
+                       'tcp': {'sport': 'dport'},
+                       'udp': {'sport': 'dport'},
+                       'iprange': {'src-range': 'dst-range'}
+                       }
+
+    __REVERSAL_VALS = {'':
+                       {},
+                       'chain':
+                       {'INPUT': 'OUTPUT',
+                        'PREROUTING': 'POSTROUTING',
+                        'FORWARD': 'FORWARD'},
+                       'icmp':  # k0 v0=
+                       {'icmp_type':  # v0 = { k1 v1 }
+                        {'echo-request': 'echo-reply'}}}
+
+    def __reverse_key(self, skey, dkey, params):
+        """ Swaps keys over for a parameter dictionary. """
+
+        if skey in params and dkey in params:
+            holdkey = params[skey]
+            params[skey] = params[dkey]
+            params[dkey] = holdkey
+
+        elif skey in params and dkey not in params:
+            params[dkey] = params.pop(skey)
+
+        elif dkey in params and skey not in params:
+            params[skey] = params.pop(dkey)
+
+        elif skey not in params and dkey not in params:
+            pass
+
+        else:
+            raise(ValueError("Unexpected condition!"))
+
+        return params
+
+    def __reverse_val(self, value, rdict):
+        """ Swaps value if present in rdict. """
+
+        if value in rdict:
+            return rdict[value]
+        elif value in rdict.values():
+            ldict = dict((v, k) for k, v in rdict.items())
+            return ldict[value]
+        else:
+            return value
