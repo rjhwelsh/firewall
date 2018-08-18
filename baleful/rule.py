@@ -219,3 +219,19 @@ class Rule:
             return ldict[value]
         else:
             return value
+
+
+class RuleArray(list):
+    """ A rule array class for handling Rule s """
+
+    def __init__(self, *rules):
+        """Arguments:
+        *rules -- Rule objects
+        """
+
+        for R in rules:
+            if not isinstance(R, Rule):
+                raise(TypeError(
+                    "Only Rule type is allowed."))
+            else:
+                self.append(R)

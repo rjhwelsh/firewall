@@ -107,3 +107,18 @@ class Test_Rule(unittest.TestCase):
 
         self.assertNotIn('dport', rule_ssh_client.kwargs['tcp'])
         self.assertIn('sport', rule_ssh_client.kwargs['tcp'])
+
+
+class Test_RuleArray(unittest.TestCase):
+    """ Tests for the Rule Array. """
+
+    def testRuleArrayInit(self):
+        """ Test Rule Array Initialization. """
+
+        ssh_client = R.Rule(tcp={'dport': 22})
+        http_client = R.Rule(tcp={'dport': 80})
+
+        rarr = R.RuleArray(ssh_client, http_client)
+
+        self.assertEqual(rarr[0], ssh_client)
+        self.assertEqual(rarr[1], http_client)
