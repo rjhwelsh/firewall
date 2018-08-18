@@ -137,3 +137,57 @@ class Test_RuleArray(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             rarr2 = R.RuleArray(1, 2)
+
+    def testRuleMultiplication(self):
+        """ Test Rule Array Multiplication. """
+
+        ssh_client = R.Rule(tcp={'dport': 22})
+        http_client = R.Rule(tcp={'dport': 80})
+        rarr = R.RuleArray(ssh_client, http_client)
+
+        lo_route = R.Rule(params={'src': '127.0.0.1',
+                                  'dst': '127.0.0.1'})
+
+        rarr_lo = rarr * lo_route
+
+        for rule in rarr:
+            for key in ['src', 'dst']:
+                self.assertNotIn(key, rule.params)
+
+        for rule in rarr_lo:
+            for key in ['src', 'dst']:
+                self.assertEqual(rule.params[key],
+                                 lo_route.params[key])
+
+    def testRuleMultiplicationOverride(self):
+        """ Tests Rule Multiplication RHS precedence. """
+
+        ssh_client = R.Rule(
+            params={'src': '10.1.1.1',
+                    'dst': '10.1.1.2'},
+            tcp={'dport': 22})
+        http_client = R.Rule(
+            params={'src': '10.1.1.1',
+                    'dst': '10.1.1.2'},
+            tcp={'dport': 80})
+
+        rarr = R.RuleArray(ssh_client, http_client)
+
+        lo_route = R.Rule(params={'src': '127.0.0.1',
+                                  'dst': '127.0.0.1'},
+                          tcp={'dport': 443})
+
+        rarr_lo = rarr * lo_route
+        rarr_no = lo_route * rarr
+
+        for rule_lo, rule_no in zip(rarr_lo, rarr_no):
+            for key in ['src', 'dst']:
+                self.assertEqual(rule_lo.params[key],
+                                 lo_route.params[key])
+                self.assertNotEqual(rule_no.params[key],
+                                    lo_route.params[key])
+
+            self.assertEqual(rule_lo.kwargs['tcp']['dport'],
+                             443)
+            self.assertNotEqual(rule_no.kwargs['tcp']['dport'],
+                                443)
