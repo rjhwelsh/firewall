@@ -13,12 +13,17 @@ class Rule:
                     'rule': iptc.Rule6,
                     'table': iptc.Table6}}
 
+    DEFAULTS = {'target': "ACCEPT",
+                'chain': "OUTPUT",
+                'table': "FILTER",
+                'ipv': 4}
+
     def __init__(self,
                  params=None,
                  target=None,
                  chain=None,
-                 table="FILTER",
-                 ipv=4,
+                 table=None,
+                 ipv=None,
                  **kwargs):
         """Keyword Arguments:
         params -- iptc rule parameters (dict)
@@ -34,12 +39,14 @@ class Rule:
         mark = { ... }
         """
 
-        self.ipv = ipv
-        self.target = target
-        self.chain = chain
-        self.table = table
+        for key, val in self.DEFAULTS.items():
+            if isinstance(locals()[key], type(None)):
+                self.__dict__[key] = val
+            else:
+                self.__dict__[key] = locals()[key]
+
         self.params = params if params else dict()
-        self.kwargs = kwargs
+        self.kwargs = kwargs if kwargs else dict()
 
     def dict(self):
         """ Return a dictionary view of rule arguments. """
