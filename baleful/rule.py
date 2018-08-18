@@ -117,6 +117,18 @@ class Rule:
             {'': self.params.copy()})
         return kwargs
 
+    def copy(self):
+        """ Returns a copy of a Rule. """
+        params = self.params.copy()
+        kwargs = {k: v.copy()
+                  for k, v in self.kwargs.items()}
+        return Rule(params=params,
+                    target=self.target,
+                    chain=self.chain,
+                    table=self.table,
+                    ipv=self.ipv,
+                    **kwargs)
+
     def create(self):
         """ Returns an iptc rule """
         rule = self.IPTABLES[self.ipv]['rule']()
