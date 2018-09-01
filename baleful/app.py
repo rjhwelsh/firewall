@@ -138,3 +138,8 @@ google_hangouts = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 5222}))
 
+avahi = RuleArray(
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 5353}))
+
