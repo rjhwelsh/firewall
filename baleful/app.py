@@ -54,3 +54,8 @@ snmp = RuleArray(
         params={'protocol': 'udp'},
         udp={'dport': 161}))
 
+https = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 443}))
+
