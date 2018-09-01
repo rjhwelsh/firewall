@@ -154,3 +154,8 @@ irc = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 7000}))
 
+pgp = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 11371}))
+
