@@ -163,6 +163,14 @@ pgp = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 11371}))
 
+syncthing = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 22000}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 21027}))
+
 openvpn = RuleArray(
     Rule(
         params={'protocol': 'udp'},
