@@ -64,3 +64,11 @@ smtp = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 587}))
 
+cups = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 631}),
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'sport': 631}))
+
