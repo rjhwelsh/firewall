@@ -235,7 +235,7 @@ class Rule:
 class RuleArray(list):
     """ A rule array class for handling Rule s """
 
-    def __init__(self, *rules):
+    def __init__(self, *rules: Rule):
         """Arguments:
         *rules -- Rule objects
         """
@@ -254,7 +254,7 @@ class RuleArray(list):
             newArray.append(R.copy())
         return newArray
 
-    def __rmul__(self, other):
+    def __rmul__(self, other: Rule):
         """ Adds a rule with every item in Array.
         y * x_arr = z_arr, where values in x_arr take precedence. """
         rarr = self.copy()
@@ -262,14 +262,14 @@ class RuleArray(list):
             rarr[i] = other + r
         return rarr
 
-    def __mul__(self, other):
+    def __mul__(self, other: Rule):
         """ Adds a rule with every item in Array. """
         rarr = self.copy()
         for i, r in enumerate(rarr):
             rarr[i] = r + other
         return rarr
 
-    def __matmul__(self, other):
+    def __matmul__(self, other: list):
         """ Matrix multiplication between two rule arrays. """
         newArray = RuleArray()
         for i in self:
@@ -277,14 +277,14 @@ class RuleArray(list):
                 newArray.append(i + j)
         return newArray
 
-    def __rtruediv__(self, other):
+    def __rtruediv__(self, other: Rule):
         """ Removes every item in Array from a rule. """
         rule = other.copy()
         for r in self:
             rule -= r
         return rule
 
-    def __truediv__(self, other):
+    def __truediv__(self, other: Rule):
         """ Removes a rule from every item in Array. """
         rarr = self.copy()
         for i, r in enumerate(rarr):
