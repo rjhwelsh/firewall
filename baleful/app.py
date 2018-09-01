@@ -77,3 +77,8 @@ rsync = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 873}))
 
+imaps = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 993}))
+
