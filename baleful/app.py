@@ -164,3 +164,8 @@ openvpn = RuleArray(
         params={'protocol': 'udp'},
         udp={'dport': 26009}))
 
+hedgewars = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 46631}))
+
