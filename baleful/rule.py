@@ -50,7 +50,8 @@ class Rule:
 
     def __add__(self, other):
         """ Adds two rules together.
-        x + y, where y values take precedence over x values. """
+        x + y, x.__add__(y)
+        where y values update x values. """
 
         rule = self.copy()
         params = rule.params
@@ -94,6 +95,7 @@ class Rule:
             for k, v in x.items():
                 if k in y and v == y[k]:
                     p.append(k)
+
             for i in p:
                 x.pop(i)
             return x
