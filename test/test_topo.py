@@ -30,3 +30,25 @@ class Test_Topo(unittest.TestCase):
 
         self.assertEqual(rarr[0].dict(), combo.dict())
         self.assertEqual(rarr[1].dict(), reverse.dict())
+
+    def testRmul(self):
+        """ Test __rmul__ with Rules """
+
+        rule = R.RuleArray(R.Rule(chain="OUTPUT"))
+        rule_reverse = R.RuleArray(R.Rule(chain="INPUT"))
+
+        topo = T.Topology(rule, rule_reverse)
+
+        route = R.Rule(params={'src': '192.168.1.10',
+                               'dst': '192.168.1.1'})
+
+        app = R.Rule(tcp={'dport': 22})
+
+        combo = route + app
+        reverse = combo.copy()
+        reverse.reverse()
+
+        rarr = (route + app) * topo
+
+        self.assertEqual(rarr[0].dict(), combo.dict())
+        self.assertEqual(rarr[1].dict(), reverse.dict())
