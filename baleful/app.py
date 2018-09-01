@@ -16,3 +16,12 @@ ssh = RuleArray(
     Rule(
         params={'protocol': 'tcp'},
         tcp={'dport': 22}))
+
+dns = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 53}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 53}))
+
