@@ -25,3 +25,9 @@ dns = RuleArray(
         params={'protocol': 'udp'},
         udp={'dport': 53}))
 
+dhcp = RuleArray(
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 67,
+             'sport': 68}))
+
