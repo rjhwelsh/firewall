@@ -143,3 +143,14 @@ avahi = RuleArray(
         params={'protocol': 'udp'},
         udp={'dport': 5353}))
 
+irc = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 6667}),
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 6697}),
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 7000}))
+
