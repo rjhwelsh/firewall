@@ -122,3 +122,14 @@ sip = RuleArray(
         params={'protocol': 'udp'},
         udp={'dport': "9076:9079"}))
 
+skype = https + RuleArray(
+    Rule(
+        params={'protocol': 'udp'},
+        tcp={'dport': "3478:3481"}),
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': "49152:65535"}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': "49152:65535"}))
+
