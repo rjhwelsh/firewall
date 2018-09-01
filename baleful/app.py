@@ -36,3 +36,11 @@ http = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 80}))
 
+rpcbind = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 111}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 111}))
+
