@@ -82,3 +82,23 @@ imaps = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 993}))
 
+nfs = rpcbind + RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 2049}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 2049}),
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': "51378:51379"}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': "51378:51379"}),
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 55461}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 55461}))
+
