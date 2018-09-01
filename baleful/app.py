@@ -159,3 +159,8 @@ pgp = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 11371}))
 
+openvpn = RuleArray(
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 26009}))
+
