@@ -169,3 +169,7 @@ hedgewars = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 46631}))
 
+brscan_skey = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 54921}))
