@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import baleful.rule
+import baleful.topo
 
+Topology = baleful.topo.Topology
 RuleArray = baleful.rule.RuleArray
 Rule = baleful.rule.Rule
 
@@ -186,7 +188,12 @@ hedgewars = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 46631}))
 
-brscan_skey = RuleArray(
-    Rule(
-        params={'protocol': 'tcp'},
-        tcp={'dport': 54921}))
+brscan_skey = Topology(
+    RuleArray(
+        Rule(
+            params={'protocol': 'tcp'},
+            tcp={'dport': 54921})),
+    RuleArray(
+        Rule(
+            params={'protocol': 'udp'},
+            udp={'dport': 54925})))
