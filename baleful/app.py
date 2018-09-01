@@ -72,3 +72,8 @@ cups = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'sport': 631}))
 
+rsync = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 873}))
+
