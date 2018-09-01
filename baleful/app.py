@@ -11,6 +11,10 @@ Applications are defined with respect to a client node, see the Topology class
 for dealing with different NetworkTopology models. See Rule class for the
 'reverse' method which instantiates the alternative rule for Servers. """
 
+ping = RuleArray(
+    Rule(
+        params={'protocol': 'icmp'},
+        icmp={'icmp_type': 'echo-request'}))
 
 ssh = RuleArray(
     Rule(
