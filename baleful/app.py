@@ -133,3 +133,8 @@ skype = https + RuleArray(
         params={'protocol': 'udp'},
         udp={'dport': "49152:65535"}))
 
+google_hangouts = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 5222}))
+
