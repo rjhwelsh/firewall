@@ -49,3 +49,8 @@ ntp = RuleArray(
         params={'protocol': 'udp'},
         udp={'dport': 123}))
 
+snmp = RuleArray(
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 161}))
+
