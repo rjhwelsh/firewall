@@ -44,3 +44,8 @@ rpcbind = RuleArray(
         params={'protocol': 'udp'},
         udp={'dport': 111}))
 
+ntp = RuleArray(
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 123}))
+
