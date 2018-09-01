@@ -102,3 +102,23 @@ nfs = rpcbind + RuleArray(
         params={'protocol': 'udp'},
         udp={'dport': 55461}))
 
+sip = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 5060}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 5060}),
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 3478}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': 3478}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': "7076:7079"}),
+    Rule(
+        params={'protocol': 'udp'},
+        udp={'dport': "9076:9079"}))
+
