@@ -1,25 +1,15 @@
 #!/usr/bin/env python3
 
+import baleful.rule
 
-class Application:
-    """Base class for application classes which provide details about client/server
-    firewall configurations.
-    """
+RuleArray = baleful.rule.RuleArray
+Rule = baleful.rule.Rule
 
-    def __init__(self, kwarg_list):
-        """ Arguments:
-        A list of kwargs defining each connection
-        ( Client to Server )
-
-        Example:
-        ssh:
-        [ { 'dport':22, 'protocol':"tcp" } ]
-
-        ftp-active:
-        [ { 'dport':21 }, { 'sport':1027, 'ctstate':"" } ]
-        N.B. Here ctstate is overridden by the application kwarg.
-
-        """
+"""Applications which are instances of the RuleArray class are instantiated and
+defined here.
+Applications are defined with respect to a client node, see the Topology class
+for dealing with different NetworkTopology models. See Rule class for the
+'reverse' method which instantiates the alternative rule for Servers. """
 
 
-ssh = Application([{'dport': 22, 'protocol': "tcp"}])
+ssh = RuleArray(Rule([{'dport': 22, 'protocol': "tcp"}]))
