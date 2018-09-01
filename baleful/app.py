@@ -31,3 +31,8 @@ dhcp = RuleArray(
         udp={'dport': 67,
              'sport': 68}))
 
+http = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 80}))
+
