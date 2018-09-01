@@ -59,3 +59,8 @@ https = RuleArray(
         params={'protocol': 'tcp'},
         tcp={'dport': 443}))
 
+smtp = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 587}))
+
