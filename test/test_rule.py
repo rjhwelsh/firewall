@@ -50,6 +50,7 @@ class Test_Rule(unittest.TestCase):
 
         self.assertEqual(rule.protocol, 'tcp')
         self.assertEqual(rule.dst, '127.0.0.1/255.255.255.255')
+        self.assertEqual(rule.src, '127.1.1.0/255.255.255.255')
 
         # Test matches in rule.
         self.assertEqual(rule_ssh_client.kwargs['tcp']['sport'], 22)
