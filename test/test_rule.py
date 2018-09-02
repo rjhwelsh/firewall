@@ -101,6 +101,9 @@ class Test_Rule(unittest.TestCase):
         self.assertEqual(ssh.kwargs['tcp']['dport'], 22)
         self.assertEqual(http.kwargs['tcp']['dport'], 80)
 
+        with self.assertRaises(TypeError):
+            http_client + list()
+
     def testRuleSubtraction(self):
         """ Test rule subtraction. """
         rule_ssh_client_1 = R.Rule(ipv=4,
@@ -120,6 +123,9 @@ class Test_Rule(unittest.TestCase):
 
         self.assertNotIn('dport', rule_ssh_client.kwargs['tcp'])
         self.assertIn('sport', rule_ssh_client.kwargs['tcp'])
+
+        with self.assertRaises(TypeError):
+            rule_ssh_client - list()
 
 
 class Test_RuleArray(unittest.TestCase):
