@@ -13,9 +13,9 @@ class Test_Topo(unittest.TestCase):
         """ Test __mul__ with Rules"""
 
         rule = R.RuleArray(R.Rule(chain="OUTPUT"))
-        rule_reverse = R.RuleArray(R.Rule(chain="INPUT"))
+        rule_flip = R.RuleArray(R.Rule(chain="INPUT"))
 
-        topo = T.Topology(rule, rule_reverse)
+        topo = T.Topology(rule, rule_flip)
 
         route = R.Rule(params={'src': '192.168.1.10',
                                'dst': '192.168.1.1'})
@@ -23,21 +23,21 @@ class Test_Topo(unittest.TestCase):
         app = R.Rule(tcp={'dport': 22})
 
         combo = route + app
-        reverse = combo.copy()
-        reverse.reverse()
+        flip = combo.copy()
+        flip.flip()
 
         rarr = topo * (route + app)
 
         self.assertEqual(rarr[0].dict(), combo.dict())
-        self.assertEqual(rarr[1].dict(), reverse.dict())
+        self.assertEqual(rarr[1].dict(), flip.dict())
 
     def testRmul(self):
         """ Test __rmul__ with Rules """
 
         rule = R.RuleArray(R.Rule(chain="OUTPUT"))
-        rule_reverse = R.RuleArray(R.Rule(chain="INPUT"))
+        rule_flip = R.RuleArray(R.Rule(chain="INPUT"))
 
-        topo = T.Topology(rule, rule_reverse)
+        topo = T.Topology(rule, rule_flip)
 
         route = R.Rule(params={'src': '192.168.1.10',
                                'dst': '192.168.1.1'})
@@ -45,21 +45,21 @@ class Test_Topo(unittest.TestCase):
         app = R.Rule(tcp={'dport': 22})
 
         combo = route + app
-        reverse = combo.copy()
-        reverse.reverse()
+        flip = combo.copy()
+        flip.flip()
 
         rarr = (route + app) * topo
 
         self.assertEqual(rarr[0].dict(), combo.dict())
-        self.assertEqual(rarr[1].dict(), reverse.dict())
+        self.assertEqual(rarr[1].dict(), flip.dict())
 
     def testMatmul(self):
         """ Test __matmul__ with RuleArray """
 
         rule = R.RuleArray(R.Rule(chain="OUTPUT"))
-        rule_reverse = R.RuleArray(R.Rule(chain="INPUT"))
+        rule_flip = R.RuleArray(R.Rule(chain="INPUT"))
 
-        topo = T.Topology(rule, rule_reverse)
+        topo = T.Topology(rule, rule_flip)
 
         route = R.Rule(params={'src': '192.168.1.10',
                                'dst': '192.168.1.1'})
@@ -70,12 +70,12 @@ class Test_Topo(unittest.TestCase):
         appArray = R.RuleArray(app, app2)
 
         combo = route * appArray
-        reverse = combo.copy()
-        for r in reverse:
-            r.reverse()
+        flip = combo.copy()
+        for r in flip:
+            r.flip()
 
         rarr = topo @ (route * appArray)
 
         for c, r in enumerate(combo):
             self.assertEqual(rarr[2*c+0].dict(), combo[c].dict())
-            self.assertEqual(rarr[2*c+1].dict(), reverse[c].dict())
+            self.assertEqual(rarr[2*c+1].dict(), flip[c].dict())

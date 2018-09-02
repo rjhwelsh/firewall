@@ -33,7 +33,7 @@ class Test_Rule(unittest.TestCase):
         # Test matches in rule.
         self.assertEqual(rule._matches[0].dport, '22')
 
-    def testRuleReverse(self):
+    def testRuleFlip(self):
         """ Test rule reversal. """
         rule_ssh_client = R.Rule(ipv=4,
                                  chain='OUTPUT',
@@ -44,7 +44,7 @@ class Test_Rule(unittest.TestCase):
                                  tcp={'dport': 22},
                                  icmp={'icmp_type': 'echo-request'})
 
-        rule_ssh_client.reverse()
+        rule_ssh_client.flip()
 
         rule = rule_ssh_client.create()
 

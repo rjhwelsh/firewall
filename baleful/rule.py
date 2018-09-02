@@ -156,49 +156,48 @@ class Rule:
 
         return rule
 
-    def reverse(self):
-        """ Reverses the iptables rule"""
+    def flip(self):
+        """ Flips the iptables rule"""
 
-        REVERSAL_KEYS = self.__REVERSAL_KEYS
+        FLIP_KEYS = self.__FLIP_KEYS
 
-        for k0, v0 in REVERSAL_KEYS.items():
+        for k0, v0 in FLIP_KEYS.items():
             for k1, v1 in v0.items():
                 if k0 == '':
-                    self.params = self.__reverse_key(k1, v1, self.params)
+                    self.params = self.__flip_key(k1, v1, self.params)
                 elif k0 in self.kwargs:
-                    self.kwargs[k0] = self.__reverse_key(
+                    self.kwargs[k0] = self.__flip_key(
                         k1, v1, self.kwargs[k0])
 
-        REVERSAL_VALS = self.__REVERSAL_VALS
-        for k0, v0 in REVERSAL_VALS.items():
+        FLIP_VALS = self.__FLIP_VALS
+        for k0, v0 in FLIP_VALS.items():
             if k0 == 'chain':
-                self.chain = self.__reverse_val(self.chain, v0)
+                self.chain = self.__flip_val(self.chain, v0)
             else:
                 for k1, v1 in v0.items():
                     if k0 in self.kwargs:
                         if k1 in self.kwargs[k0]:
                             value = self.kwargs[k0][k1]
-                            self.kwargs[k0][k1] = self.__reverse_val(value, v1)
+                            self.kwargs[k0][k1] = self.__flip_val(value, v1)
 
-    # KEYS and VALUES for reverse method
-    __REVERSAL_KEYS = {'': {'src': 'dst',
-                            'in_interface': 'out_interface'},
-                       'tcp': {'sport': 'dport'},
-                       'udp': {'sport': 'dport'},
-                       'iprange': {'src-range': 'dst-range'}
-                       }
+    # KEYS and VALUES for flip method
+    __FLIP_KEYS = {'': {'src': 'dst',
+                        'in_interface': 'out_interface'},
+                   'tcp': {'sport': 'dport'},
+                   'udp': {'sport': 'dport'},
+                   'iprange': {'src-range': 'dst-range'}}
 
-    __REVERSAL_VALS = {'':
-                       {},
-                       'chain':
-                       {'INPUT': 'OUTPUT',
-                        'PREROUTING': 'POSTROUTING',
-                        'FORWARD': 'FORWARD'},
-                       'icmp':  # k0 v0=
-                       {'icmp_type':  # v0 = { k1 v1 }
-                        {'echo-request': 'echo-reply'}}}
+    __FLIP_VALS = {'':
+                   {},
+                   'chain':
+                   {'INPUT': 'OUTPUT',
+                    'PREROUTING': 'POSTROUTING',
+                    'FORWARD': 'FORWARD'},
+                   'icmp':  # k0 v0=
+                   {'icmp_type':  # v0 = { k1 v1 }
+                    {'echo-request': 'echo-reply'}}}
 
-    def __reverse_key(self, skey, dkey, params):
+    def __flip_key(self, skey, dkey, params):
         """ Swaps keys over for a parameter dictionary. """
 
         if skey in params and dkey in params:
@@ -220,7 +219,7 @@ class Rule:
 
         return params
 
-    def __reverse_val(self, value, rdict):
+    def __flip_val(self, value, rdict):
         """ Swaps value if present in rdict. """
 
         if value in rdict:
@@ -233,7 +232,7 @@ class Rule:
 
 
 class RuleArray(list):
-    """ A rule array class for handling Rule s """
+    """ A rule array class for handling Rules """
 
     def __init__(self, *rules: Rule):
         """Arguments:

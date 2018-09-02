@@ -12,14 +12,14 @@ class Topology:
     """
 
     def __init__(self, ruleArray: RuleArray,
-                 ruleArray_reverse: RuleArray):
+                 ruleArray_flip: RuleArray):
         """ Constructs a Topology instance.
         This consists of two rules:
         ruleArray -- a ruleArray to apply to normal rules
-        ruleArray_reverse -- a ruleArray to apply to reverse rules
+        ruleArray_flip -- a ruleArray to apply to flip rules
         """
         self.ruleArray = ruleArray
-        self.ruleArray_reverse = ruleArray_reverse
+        self.ruleArray_flip = ruleArray_flip
 
     def __mul__(self, other: Rule):
         """ Multiplies Topology objects with a Rule"""
@@ -27,11 +27,11 @@ class Topology:
         j = other.copy()
 
         ruleArray = self.ruleArray
-        ruleArray_reverse = self.ruleArray_reverse
+        ruleArray_flip = self.ruleArray_flip
 
         newArray += ruleArray * other
-        j.reverse()
-        newArray += ruleArray_reverse * j
+        j.flip()
+        newArray += ruleArray_flip * j
 
         return newArray
 
@@ -41,11 +41,11 @@ class Topology:
         j = other.copy()
 
         ruleArray = self.ruleArray
-        ruleArray_reverse = self.ruleArray_reverse
+        ruleArray_flip = self.ruleArray_flip
 
         newArray += other * ruleArray
-        j.reverse()
-        newArray += j * ruleArray_reverse
+        j.flip()
+        newArray += j * ruleArray_flip
 
         return newArray
 
