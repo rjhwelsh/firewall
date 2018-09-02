@@ -122,6 +122,14 @@ class Rule:
             {'': self.params.copy()})
         return kwargs
 
+    def __eq__(self, other):
+        if self.dict() == other.dict():
+            return True
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def copy(self):
         """ Returns a copy of a Rule. """
         params = self.params.copy()
