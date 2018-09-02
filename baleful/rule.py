@@ -132,36 +132,6 @@ class Rule:
                     ipv=self.ipv,
                     **kwargs)
 
-    def create(self):
-        """ Returns an iptc rule """
-        rule = self.IPTABLES[self.ipv]['rule']()
-
-        # Setup method table
-        set_methods = {'src': rule.set_src,
-                       'dst': rule.set_dst,
-                       'in_interface': rule.set_in_interface,
-                       'out_interface': rule.set_out_interface,
-                       'fragment': rule.set_fragment,
-                       'protocol': rule.set_protocol}
-
-        # Set target
-        rule.create_target(self.target)
-
-        # Set rule params
-        for arg, val in self.params.items():
-            set_methods[arg](
-                str(val))
-
-        # Set match params
-        for m, params in self.kwargs.items():
-            # Create match based on keyword
-            match = rule.create_match(m)
-            # Create arguments based on value dict.
-            for arg, val in params.items():
-                match.__dict__[arg] = str(val)
-
-        return rule
-
     def flip(self):
         """ Flips the iptables rule"""
 
@@ -235,6 +205,36 @@ class Rule:
             return ldict[value]
         else:
             return value
+
+    def create(self):
+        """ Returns an iptc rule """
+        rule = self.IPTABLES[self.ipv]['rule']()
+
+        # Setup method table
+        set_methods = {'src': rule.set_src,
+                       'dst': rule.set_dst,
+                       'in_interface': rule.set_in_interface,
+                       'out_interface': rule.set_out_interface,
+                       'fragment': rule.set_fragment,
+                       'protocol': rule.set_protocol}
+
+        # Set target
+        rule.create_target(self.target)
+
+        # Set rule params
+        for arg, val in self.params.items():
+            set_methods[arg](
+                str(val))
+
+        # Set match params
+        for m, params in self.kwargs.items():
+            # Create match based on keyword
+            match = rule.create_match(m)
+            # Create arguments based on value dict.
+            for arg, val in params.items():
+                match.__dict__[arg] = str(val)
+
+        return rule
 
 
 class RuleArray(list):
