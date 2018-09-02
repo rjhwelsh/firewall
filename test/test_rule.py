@@ -127,6 +127,16 @@ class Test_Rule(unittest.TestCase):
         with self.assertRaises(TypeError):
             rule_ssh_client - list()
 
+    def testEqualityOperator(self):
+        """ Tests rule equality relation."""
+
+        ssh_client = R.Rule(tcp={'dport': 22})
+        ssh_client2 = R.Rule(tcp={'dport': 22})
+        http_client = R.Rule(tcp={'dport': 80})
+
+        self.assertEqual(ssh_client, ssh_client2)
+        self.assertNotEqual(ssh_client, http_client)
+
 
 class Test_RuleArray(unittest.TestCase):
     """ Tests for the Rule Array. """
