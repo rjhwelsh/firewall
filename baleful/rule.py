@@ -53,6 +53,9 @@ class Rule:
         x + y, x.__add__(y)
         where y values update x values. """
 
+        if not isinstance(other, type(self)):
+            raise(TypeError)
+
         rule = self.copy()
         params = rule.params
         kwargs = rule.kwargs
@@ -83,6 +86,9 @@ class Rule:
     def __sub__(self, other):
         """ Subtract values of one rule from another.
         x - y, where y values are removed from x. """
+
+        if not isinstance(other, type(self)):
+            raise(TypeError)
 
         rule = self.copy()
         params = rule.params
