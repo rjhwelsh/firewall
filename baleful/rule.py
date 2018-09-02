@@ -8,10 +8,12 @@ class Rule:
 
     IPTABLES = {4: {'module': iptc,
                     'rule': iptc.Rule,
-                    'table': iptc.Table},
+                    'table': iptc.Table,
+                    'chain': iptc.Chain},
                 6: {'module': iptc,
                     'rule': iptc.Rule6,
-                    'table': iptc.Table6}}
+                    'table': iptc.Table6,
+                    'chain': iptc.Chain}}
 
     DEFAULTS = {'target': "ACCEPT",
                 'chain': "OUTPUT",
@@ -235,6 +237,25 @@ class Rule:
                 match.__dict__[arg] = str(val)
 
         return rule
+
+    def __iptc_rule_iter(self):
+        """ Iterates over rules for particular ipv, table, chain. """
+
+        ipv = self.ipv
+
+        tableName = self.table
+        tableClass = self.IPTABLES[ipv]['table']
+        table = tableClass(
+            tableClass.__dict__[tableName])
+
+        chainName = self.chain
+        # Find matching chain
+        for chain in table.chains:
+            if chain.name == chainName:
+                break
+
+        for rule in chain.rules:
+            yield rule
 
 
 class RuleArray(list):
