@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import iptc
+import ipaddress
 
 
 class Rule:
@@ -9,11 +10,13 @@ class Rule:
     IPTABLES = {4: {'module': iptc,
                     'rule': iptc.Rule,
                     'table': iptc.Table,
-                    'chain': iptc.Chain},
+                    'chain': iptc.Chain,
+                    'addr': ipaddress.IPv4Network},
                 6: {'module': iptc,
                     'rule': iptc.Rule6,
                     'table': iptc.Table6,
-                    'chain': iptc.Chain}}
+                    'chain': iptc.Chain,
+                    'addr': ipaddress.IPv6Network}}
 
     DEFAULTS = {'target': "ACCEPT",
                 'chain': "OUTPUT",
@@ -47,8 +50,29 @@ class Rule:
             else:
                 self.__dict__[key] = locals()[key]
 
-        self.params = params if params else dict()
+        self.params = self.__conv_params(params)
         self.kwargs = kwargs if kwargs else dict()
+
+    def __default_params(self):
+        """ Returns the default params. """
+        return {'src': self.IPTABLES[self.ipv]['addr'](0),
+                'dst': self.IPTABLES[self.ipv]['addr'](0),
+                'fragment': False,
+                'in_interface': None,
+                'out_interface': None,
+                'protocol': 'ip'}
+
+    def __conv_params(self, params):
+        """ Converts params to  relevant objects.
+            src, dst -> ip_network objects
+        """
+        all_params = self.__default_params()
+        if params:
+            for key, val in params.items():
+                if key in ['src', 'dst']:
+                    params[key] = self.IPTABLES[self.ipv]['addr'](val)
+            all_params.update(params)
+        return all_params
 
     def __add__(self, other):
         """ Adds two rules together.
