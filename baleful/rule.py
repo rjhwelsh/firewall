@@ -408,6 +408,10 @@ class Rule:
         chain = self._iptc_chain()
         chain.delete_rule(self.iptc())
 
+    def get_counters(self):
+        """ Retrieves packet/byte counters for rule. """
+        return self.iptc().get_counters()
+
 
 class RuleArray(list):
     """ A rule array class for handling Rules """
@@ -506,3 +510,6 @@ class RuleArray(list):
         """ Returns a list object containing iptc conversions of rules. """
         return [rule.iptc() for rule in self]
 
+    def get_counters(self):
+        """ Returns a list object containing counters for each rule. """
+        return [rule.iptc().get_counters() for rule in self]
