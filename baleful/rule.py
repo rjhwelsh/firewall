@@ -469,3 +469,38 @@ class RuleArray(list):
         for i, r in enumerate(rarr):
             rarr[i] -= other
         return rarr
+
+    @classmethod
+    def read(cls, table=None, chain=None, ipv=None):
+        """ Creates a RuleArray from all rules present on the system. """
+
+        rarr = RuleArray()
+
+        if isinstance(ipv, type(None)):
+            ipv = [4, 6]
+        else:
+            ipv = [ipv]
+
+        if isinstance(table, type(None)):
+            iptc_tables = [Rule.IPTABLES[v]['table'](t)
+                           for v in ipv
+                           for t in Rule.IPTABLES[v]['table'].ALL]
+
+        else:
+            iptc_tables = [Rule.IPTABLES[v]['table'](
+                Rule.IPTABLES[v]['table'].__dict__[table])
+                for v in ipv]
+
+        for tableObj in iptc_tables:
+            if isinstance(chain, type(None)):
+                iptc_chains = tableObj.chains
+            else:
+                iptc_chains = [Rule.IPTABLES[v]['chain'](
+                    tableObj, chain) for v in ipv]
+
+            for chainObj in iptc_chains:
+                for iptc_rule in chainObj.rules:
+                    rarr.append(
+                        Rule.from_iptc(
+                            iptc_rule))
+        return rarr
