@@ -79,3 +79,6 @@ class Test_Topo(unittest.TestCase):
         for c, r in enumerate(combo):
             self.assertEqual(rarr[2*c+0].dict(), combo[c].dict())
             self.assertEqual(rarr[2*c+1].dict(), flip[c].dict())
+
+        with self.assertRaises(TypeError):
+            (route * appArray) @ topo
