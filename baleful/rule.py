@@ -174,6 +174,20 @@ class Rule:
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __contains__(self, rule):
+        """ Returns True, if self is a superset of 'rule' """
+        general_rule = self.__str_dict(self.dict())
+        general_defaults = self.__default_params()
+        specific_rule = rule.__str_dict(rule.dict())
+
+        for k1, v1 in general_rule.items():
+            for k2, v2 in v1.items():
+                if not ((k1 == '') and (v2 == str(general_defaults[k2]))):
+                    if not specific_rule[k1][k2] == v2:
+                        return False
+
+        return True
+
     def copy(self):
         """ Returns a copy of a Rule. """
         params = self.params.copy()
