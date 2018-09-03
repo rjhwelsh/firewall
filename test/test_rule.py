@@ -209,6 +209,12 @@ class Test_Rule(unittest.TestCase):
         self.assertIn(specific_rule_match, general_rule)
         self.assertNotIn(specific_rule_nomatch, general_rule)
 
+        try:
+            for rule in general_rule.matches():
+                print(rule.dict())
+        except iptc.ip4tc.IPTCError as e:
+            raise unittest.SkipTest(e)
+
 
 class Test_RuleArray(unittest.TestCase):
     """ Tests for the Rule Array. """
