@@ -234,7 +234,10 @@ class Rule:
 
     def iptc(self):
         """ Returns an iptc rule """
-        rule = self.IPTABLES[self.ipv]['rule']()
+
+        ruleClass = self.IPTABLES[self.ipv]['rule']
+        rule = ruleClass(
+            chain=self._iptc_chain())
 
         # Setup method table
         set_methods = {'src': rule.set_src,
