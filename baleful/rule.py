@@ -431,6 +431,18 @@ class RuleArray(list):
             newArray.append(R.copy())
         return newArray
 
+    def __add__(self, other):
+        """ Add two RuleArrays together. """
+        return RuleArray(*self, *other)
+
+    def __sub__(self, other):
+        """ Subtract two RuleArrays together. """
+        rules = self.copy()
+        for rule in other:
+            if rule in rules:
+                rules.pop(rule)
+        return rules
+
     def __rmul__(self, other: Rule):
         """ Adds a rule with every item in Array.
         y * x_arr = z_arr, where values in x_arr take precedence. """
