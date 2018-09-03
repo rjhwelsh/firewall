@@ -60,11 +60,11 @@ class Rule:
         """ Returns the default params. """
         params = {'src': self.IPTABLES[self.ipv]['addr'](
             self.WILD_ADDR[self.ipv]),
-                  'dst': self.IPTABLES[self.ipv]['addr'](
-                      self.WILD_ADDR[self.ipv]),
-                  'in_interface': None,
-                  'out_interface': None,
-                  'protocol': 'ip'}
+            'dst': self.IPTABLES[self.ipv]['addr'](
+            self.WILD_ADDR[self.ipv]),
+            'in_interface': None,
+            'out_interface': None,
+            'protocol': 'ip'}
 
         if self.ipv == 4:
             params['fragment'] = False
