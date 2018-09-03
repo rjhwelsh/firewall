@@ -480,3 +480,29 @@ class RuleArray(list):
         for i, r in enumerate(rarr):
             rarr[i] -= other
         return rarr
+
+    # Bulk actions #
+    def flip(self):
+        """ Flips all rules in the array."""
+        for rule in self:
+            rule.flip()
+
+    def append(self):
+        """ Appends all rules to their respective tables. """
+        for rule in self:
+            rule.append()
+
+    def delete(self):
+        """ Delete all rules from their respective tables. """
+        for rule in self:
+            rule.delete()
+
+    def insert(self, position=0):
+        """ Insert all rules starting at the respective position. """
+        for rule in self:
+            rule.insert(position=position)
+
+    def iptc(self):
+        """ Returns a list object containing iptc conversions of rules. """
+        return [rule.iptc() for rule in self]
+
