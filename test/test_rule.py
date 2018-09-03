@@ -33,34 +33,42 @@ class Test_Rule(unittest.TestCase):
         # Test matches in rule.
         self.assertEqual(rule._matches[0].dport, '22')
 
-    def testRuleFlip(self):
-        """ Test rule reversal. """
         rule_ssh_client = R.Rule(ipv=4,
-                                 chain='OUTPUT',
                                  target="ACCEPT",
                                  params={'protocol': 'tcp',
-                                         'dst': '127.1.1.0',
                                          'src': '127.0.0.1'},
-                                 tcp={'dport': 22},
-                                 icmp={'icmp_type': 'echo-request'})
 
-        rule_ssh_client.flip()
 
-        rule = rule_ssh_client.iptc()
 
-        self.assertEqual(rule.protocol, 'tcp')
-        self.assertEqual(rule.dst, '127.0.0.1/255.255.255.255')
-        self.assertEqual(rule.src, '127.1.1.0/255.255.255.255')
+    def testRuleFlip(self):
+        """ Test rule reversal. """
+        rule = R.Rule(ipv=4,
+                      chain='OUTPUT',
+                      target="ACCEPT",
+                      params={'protocol': 'tcp',
+                              'dst': '127.1.1.0/255.255.255.255',
+                              'src': '127.0.0.1/255.255.255.255'},
+                      tcp={'dport': 22},
+                      icmp={'icmp_type': 'echo-request'})
+
+        rule_flipped = rule.copy()
+        rule_flipped.flip()
+
+        self.assertEqual(rule_flipped.params['protocol'], 'tcp')
+        self.assertEqual(
+            rule_flipped.params['dst'], '127.0.0.1/255.255.255.255')
+        self.assertEqual(
+            rule_flipped.params['src'], '127.1.1.0/255.255.255.255')
 
         # Test matches in rule.
-        self.assertEqual(rule_ssh_client.kwargs['tcp']['sport'], 22)
+        self.assertEqual(rule_flipped.kwargs['tcp']['sport'], 22)
 
         # Test chain reversal
-        self.assertEqual(rule_ssh_client.chain, 'INPUT')
+        self.assertEqual(rule_flipped.chain, 'INPUT')
 
         # Test icmp reversal
         self.assertEqual(
-            rule_ssh_client.kwargs['icmp']['icmp_type'], 'echo-reply')
+            rule_flipped.kwargs['icmp']['icmp_type'], 'echo-reply')
 
     def testRuleAddition(self):
         """ Test rule addition. """
