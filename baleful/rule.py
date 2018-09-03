@@ -383,6 +383,21 @@ class Rule:
             if brule in self:
                 yield brule
 
+    def append(self):
+        """ Appends rule to chain. """
+        chain = self._iptc_chain()
+        chain.append_rule(self.iptc())
+
+    def insert(self, position=0):
+        """ Inserts rule to chain. """
+        chain = self._iptc_chain()
+        chain.insert_rule(self.iptc(), position)
+
+    def delete(self):
+        """ Deletes rule to chain. """
+        chain = self._iptc_chain()
+        chain.delete_rule(self.iptc())
+
 
 class RuleArray(list):
     """ A rule array class for handling Rules """
