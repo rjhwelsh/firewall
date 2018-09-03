@@ -216,7 +216,7 @@ class Rule:
         else:
             return value
 
-    def create(self):
+    def iptc(self):
         """ Returns an iptc rule """
         rule = self.IPTABLES[self.ipv]['rule']()
 

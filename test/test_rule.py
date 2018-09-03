@@ -25,7 +25,7 @@ class Test_Rule(unittest.TestCase):
                                          'src': '127.0.0.1'},
                                  tcp={'dport': 22})
 
-        rule = rule_ssh_client.create()
+        rule = rule_ssh_client.iptc()
 
         self.assertEqual(rule.protocol, 'tcp')
         self.assertEqual(rule.src, '127.0.0.1/255.255.255.255')
@@ -46,7 +46,7 @@ class Test_Rule(unittest.TestCase):
 
         rule_ssh_client.flip()
 
-        rule = rule_ssh_client.create()
+        rule = rule_ssh_client.iptc()
 
         self.assertEqual(rule.protocol, 'tcp')
         self.assertEqual(rule.dst, '127.0.0.1/255.255.255.255')
