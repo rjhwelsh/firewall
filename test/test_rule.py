@@ -59,14 +59,20 @@ class Test_Rule(unittest.TestCase):
 
     def testRuleExists(self):
         """ Test rule existence in iptables. """
-        rule = R.Rule(ipv=4,
-                      target="ACCEPT",
-                      params={'protocol': 'tcp',
-                              'src': '127.0.0.1'},
-                      tcp={'dport': 22})
+        rule_not_exist = R.Rule(ipv=4,
+                                target="ACCEPT",
+                                params={'protocol': 'tcp',
+                                        'src': '127.0.0.1'},
+                                tcp={'dport': 22})
+
+        rule_exists = R.Rule(ipv=4,
+                             target="ACCEPT",
+                             params={'protocol': 'tcp'},
+                             tcp={'dport': 22})
 
         try:
-            self.assertFalse(rule.exists())
+            self.assertFalse(rule_not_exist.exists())
+            self.assertTrue(rule_exists.exists())
         except iptc.ip4tc.IPTCError as e:
             raise unittest.SkipTest(e)
 
