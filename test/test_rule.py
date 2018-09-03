@@ -196,7 +196,7 @@ class Test_RuleArray(unittest.TestCase):
         self.assertEqual(rarr[1], http_client)
 
         with self.assertRaises(TypeError):
-            rarr2 = R.RuleArray(1, 2)
+            R.RuleArray(1, 2)
 
     def testRuleMultiplication(self):
         """ Test Rule Array Multiplication. """
