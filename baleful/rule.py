@@ -447,6 +447,7 @@ class RuleArray(list):
         """ Adds a rule with every item in Array.
         y * x_arr = z_arr, where values in x_arr take precedence. """
         rarr = self.copy()
+
         for i, r in enumerate(rarr):
             rarr[i] = other + r
         return rarr
