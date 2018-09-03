@@ -53,6 +53,9 @@ class Test_Rule(unittest.TestCase):
         conv_rule = R.Rule.from_iptc(iptc_rule)
 
         self.assertEqual(conv_rule, rule)
+        self.assertEqual(conv_rule.target, "ACCEPT")
+        self.assertEqual(conv_rule.chain, "OUTPUT")
+        self.assertEqual(conv_rule.table, "FILTER")
 
     def testRuleFlip(self):
         """ Test rule reversal. """
