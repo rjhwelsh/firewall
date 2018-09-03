@@ -36,12 +36,25 @@ class Test_Rule(unittest.TestCase):
         # Test matches in rule.
         self.assertEqual(rule._matches[0].dport, '22')
 
-        rule_ssh_client = R.Rule(ipv=4,
-                                 target="ACCEPT",
-                                 params={'protocol': 'tcp',
-                                         'src': '127.0.0.1'},
+    def testRuleConversion(self):
+        """ Test rule conversion from iptc.rule """
+        rule = R.Rule(ipv=4,
+                      target="ACCEPT",
+                      params={'protocol': 'tcp',
+                              'src': '127.0.0.1'},
+                      tcp={'dport': 22})
 
+        try:
+            iptc_rule = rule.iptc()
+        except iptc.ip4tc.IPTCError as e:
+            raise unittest.SkipTest(e)
 
+        conv_rule = R.Rule.from_iptc(iptc_rule)
+
+        print(conv_rule.dict())
+        print(rule.dict())
+
+        self.assertEqual(conv_rule, rule)
 
     def testRuleFlip(self):
         """ Test rule reversal. """
