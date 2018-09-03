@@ -212,7 +212,8 @@ class Test_RuleArray(unittest.TestCase):
 
         for rule in rarr:
             for key in ['src', 'dst']:
-                self.assertEqual(rule.params[key], ipaddress.ip_network(0))
+                self.assertEqual(rule.params[key], ipaddress.ip_network(
+                    "0.0.0.0/0"))
 
         for rule in rarr_lo:
             for key in ['src', 'dst']:

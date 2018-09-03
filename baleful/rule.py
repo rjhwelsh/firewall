@@ -18,6 +18,9 @@ class Rule:
                     'chain': iptc.Chain,
                     'addr': ipaddress.IPv6Network}}
 
+    WILD_ADDR = {4: "0.0.0.0/0.0.0.0",
+                 6: "::/128"}
+
     DEFAULTS = {'target': "ACCEPT",
                 'chain': "OUTPUT",
                 'table': "FILTER",
@@ -55,8 +58,10 @@ class Rule:
 
     def __default_params(self):
         """ Returns the default params. """
-        params = {'src': self.IPTABLES[self.ipv]['addr'](0),
-                  'dst': self.IPTABLES[self.ipv]['addr'](0),
+        params = {'src': self.IPTABLES[self.ipv]['addr'](
+            self.WILD_ADDR[self.ipv]),
+                  'dst': self.IPTABLES[self.ipv]['addr'](
+                      self.WILD_ADDR[self.ipv]),
                   'in_interface': None,
                   'out_interface': None,
                   'protocol': 'ip'}

@@ -44,10 +44,12 @@ class Test_Route(unittest.TestCase):
             self.Address("127.0.0.1"),
             self.Address(""))
 
-        self.assertEqual(src_route.params['dst'], ipaddress.ip_network(0))
+        self.assertEqual(src_route.params['dst'], ipaddress.ip_network(
+            "0.0.0.0/0"))
 
         dst_route = self.Route(
             self.Address(""),
             self.Address("127.0.0.1"))
 
-        self.assertEqual(dst_route.params['src'], ipaddress.ip_network(0))
+        self.assertEqual(dst_route.params['src'], ipaddress.ip_network(
+            "0.0.0.0/0"))
