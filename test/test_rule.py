@@ -145,6 +145,9 @@ class Test_Rule(unittest.TestCase):
         self.assertEqual(ssh_client, ssh_client2)
         self.assertNotEqual(ssh_client, http_client)
 
+        with self.assertRaises(TypeError):
+            http_client == list()
+
 
 class Test_RuleArray(unittest.TestCase):
     """ Tests for the Rule Array. """

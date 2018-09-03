@@ -123,6 +123,10 @@ class Rule:
         return kwargs
 
     def __eq__(self, other):
+
+        if not isinstance(other, type(self)):
+            raise(TypeError)
+
         if self.dict() == other.dict():
             return True
         return False
