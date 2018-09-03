@@ -337,3 +337,14 @@ class Test_RuleArray(unittest.TestCase):
 
         for rule in rule_list:
             self.assertIn(rule, rarr)
+
+    def testRead(self):
+        """ Tests RuleArray Reading iptables. """
+        try:
+            rarr = R.RuleArray.read()
+
+            for rule in rarr:
+                print(rule.dict())
+
+        except iptc.ip4tc.IPTCError as e:
+            raise unittest.SkipTest(e)
