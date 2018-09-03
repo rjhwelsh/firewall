@@ -265,10 +265,11 @@ class Rule:
 
         return rule
 
-    def __iptc_convert(self, rule):
-        """ Converts iptc.Rule into a baleful.Rule object. """
+    @classmethod
+    def from_iptc(cls, rule):
+        """ Converts from iptc.Rule into a baleful.Rule object. """
 
-        for key, value in self.IPTABLES.items():
+        for key, value in cls.IPTABLES.items():
             if isinstance(rule, value['rule']):
                 ipv = key
                 break
