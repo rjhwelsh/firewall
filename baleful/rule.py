@@ -347,7 +347,6 @@ class Rule:
         for key, value in cls.IPTABLES.items():
             if isinstance(rule, value['rule']):
                 ipv = key
-                break
 
         kwargs = dict()
         for match in rule.matches:
@@ -357,12 +356,17 @@ class Rule:
             for prop, val in match.get_all_parameters().items():
                 kwargs[key][prop] = ','.join(val)
 
-        return Rule(params={'src': rule.get_src(),
-                            'dst': rule.get_dst(),
-                            'in_interface': rule.get_in_interface(),
-                            'out_interface': rule.get_out_interface(),
-                            'fragment': rule.get_fragment(),
-                            'protocol': rule.get_protocol()},
+        params = {'src': rule.get_src(),
+                  'dst': rule.get_dst(),
+                  'in_interface': rule.get_in_interface(),
+                  'out_interface': rule.get_out_interface(),
+                  'protocol': rule.get_protocol()}
+
+        if ipv == 4:
+            fragment = {'fragment': rule.get_fragment()}
+            params.update(fragment)
+
+        return Rule(params=params,
                     ipv=ipv,
                     chain=rule.chain.name,
                     table=rule.chain.table.name.upper(),
