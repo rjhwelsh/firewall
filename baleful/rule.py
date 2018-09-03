@@ -150,12 +150,19 @@ class Rule:
             {'': self.params.copy()})
         return kwargs
 
-    def __eq__(self, other):
+    def __str_dict(self, kwargs):
+        """ Converts a dictionary into string arguments for comparison. """
+        for k1, v1 in kwargs.items():
+            for k2, v2 in v1.items():
+                kwargs[k1][k2] = str(v2)
 
+        return kwargs
+
+    def __eq__(self, other):
         if not isinstance(other, type(self)):
             raise(TypeError)
 
-        if self.dict() == other.dict():
+        if (self.__str_dict(self.dict()) == self.__str_dict(other.dict())):
             return True
         return False
 
