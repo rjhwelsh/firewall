@@ -323,3 +323,17 @@ class Test_RuleArray(unittest.TestCase):
         rarr_lo_ssh = route_lo @ app_ssh
         rarr_wifi_http = route_wifi @ app_http
         rarr_wifi_ssh = route_wifi @ app_ssh
+
+        rule_list = [rarr_lo_http,
+                     rarr_lo_ssh,
+                     rarr_wifi_http,
+                     rarr_wifi_ssh]
+
+        route_all = route_lo + route_wifi
+        app_all = app_ssh + app_http
+        rarr = route_all @ app_all
+
+        self.assertEqual(len(rarr), 4)
+
+        for rule in rule_list:
+            self.assertIn(rule[0], rarr)
