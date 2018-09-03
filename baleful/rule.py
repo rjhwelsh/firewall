@@ -349,6 +349,15 @@ class Rule:
         for rule in chain.rules:
             yield rule
 
+    def exists(self):
+        """ Returns whether the rule exists in the current chain."""
+        chain = self._iptc_chain()
+        rule = self.iptc()
+
+        if rule in chain.rules:
+            return True
+        return False
+
 
 class RuleArray(list):
     """ A rule array class for handling Rules """
