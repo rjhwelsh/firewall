@@ -25,7 +25,10 @@ class Test_Rule(unittest.TestCase):
                                          'src': '127.0.0.1'},
                                  tcp={'dport': 22})
 
-        rule = rule_ssh_client.iptc()
+        try:
+            rule = rule_ssh_client.iptc()
+        except iptc.ip4tc.IPTCError as e:
+            raise unittest.SkipTest(e)
 
         self.assertEqual(rule.protocol, 'tcp')
         self.assertEqual(rule.src, '127.0.0.1/255.255.255.255')
