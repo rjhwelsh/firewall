@@ -3,6 +3,7 @@
 import unittest
 import baleful.rule as R
 import iptc
+import ipaddress
 
 
 class Test_Rule(unittest.TestCase):
@@ -72,9 +73,11 @@ class Test_Rule(unittest.TestCase):
 
         self.assertEqual(rule_flipped.params['protocol'], 'tcp')
         self.assertEqual(
-            rule_flipped.params['dst'], '127.0.0.1/255.255.255.255')
+            str(rule_flipped.params['dst']),
+            '127.0.0.1/32')
         self.assertEqual(
-            rule_flipped.params['src'], '127.1.1.0/255.255.255.255')
+            str(rule_flipped.params['src']),
+            '127.1.1.0/32')
 
         # Test matches in rule.
         self.assertEqual(rule_flipped.kwargs['tcp']['sport'], 22)
@@ -196,7 +199,7 @@ class Test_RuleArray(unittest.TestCase):
 
         for rule in rarr:
             for key in ['src', 'dst']:
-                self.assertNotIn(key, rule.params)
+                self.assertEqual(rule.params[key], ipaddress.ip_network(0))
 
         for rule in rarr_lo:
             for key in ['src', 'dst']:

@@ -2,6 +2,7 @@
 
 
 import unittest
+import ipaddress
 import baleful.address
 
 
@@ -29,7 +30,7 @@ class Test_Route(unittest.TestCase):
     def testIpv46MixingRaises(self):
         """ Tests mixing ipv4 ipv6 addresses raises error."""
         with self.assertRaises(ValueError):
-            lo_route = self.Route(
+            self.Route(
                 self.Address("127.0.0.1"),
                 self.Address("::1"))
 
@@ -43,10 +44,10 @@ class Test_Route(unittest.TestCase):
             self.Address("127.0.0.1"),
             self.Address(""))
 
-        self.assertNotIn('dst', src_route.params)
+        self.assertEqual(src_route.params['dst'], ipaddress.ip_network(0))
 
         dst_route = self.Route(
             self.Address(""),
             self.Address("127.0.0.1"))
 
-        self.assertNotIn('src', dst_route.params)
+        self.assertEqual(dst_route.params['src'], ipaddress.ip_network(0))
