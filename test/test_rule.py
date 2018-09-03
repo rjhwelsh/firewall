@@ -186,6 +186,29 @@ class Test_Rule(unittest.TestCase):
         with self.assertRaises(TypeError):
             http_client == list()
 
+    def testMembership(self):
+        """ Tests membership methods. """
+
+        specific_rule_match = R.Rule(ipv=4,
+                                     target="ACCEPT",
+                                     params={'protocol': 'tcp',
+                                             'src': '127.0.0.1'},
+                                     tcp={'dport': 22})
+
+        specific_rule_nomatch = R.Rule(ipv=4,
+                                       target="ACCEPT",
+                                       params={'protocol': 'udp',
+                                               'src': '127.0.0.1'},
+                                       tcp={'dport': 22})
+
+        general_rule = R.Rule(ipv=4,
+                              target="ACCEPT",
+                              params={'protocol': 'tcp'},
+                              tcp={'dport': 22})
+
+        self.assertIn(specific_rule_match, general_rule)
+        self.assertNotIn(specific_rule_nomatch, general_rule)
+
 
 class Test_RuleArray(unittest.TestCase):
     """ Tests for the Rule Array. """
