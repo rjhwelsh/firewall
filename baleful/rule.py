@@ -246,6 +246,34 @@ class Rule:
 
         return rule
 
+    def __iptc_convert(self, rule):
+        """ Converts iptc.Rule into a baleful.Rule object. """
+
+        for key, value in self.IPTABLES.items():
+            if isinstance(rule, value['rule']):
+                ipv = key
+                break
+
+        kwargs = dict()
+        for match in rule.matches:
+            key = match.name
+            kwargs[key] = dict()
+
+            for prop, val in match.get_all_parameters().items():
+                kwargs[key][prop] = ','.join(val)
+
+        return Rule(params={'src': rule.get_src(),
+                            'dst': rule.get_dst(),
+                            'in_interface': rule.get_in_interface(),
+                            'out_interface': rule.get_out_interface(),
+                            'fragment': rule.get_fragment(),
+                            'protocol': rule.get_protocol()},
+                    ipv=ipv,
+                    chain=rule.chain.name,
+                    table=rule.chain.table.name.upper(),
+                    target=rule.target.name,
+                    **kwargs)
+
     def __iptc_rule_iter(self):
         """ Iterates over rules for particular ipv, table, chain. """
 
