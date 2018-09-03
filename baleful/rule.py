@@ -374,6 +374,15 @@ class Rule:
             return True
         return False
 
+    def matches(self):
+        """ Returns rules that match this ruleset."""
+        chain = self._iptc_chain()
+
+        for rule in chain.rules:
+            brule = self.from_iptc(rule)
+            if brule in self:
+                yield brule
+
 
 class RuleArray(list):
     """ A rule array class for handling Rules """
