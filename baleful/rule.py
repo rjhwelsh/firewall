@@ -216,6 +216,13 @@ class Rule:
         else:
             return value
 
+    def _iptc_table(self):
+        """ Returns the iptc table. """
+        tableName = self.table
+        tableClass = self.IPTABLES[self.ipv]['table']
+        return tableClass(
+            tableClass.__dict__[tableName])
+
     def iptc(self):
         """ Returns an iptc rule """
         rule = self.IPTABLES[self.ipv]['rule']()
