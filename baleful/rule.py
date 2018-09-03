@@ -291,8 +291,14 @@ class Rule:
 
         # Set rule params
         for arg, val in self.params.items():
-            set_methods[arg](
-                str(val))
+            if arg in ['src',
+                       'dst',
+                       'in_interface',
+                       'out_interface']:
+                if val:
+                    set_methods[arg](str(val))
+            else:
+                set_methods[arg](val)
 
         # Set match params
         for m, params in self.kwargs.items():
@@ -300,8 +306,7 @@ class Rule:
             match = rule.create_match(m)
             # Create arguments based on value dict.
             for arg, val in params.items():
-                match.__dict__[arg] = str(val)
-
+                match.set_parameter(arg, str(val))
         return rule
 
     @classmethod
