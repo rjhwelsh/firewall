@@ -57,6 +57,19 @@ class Test_Rule(unittest.TestCase):
         self.assertEqual(conv_rule.chain, "OUTPUT")
         self.assertEqual(conv_rule.table, "FILTER")
 
+    def testRuleExists(self):
+        """ Test rule existence in iptables. """
+        rule = R.Rule(ipv=4,
+                      target="ACCEPT",
+                      params={'protocol': 'tcp',
+                              'src': '127.0.0.1'},
+                      tcp={'dport': 22})
+
+        try:
+            self.assertFalse(rule.exists())
+        except iptc.ip4tc.IPTCError as e:
+            raise unittest.SkipTest(e)
+
     def testRuleFlip(self):
         """ Test rule reversal. """
         rule = R.Rule(ipv=4,
