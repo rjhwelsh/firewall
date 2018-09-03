@@ -255,6 +255,9 @@ class Test_RuleArray(unittest.TestCase):
                 self.assertEqual(rule.params[key],
                                  lo_route.params[key])
 
+        with self.assertRaises(TypeError):
+            rarr * list()
+
     def testRuleMultiplicationOverride(self):
         """ Tests Rule Multiplication RHS precedence. """
 
@@ -287,3 +290,36 @@ class Test_RuleArray(unittest.TestCase):
                              443)
             self.assertNotEqual(rule_no.kwargs['tcp']['dport'],
                                 443)
+
+        with self.assertRaises(TypeError):
+            list() * rarr
+
+    def testRuleArrayMatMul(self):
+        """ Tests RuleArray Matrix Multiplication. """
+        route_lo = R.RuleArray(
+            R.Rule(
+                params={'src': '127.0.0.1',
+                        'dst': '127.0.0.1'}))
+
+        route_wifi = R.RuleArray(
+            R.Rule(
+                params={'src': '192.168.1.0/24',
+                        'dst': '192.168.1.0/24'}))
+
+        app_ssh = R.RuleArray(
+            R.Rule(
+                params={'protocol': 'tcp'},
+                tcp={'dport': 22}))
+
+        app_http = R.RuleArray(
+            R.Rule(
+                params={'protocol': 'tcp'},
+                tcp={'dport': 80}))
+
+        with self.assertRaises(TypeError):
+            route_lo * app_http
+
+        rarr_lo_http = route_lo @ app_http
+        rarr_lo_ssh = route_lo @ app_ssh
+        rarr_wifi_http = route_wifi @ app_http
+        rarr_wifi_ssh = route_wifi @ app_ssh
