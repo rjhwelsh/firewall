@@ -52,9 +52,6 @@ class Test_Rule(unittest.TestCase):
 
         conv_rule = R.Rule.from_iptc(iptc_rule)
 
-        print(conv_rule.dict())
-        print(rule.dict())
-
         self.assertEqual(conv_rule, rule)
 
     def testRuleFlip(self):
