@@ -295,21 +295,8 @@ class Rule:
                     **kwargs)
 
     def __iptc_rule_iter(self):
-        """ Iterates over rules for particular ipv, table, chain. """
-
-        ipv = self.ipv
-
-        tableName = self.table
-        tableClass = self.IPTABLES[ipv]['table']
-        table = tableClass(
-            tableClass.__dict__[tableName])
-
-        chainName = self.chain
-        # Find matching chain
-        for chain in table.chains:
-            if chain.name == chainName:
-                break
-
+        """ Iterates over rules for a particular chain."""
+        chain = self._iptc_chain()
         for rule in chain.rules:
             yield rule
 
