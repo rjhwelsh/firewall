@@ -183,7 +183,9 @@ class Rule:
         for k1, v1 in general_rule.items():
             for k2, v2 in v1.items():
                 if not ((k1 == '') and (v2 == str(general_defaults[k2]))):
-                    if not specific_rule[k1][k2] == v2:
+                    if (k1 not in specific_rule or
+                            k2 not in specific_rule[k1] or
+                            not specific_rule[k1][k2] == v2):
                         return False
 
         return True
