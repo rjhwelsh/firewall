@@ -140,12 +140,21 @@ class Test_Rule(unittest.TestCase):
 
         ssh_client = R.Rule(tcp={'dport': 22})
         http_client = R.Rule(tcp={'dport': 80})
+        wifi_route = R.Rule(params={'src': '192.168.1.1'})
+        lo_route = R.Rule(params={'dst': '127.0.0.1'})
 
         ssh = http_client + ssh_client
         http = ssh_client + http_client
 
         self.assertEqual(ssh.kwargs['tcp']['dport'], 22)
         self.assertEqual(http.kwargs['tcp']['dport'], 80)
+
+        lo_wifi = wifi_route + lo_route
+
+        self.assertEqual(lo_wifi.params['src'],
+                         ipaddress.ip_network('192.168.1.1'))
+        self.assertEqual(lo_wifi.params['dst'],
+                         ipaddress.ip_network('127.0.0.1'))
 
         with self.assertRaises(TypeError):
             http_client + list()
