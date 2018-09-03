@@ -223,6 +223,15 @@ class Rule:
         return tableClass(
             tableClass.__dict__[tableName])
 
+    def _iptc_chain(self):
+        """ Returns the iptc chain. """
+        chainName = self.chain
+        chainClass = self.IPTABLES[self.ipv]['chain']
+
+        return chainClass(
+            self._iptc_table(),
+            chainName)
+
     def iptc(self):
         """ Returns an iptc rule """
         rule = self.IPTABLES[self.ipv]['rule']()
