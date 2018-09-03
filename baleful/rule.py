@@ -55,12 +55,16 @@ class Rule:
 
     def __default_params(self):
         """ Returns the default params. """
-        return {'src': self.IPTABLES[self.ipv]['addr'](0),
-                'dst': self.IPTABLES[self.ipv]['addr'](0),
-                'fragment': False,
-                'in_interface': None,
-                'out_interface': None,
-                'protocol': 'ip'}
+        params = {'src': self.IPTABLES[self.ipv]['addr'](0),
+                  'dst': self.IPTABLES[self.ipv]['addr'](0),
+                  'in_interface': None,
+                  'out_interface': None,
+                  'protocol': 'ip'}
+
+        if self.ipv == 4:
+            params['fragment'] = False
+
+        return params
 
     def __conv_params(self, params):
         """ Converts params to  relevant objects.
