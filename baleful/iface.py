@@ -58,13 +58,15 @@ class NetworkInterface:
              ipv=4,
              src=0,
              dst=0,
-             restrict=True):
+             restrict_in=True,
+             restrict_out=True):
         """ Generates a RuleArray based on network interface.
         table -- the name of the table
         chain -- the name of the chain
         src -- 0 = disable, 1 = gateway only, 2 = subnet, 3 = self
         dst -- (same as above)
-        restrict -- True means restricts to interface if possible.
+        restrict_in -- True means restricts to in_interface if possible.
+        restrict_out -- (as above) for out_interface
         ( Worked out based on table/chain) """
 
         p = "ip"
@@ -86,9 +88,11 @@ class NetworkInterface:
         params = dict()
 
         # Restrict rule to network interface
-        if restrict and chain:
+        if chain:
             for netif in self.__CHAIN_IF[chain]:
-                params[netif] = name
+                if ((restrict_in and netif == "in_interface") or
+                        (restrict_out and netif == "out_interface")):
+                    params[netif] = name
 
         if not route[src]:
             rarr.append(
