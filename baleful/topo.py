@@ -12,14 +12,14 @@ class Topology:
     """
 
     def __init__(self, forward: RuleArray,
-                 reverse: RuleArray):
+                 reverse=None):
         """ Constructs a Topology instance.
         This consists of two rules:
         forward -- a RuleArray to apply to normal rules
         reverse -- a RuleArray to apply to flip rules
         """
         self.forward = forward
-        self.reverse = reverse
+        self.reverse = reverse if reverse else RuleArray()
 
     @staticmethod
     def combine(x, y):
