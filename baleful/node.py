@@ -59,16 +59,32 @@ class Node:
                     iptc_rule)
 
     def stop(self):
-        """ Stops iptables instance for node. """
+        """ Stops iptables instance for node.
+        Deletes rules from iptables instance"""
+
+        for rule in self.rules + self.final_rules:
+            iptc_rule = rule.iptc()
+            iptc_rule.chain.delete_rule(
+                iptc_rule)
 
     def __str__(self):
         """ Returns a string of iptables actions to be performed. """
-
-    def log(self):
-        """ Changes the target of all rules to LOG. """
+        string = ''
+        for rule in self.rules + self.final_rules:
+            string += str(rule)
+            string += '\n'
+        return string
 
     def status(self):
-        """ Returns the status of each rule. """
+        """ Returns the status of each rule.
+        Returns a tuple (exists, (packets, bytes)) """
+
+        stats = list()
+        for rule in self.rules:
+            stats.append(
+                (rule.exists(), rule.iptc().get_counters()))
+
+        return stats
 
     def lock(self):
         """ Stops regular rules and implements lock down. """
