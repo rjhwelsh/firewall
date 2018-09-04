@@ -115,7 +115,9 @@ class Node:
         """ Clear all iptables rules.
         From all tables."""
 
-# TODO:
-# TODO: Method for adding and subtracting nodes
-# TODO: Add interfaces variable and methods
-# TODO: Add known address variable and methods
+        for i in ipv:
+            tableClass = Rule.IPTABLES[i]['table']
+            for t in tableClass.ALL:
+                table = tableClass(t)
+                for chain in table.chains:
+                    chain.flush()
