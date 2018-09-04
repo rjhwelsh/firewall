@@ -32,7 +32,7 @@ class NetworkInterface:
         addrs = netifaces.ifaddresses(self.name)
         gws = netifaces.gateways()
 
-        for p, n in self.protocols.items():
+        for p, n in self.PROTOCOLS.items():
             self.addr[p] = addrs[n] if n in addrs else list()
             self.gate[p] = [gate
                             for gate in gws[n]
