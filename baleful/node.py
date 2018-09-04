@@ -30,7 +30,15 @@ class Node:
         self.final_rules = final_rules if final_rules else list()
 
     def set_policy(self):
-        """ Sets the policy for node. """
+        """ Sets the policy for node.
+        Only policies described in self.policy will be set"""
+        for i, v in self.policy.items():
+            tableClass = Rule.IPTABLES[i]['table']
+            for t in tableClass.ALL:
+                table = tableClass(t)
+                for chain in table.chains:
+                    if chain.name in v:
+                        chain.set_policy(v[chain.name])
 
     def start(self):
         """ Starts iptables instance for node. """
