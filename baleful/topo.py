@@ -39,8 +39,8 @@ class Topology:
             i.flip()
 
         return Topology(
-            forward=xforward * (yforward + yreverse),
-            reverse=xreverse * (yforward_flipped + yreverse_flipped))
+            forward=xforward * yforward + xforward * yreverse_flipped,
+            reverse=xreverse * yforward_flipped + xreverse * yreverse)
 
     def __mul__(self, other):
         if isinstance(other, Rule):
