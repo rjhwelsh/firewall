@@ -478,14 +478,6 @@ class RuleArray(list):
             return NotImplemented
         return self.combine(y, self)
 
-    def __matmul__(self, other: list):
-        """ Matrix multiplication between two rule arrays. """
-        newArray = RuleArray()
-        for i in self:
-            for j in other:
-                newArray.append(i * j)
-        return newArray
-
     def __rtruediv__(self, other: Rule):
         """ Removes every item in Array from a rule. """
         rule = other.copy()

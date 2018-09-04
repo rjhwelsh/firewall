@@ -331,10 +331,10 @@ class Test_RuleArray(unittest.TestCase):
                    params={'protocol': 'tcp'},
                    tcp={'dport': 80}))
 
-        rarr_lo_http = route_lo @ app_http
-        rarr_lo_ssh = route_lo @ app_ssh
-        rarr_wifi_http = route_wifi @ app_http
-        rarr_wifi_ssh = route_wifi @ app_ssh
+        rarr_lo_http = route_lo * app_http
+        rarr_lo_ssh = route_lo * app_ssh
+        rarr_wifi_http = route_wifi * app_http
+        rarr_wifi_ssh = route_wifi * app_ssh
 
         rule_list = [rarr_lo_http[0],
                      rarr_lo_ssh[0],
@@ -344,7 +344,7 @@ class Test_RuleArray(unittest.TestCase):
         route_all = route_lo + route_wifi
         app_all = app_ssh + app_http
 
-        rarr = route_all @ app_all
+        rarr = route_all * app_all
 
         self.assertEqual(len(rarr), 4)
 

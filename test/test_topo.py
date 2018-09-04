@@ -70,16 +70,16 @@ class Test_Topo(unittest.TestCase):
 
         appArray = R.RuleArray(app, app2)
 
-        combo = route * appArray @ rule
+        combo = route * appArray * rule
         flip = combo.copy()
         for r in flip:
             r.flip()
 
-        rarr = topo @ (route * appArray)
+        rarr = topo * (route * appArray)
 
         for c, r in enumerate(combo):
             self.assertEqual(rarr[2*c+0].dict(), combo[c].dict())
             self.assertEqual(rarr[2*c+1].dict(), flip[c].dict())
 
         with self.assertRaises(TypeError):
-            (route * appArray) @ topo
+            (route * appArray) * topo
