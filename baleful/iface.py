@@ -38,6 +38,14 @@ class NetworkInterface:
                             for gate in gws[n]
                             if gate[1] == self.name] if n in gws else list()
 
+    @classmethod
+    def iter(cls):
+        """ Iterates over all network interfaces. """
+        def __get_all_ifs():
+            for n in netifaces.interfaces():
+                yield cls(name=n)
+        return __get_all_ifs()
+
     __CHAIN_IF = {"PREROUTING": ['in_interface'],
                   "INPUT": ['in_interface'],
                   "FORWARD": ['in_interface', 'out_interface'],

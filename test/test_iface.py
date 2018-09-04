@@ -50,3 +50,9 @@ class Test_NetworkInterface(unittest.TestCase):
                          ipaddress.ip_network(your_addr))
         self.assertEqual(rarr[0].params['out_interface'],
                          gw_if)
+
+    def testIter(self):
+        """ Test network interface iteration. """
+
+        for n, m in zip(self.netif.iter(), netifaces.interfaces()):
+            self.assertEqual(n.name, m)
