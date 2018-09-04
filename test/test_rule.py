@@ -11,7 +11,7 @@ class Test_Rule(unittest.TestCase):
 
     def testInit(self):
         """ Test rule initialization. """
-        rinit = R.Rule()
+        rinit = R.Rule(ipv=4, chain="OUTPUT",)
 
         self.assertEqual(rinit.IPTABLES[4]['rule'], iptc.Rule)
         self.assertEqual(rinit.IPTABLES[4]['table'], iptc.Table)
@@ -20,7 +20,7 @@ class Test_Rule(unittest.TestCase):
 
     def testRuleCreation(self):
         """ Test rule creation. """
-        rule_ssh_client = R.Rule(ipv=4,
+        rule_ssh_client = R.Rule(ipv=4, chain="OUTPUT",
                                  target="ACCEPT",
                                  params={'protocol': 'tcp',
                                          'src': '127.0.0.1'},
@@ -39,7 +39,7 @@ class Test_Rule(unittest.TestCase):
 
     def testRuleConversion(self):
         """ Test rule conversion from iptc.rule """
-        rule = R.Rule(ipv=4,
+        rule = R.Rule(ipv=4, chain="OUTPUT",
                       target="ACCEPT",
                       params={'protocol': 'tcp',
                               'src': '127.0.0.1'},
@@ -59,13 +59,13 @@ class Test_Rule(unittest.TestCase):
 
     def testRuleExists(self):
         """ Test rule existence in iptables. """
-        rule_not_exist = R.Rule(ipv=4,
+        rule_not_exist = R.Rule(ipv=4, chain="OUTPUT",
                                 target="ACCEPT",
                                 params={'protocol': 'tcp',
                                         'src': '127.0.0.1'},
                                 tcp={'dport': 22})
 
-        rule_exists = R.Rule(ipv=4,
+        rule_exists = R.Rule(ipv=4, chain="OUTPUT",
                              target="ACCEPT",
                              params={'protocol': 'tcp'},
                              tcp={'dport': 22})
@@ -111,15 +111,14 @@ class Test_Rule(unittest.TestCase):
     def testRuleAddition(self):
         """ Test rule addition. """
 
-        rule_ssh_client_1 = R.Rule(ipv=4,
-                                   chain='OUTPUT',
+        rule_ssh_client_1 = R.Rule(ipv=4, chain="OUTPUT",
                                    target="ACCEPT",
                                    params={'protocol': 'tcp',
                                            'dst': '127.1.1.0',
                                            'src': '127.0.0.1'},
                                    tcp={'dport': 22})
 
-        rule_ssh_client_2 = R.Rule(tcp={'sport': 23},
+        rule_ssh_client_2 = R.Rule(ipv=4, chain="OUTPUT", tcp={'sport': 23},
                                    icmp={'icmp_type': 'echo-request'})
 
         rule_ssh_client = rule_ssh_client_1 + rule_ssh_client_2
@@ -138,11 +137,12 @@ class Test_Rule(unittest.TestCase):
     def testRuleAdditionOverrides(self):
         """ Test rule addition precedence. """
 
-        ssh_client = R.Rule(tcp={'dport': 22})
-        http_client = R.Rule(tcp={'dport': 80})
-        wifi_route = R.Rule(params={'src': '192.168.1.1'},
+        ssh_client = R.Rule(ipv=4, chain="OUTPUT", tcp={'dport': 22})
+        http_client = R.Rule(ipv=4, chain="OUTPUT", tcp={'dport': 80})
+        wifi_route = R.Rule(ipv=4, chain="OUTPUT",
+                            params={'src': '192.168.1.1'},
                             target="DROP")
-        lo_route = R.Rule(params={'dst': '127.0.0.1'})
+        lo_route = R.Rule(ipv=4, chain="OUTPUT", params={'dst': '127.0.0.1'})
 
         ssh = http_client + ssh_client
         http = ssh_client + http_client
@@ -163,8 +163,8 @@ class Test_Rule(unittest.TestCase):
 
     def testRuleSubtraction(self):
         """ Test rule subtraction. """
-        rule_ssh_client_1 = R.Rule(ipv=4,
-                                   chain='OUTPUT',
+        rule_ssh_client_1 = R.Rule(chain="OUTPUT",
+                                   ipv=4,
                                    target="ACCEPT",
                                    params={'protocol': 'tcp',
                                            'dst': '127.1.1.0',
@@ -172,8 +172,8 @@ class Test_Rule(unittest.TestCase):
                                    tcp={'dport': 22,
                                         'sport': 23})
 
-        rule_ssh_client_2 = R.Rule(tcp={'dport': 22,
-                                        'sport': 24},
+        rule_ssh_client_2 = R.Rule(ipv=4, chain="OUTPUT", tcp={'dport': 22,
+                                                               'sport': 24},
                                    icmp={'icmp_type': 'echo-request'})
 
         rule_ssh_client = rule_ssh_client_1 - rule_ssh_client_2
@@ -187,9 +187,9 @@ class Test_Rule(unittest.TestCase):
     def testEqualityOperator(self):
         """ Tests rule equality relation."""
 
-        ssh_client = R.Rule(tcp={'dport': 22})
-        ssh_client2 = R.Rule(tcp={'dport': 22})
-        http_client = R.Rule(tcp={'dport': 80})
+        ssh_client = R.Rule(ipv=4, chain="OUTPUT", tcp={'dport': 22})
+        ssh_client2 = R.Rule(ipv=4, chain="OUTPUT", tcp={'dport': 22})
+        http_client = R.Rule(ipv=4, chain="OUTPUT", tcp={'dport': 80})
 
         self.assertEqual(ssh_client, ssh_client2)
         self.assertNotEqual(ssh_client, http_client)
@@ -200,19 +200,22 @@ class Test_Rule(unittest.TestCase):
     def testMembership(self):
         """ Tests membership methods. """
 
-        specific_rule_match = R.Rule(ipv=4,
+        specific_rule_match = R.Rule(ipv=4, chain="OUTPUT",
                                      target="ACCEPT",
+                                     table="FILTER",
                                      params={'protocol': 'tcp',
                                              'src': '127.0.0.1'},
                                      tcp={'dport': 22})
 
-        specific_rule_nomatch = R.Rule(ipv=4,
+        specific_rule_nomatch = R.Rule(ipv=4, chain="OUTPUT",
                                        target="ACCEPT",
+                                       table="FILTER",
                                        params={'protocol': 'udp',
                                                'src': '127.0.0.1'},
                                        tcp={'dport': 22})
 
-        general_rule = R.Rule(ipv=4,
+        general_rule = R.Rule(ipv=4, chain="OUTPUT",
+                              table="FILTER",
                               target="ACCEPT",
                               params={'protocol': 'tcp'},
                               tcp={'dport': 22})
@@ -233,8 +236,8 @@ class Test_RuleArray(unittest.TestCase):
     def testRuleArrayInit(self):
         """ Test Rule Array Initialization. """
 
-        ssh_client = R.Rule(tcp={'dport': 22})
-        http_client = R.Rule(tcp={'dport': 80})
+        ssh_client = R.Rule(ipv=4, chain="OUTPUT", tcp={'dport': 22})
+        http_client = R.Rule(ipv=4, chain="OUTPUT", tcp={'dport': 80})
 
         rarr = R.RuleArray(ssh_client, http_client)
 
@@ -247,12 +250,12 @@ class Test_RuleArray(unittest.TestCase):
     def testRuleMultiplication(self):
         """ Test Rule Array Multiplication. """
 
-        ssh_client = R.Rule(tcp={'dport': 22})
-        http_client = R.Rule(tcp={'dport': 80})
+        ssh_client = R.Rule(ipv=4, chain="OUTPUT", tcp={'dport': 22})
+        http_client = R.Rule(ipv=4, chain="OUTPUT", tcp={'dport': 80})
         rarr = R.RuleArray(ssh_client, http_client)
 
-        lo_route = R.Rule(params={'src': '127.0.0.1',
-                                  'dst': '127.0.0.1'})
+        lo_route = R.Rule(ipv=4, chain="OUTPUT", params={'src': '127.0.0.1',
+                                                         'dst': '127.0.0.1'})
 
         rarr_lo = rarr * lo_route
 
@@ -272,19 +275,19 @@ class Test_RuleArray(unittest.TestCase):
     def testRuleMultiplicationOverride(self):
         """ Tests Rule Multiplication RHS precedence. """
 
-        ssh_client = R.Rule(
-            params={'src': '10.1.1.1',
-                    'dst': '10.1.1.2'},
-            tcp={'dport': 22})
-        http_client = R.Rule(
-            params={'src': '10.1.1.1',
-                    'dst': '10.1.1.2'},
-            tcp={'dport': 80})
+        ssh_client = R.Rule(ipv=4, chain="OUTPUT",
+                            params={'src': '10.1.1.1',
+                                    'dst': '10.1.1.2'},
+                            tcp={'dport': 22})
+        http_client = R.Rule(ipv=4, chain="OUTPUT",
+                             params={'src': '10.1.1.1',
+                                     'dst': '10.1.1.2'},
+                             tcp={'dport': 80})
 
         rarr = R.RuleArray(ssh_client, http_client)
 
-        lo_route = R.Rule(params={'src': '127.0.0.1',
-                                  'dst': '127.0.0.1'},
+        lo_route = R.Rule(ipv=4, chain="OUTPUT", params={'src': '127.0.0.1',
+                                                         'dst': '127.0.0.1'},
                           tcp={'dport': 443})
 
         rarr_lo = rarr * lo_route
@@ -308,24 +311,24 @@ class Test_RuleArray(unittest.TestCase):
     def testRuleArrayMatMul(self):
         """ Tests RuleArray Matrix Multiplication. """
         route_lo = R.RuleArray(
-            R.Rule(
-                params={'src': '127.0.0.1',
-                        'dst': '127.0.0.1'}))
+            R.Rule(ipv=4, chain="OUTPUT",
+                   params={'src': '127.0.0.1',
+                           'dst': '127.0.0.1'}))
 
         route_wifi = R.RuleArray(
-            R.Rule(
-                params={'src': '192.168.1.0/24',
-                        'dst': '192.168.1.0/24'}))
+            R.Rule(ipv=4, chain="OUTPUT",
+                   params={'src': '192.168.1.0/24',
+                           'dst': '192.168.1.0/24'}))
 
         app_ssh = R.RuleArray(
-            R.Rule(
-                params={'protocol': 'tcp'},
-                tcp={'dport': 22}))
+            R.Rule(ipv=4, chain="OUTPUT",
+                   params={'protocol': 'tcp'},
+                   tcp={'dport': 22}))
 
         app_http = R.RuleArray(
-            R.Rule(
-                params={'protocol': 'tcp'},
-                tcp={'dport': 80}))
+            R.Rule(ipv=4, chain="OUTPUT",
+                   params={'protocol': 'tcp'},
+                   tcp={'dport': 80}))
 
         with self.assertRaises(TypeError):
             route_lo * app_http
