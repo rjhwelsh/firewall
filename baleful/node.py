@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import iptc
 from baleful.rule import Rule
 
 
@@ -40,8 +39,24 @@ class Node:
                     if chain.name in v:
                         chain.set_policy(v[chain.name])
 
-    def start(self):
-        """ Starts iptables instance for node. """
+    def start(self, position=None):
+        """ Starts iptables instance for node.
+        insert -- The position to insert rules at,
+        otherwise rules will be appended"""
+
+        # Reverse rule order if inserting
+        rules = self.rules.copy() + self.final_rules.copy()
+        if not isinstance(position, type(None)):
+            rules.reverse()
+
+        for rule in rules:
+            iptc_rule = rule.iptc()
+            if isinstance(position, type(None)):
+                iptc_rule.chain.append_rule(
+                    iptc_rule)
+            else:
+                iptc_rule.chain.insert_rule(
+                    iptc_rule)
 
     def stop(self):
         """ Stops iptables instance for node. """
