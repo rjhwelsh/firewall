@@ -2,12 +2,11 @@
 
 # Unit Tests for NetworkInterface
 import unittest
-import baleful.interface
-import subprocess
+import baleful.iface
 
 
 class Test_NetworkInterface(unittest.TestCase):
-    netif = baleful.interface.NetworkInterface
+    netif = baleful.iface.NetworkInterface
 
     def testLoopBack(self):
         """ Verify loopback interface can be detected."""
@@ -23,4 +22,4 @@ class Test_NetworkInterface(unittest.TestCase):
     def testNoSuchInterface(self):
         """ Verify raise error on non-existent interface."""
         with self.assertRaises(ValueError):
-            netif = self.netif("nosuchinterface")
+            self.netif("nosuchinterface")
