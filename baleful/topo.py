@@ -78,6 +78,22 @@ class Topology:
 
         return generator(self)
 
+    def __getitem__(self, key: int):
+        """ Returns rule item from Topology,
+        ordered thru self.forward, then self.reverse. """
 
+        if key < len(self.forward) and key >= 0:
+            return self.forward[key]
 
+        if key < 0 - len(self.reverse):
+            key += len(self.reverse)
+            return self.forward[key]
 
+        if key < len(self.forward) + len(self.reverse):
+            key -= len(self.forward)
+            return self.reverse[key]
+
+        if key < 0:
+            return self.reverse[key]
+
+        raise IndexError
