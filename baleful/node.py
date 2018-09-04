@@ -97,6 +97,19 @@ class Node:
     def lock(self):
         """ Stops regular rules and implements lock down. """
 
+        self.panic()
+
+        for rule in self.rules:
+            if rule.lock:
+                iptc_rule = rule.iptc()
+                iptc_rule.chain.append_rule(
+                    iptc_rule)
+
+        for rule in self.final_rules:
+            iptc_rule = rule.iptc()
+            iptc_rule.chain.append_rule(
+                iptc_rule)
+
     def panic(self):
         """ Panic, DROP all packets. """
 
