@@ -21,11 +21,6 @@ class Rule:
     WILD_ADDR = {4: "0.0.0.0/0.0.0.0",
                  6: "::/128"}
 
-    DEFAULTS = {'target': "ACCEPT",
-                'chain': "OUTPUT",
-                'table': "FILTER",
-                'ipv': 4}
-
     def __init__(self,
                  params=None,
                  target=None,
@@ -47,12 +42,10 @@ class Rule:
         mark = { ... }
         """
 
-        for key, val in self.DEFAULTS.items():
-            if isinstance(locals()[key], type(None)):
-                self.__dict__[key] = val
-            else:
-                self.__dict__[key] = locals()[key]
-
+        self.target = target
+        self.chain = chain
+        self.table = table
+        self.ipv = ipv
         self.params = self.__conv_params(params)
         self.kwargs = kwargs if kwargs else dict()
 
