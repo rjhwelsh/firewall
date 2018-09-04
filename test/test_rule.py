@@ -22,6 +22,7 @@ class Test_Rule(unittest.TestCase):
         """ Test rule creation. """
         rule_ssh_client = R.Rule(ipv=4, chain="OUTPUT",
                                  target="ACCEPT",
+                                 table="FILTER",
                                  params={'protocol': 'tcp',
                                          'src': '127.0.0.1'},
                                  tcp={'dport': 22})
@@ -40,6 +41,7 @@ class Test_Rule(unittest.TestCase):
     def testRuleConversion(self):
         """ Test rule conversion from iptc.rule """
         rule = R.Rule(ipv=4, chain="OUTPUT",
+                      table="FILTER",
                       target="ACCEPT",
                       params={'protocol': 'tcp',
                               'src': '127.0.0.1'},
@@ -60,6 +62,7 @@ class Test_Rule(unittest.TestCase):
     def testRuleExists(self):
         """ Test rule existence in iptables. """
         rule_not_exist = R.Rule(ipv=4, chain="OUTPUT",
+                                table="FILTER",
                                 target="ACCEPT",
                                 params={'protocol': 'tcp',
                                         'src': '127.0.0.1'},
@@ -67,6 +70,7 @@ class Test_Rule(unittest.TestCase):
 
         rule_exists = R.Rule(ipv=4, chain="OUTPUT",
                              target="ACCEPT",
+                             table="FILTER",
                              params={'protocol': 'tcp'},
                              tcp={'dport': 22})
 
