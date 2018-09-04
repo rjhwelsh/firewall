@@ -34,6 +34,41 @@ class Test_Topo(unittest.TestCase):
 
     def testRmul(self):
         """ Test __rmul__ with Rules """
+    def testMulTopology(self):
+        rule = R.RuleArray(R.Rule(chain="OUTPUT"))
+        rule_flip = R.RuleArray(R.Rule(chain="INPUT"))
+        topo1 = T.Topology(rule, rule_flip)
+
+        topo2 = T.Topology(
+            R.RuleArray(
+                R.Rule(
+                    params={'protocol': 'tcp'},
+                    tcp={'dport': 54921})),
+            # Scanner (server) connection to client
+            R.RuleArray(
+                R.Rule(
+                    params={'protocol': 'udp'},
+                    udp={'dport': 54925})))
+
+        topo3 = (topo1 * topo2)
+
+        self.assertEqual(topo3[0].dict()['chain'], "OUTPUT")
+        self.assertEqual(topo3[0].dict()['tcp']['dport'], 54921)
+        self.assertEqual(topo3[1].dict()['chain'], "OUTPUT")
+        self.assertEqual(topo3[1].dict()['udp']['sport'], 54925)
+        self.assertEqual(topo3[2].dict()['chain'], "INPUT")
+        self.assertEqual(topo3[2].dict()['tcp']['sport'], 54921)
+        self.assertEqual(topo3[3].dict()['chain'], "INPUT")
+        self.assertEqual(topo3[3].dict()['udp']['dport'], 54925)
+
+        # for r in topo3:
+        #     print('{}, {}, src: {}, dst: {}'.format(
+        #         r.dict()['chain'],
+        #         r.dict()['tcp'] if 'tcp' in r.dict() else r.dict()['udp'],
+        #         r.dict()['']['src'],
+        #         r.dict()['']['dst'],
+        #     ))
+
 
         rule = R.RuleArray(R.Rule(chain="OUTPUT"))
         rule_flip = R.RuleArray(R.Rule(chain="INPUT"))
