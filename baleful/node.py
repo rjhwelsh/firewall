@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from baleful.rule import Rule
+import iptc
 
 
 class Node:
@@ -120,7 +121,15 @@ class Node:
                 table = tableClass(t)
                 for chain in table.chains:
                     chain.flush()
-                    chain.delete()
+
+                    # Delete chain if possible
+                    try:
+                        chain.delete()
+                    except iptc.ip4tc.IPTCError:
+                        pass
+                    except iptc.ip6tc.IPTCError:
+                        pass
+
                     if chain.name in v:
                         chain.set_policy(v[chain.name])
 
