@@ -89,10 +89,17 @@ class Rule:
         defaults = self.__default_params()
         kwargs = rule.kwargs
 
-        rule.target = other.target
-        rule.chain = other.chain
-        rule.table = other.table
-        rule.ipv = other.ipv
+        if other.target:
+            rule.target = other.target
+
+        if other.chain:
+            rule.chain = other.chain
+
+        if other.table:
+            rule.table = other.table
+
+        if other.ipv:
+            rule.ipv = other.ipv
 
         for key in params:
             if not other.params[key] == defaults[key]:
