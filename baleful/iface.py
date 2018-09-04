@@ -76,15 +76,26 @@ class NetworkInterface:
                  3: [a['addr'] for a in addr]}
 
         params = dict()
+
         # Restrict rule to network interface
         if restrict and chain:
             for netif in self.__CHAIN_IF[chain]:
                 params[netif] = name
 
+        if not route[src]:
+            rarr.append(
+                Rule(params=params,
+                     chain=chain,
+                     table=table,
+                     ipv=ipv))
+
         # Restrict rule to src/dst addresses
         for s, d in zip(route[src], route[dst]):
-            params['src'] = s
-            params['dst'] = d
+            if s:
+                params['src'] = s
+            if d:
+                params['dst'] = d
+
             rarr.append(
                 Rule(params=params,
                      chain=chain,
