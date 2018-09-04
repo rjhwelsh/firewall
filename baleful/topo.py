@@ -21,6 +21,29 @@ class Topology:
         self.forward = forward
         self.reverse = reverse
 
+    @staticmethod
+    def combine(x, y):
+        """ Combines two topologies together.
+         x.f*(y.f + y.r) x.r*(y.fr + y.rr)"""
+
+        xforward = x.forward
+        xreverse = x.reverse
+
+        yforward = y.forward
+        yreverse = y.reverse
+
+        yforward_flipped = y.forward.copy()
+        yreverse_flipped = y.forward.copy()
+
+        for i, j in zip(yforward_flipped,
+                        yreverse_flipped):
+            i.flip()
+            j.flip()
+
+        return Topology(
+            forward=xforward * (yforward + yreverse),
+            reverse=xreverse * (yforward_flipped + yreverse_flipped))
+
     def __mul__(self, other: Rule):
         """ Multiplies Topology objects with a Rule"""
         newArray = baleful.rule.RuleArray()
