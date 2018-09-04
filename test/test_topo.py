@@ -22,7 +22,7 @@ class Test_Topo(unittest.TestCase):
 
         app = R.Rule(tcp={'dport': 22})
 
-        combo = route + app
+        combo = route + app + rule[0]
         flip = combo.copy()
         flip.flip()
 
@@ -44,7 +44,8 @@ class Test_Topo(unittest.TestCase):
 
         app = R.Rule(tcp={'dport': 22})
 
-        combo = route + app
+        combo = route + app + rule[0]
+
         flip = combo.copy()
         flip.flip()
 
@@ -69,7 +70,7 @@ class Test_Topo(unittest.TestCase):
 
         appArray = R.RuleArray(app, app2)
 
-        combo = route * appArray
+        combo = route * appArray @ rule
         flip = combo.copy()
         for r in flip:
             r.flip()
