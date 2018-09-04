@@ -357,7 +357,7 @@ class Test_RuleArray(unittest.TestCase):
             rarr = R.RuleArray.read()
 
             for rule in rarr:
-                print(rule.dict())
+                print(rule)
 
         except iptc.ip4tc.IPTCError as e:
             raise unittest.SkipTest(e)
