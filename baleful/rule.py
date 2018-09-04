@@ -84,7 +84,7 @@ class Rule:
         where y values update x values. """
 
         if not isinstance(other, type(self)):
-            raise(TypeError)
+            return NotImplemented
 
         rule = self.copy()
         params = rule.params
@@ -128,7 +128,7 @@ class Rule:
         x - y, where y values are removed from x. """
 
         if not isinstance(other, type(self)):
-            raise(TypeError)
+            return NotImplemented
 
         rule = self.copy()
         params = rule.params
@@ -185,7 +185,7 @@ class Rule:
 
     def __eq__(self, other):
         if not isinstance(other, type(self)):
-            raise(TypeError)
+            return NotImplemented
 
         if (self.__str_dict(self.dict()) == self.__str_dict(other.dict())):
             return True
