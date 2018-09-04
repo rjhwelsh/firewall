@@ -6,6 +6,14 @@ from baleful.rule import Rule
 class Node:
     """ Iptables firewall implementation for a node. """
 
+    __PANIC__ = {
+        4: {"INPUT": "DROP",
+            "OUTPUT": "DROP",
+            "FORWARD": "DROP"},
+        6: {"INPUT": "DROP",
+            "OUTPUT": "DROP",
+            "FORWARD": "DROP"}}
+
     def __init__(self,
                  hostname=str(),
                  rules=None,
@@ -92,8 +100,20 @@ class Node:
     def panic(self):
         """ Panic, DROP all packets. """
 
-    def flush(self):
-        """ Clear all iptables rules. """
+        # Set policy to DROP
+        for i, v in self.__PANIC__.items():
+            tableClass = Rule.IPTABLES[i]['table']
+            for t in tableClass.ALL:
+                table = tableClass(t)
+                for chain in table.chains:
+                    chain.flush()
+                    chain.delete()
+                    if chain.name in v:
+                        chain.set_policy(v[chain.name])
+
+    def flush(self, ipv=[4, 6]):
+        """ Clear all iptables rules.
+        From all tables."""
 
 # TODO:
 # TODO: Method for adding and subtracting nodes
