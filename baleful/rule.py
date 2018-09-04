@@ -51,10 +51,11 @@ class Rule:
 
     def __default_params(self):
         """ Returns the default params. """
-        params = {'src': self.IPTABLES[self.ipv]['addr'](
-            self.WILD_ADDR[self.ipv]),
-            'dst': self.IPTABLES[self.ipv]['addr'](
-            self.WILD_ADDR[self.ipv]),
+        ipv = self.ipv if self.ipv else 4
+        params = {'src': self.IPTABLES[ipv]['addr'](
+            self.WILD_ADDR[ipv]),
+            'dst': self.IPTABLES[ipv]['addr'](
+            self.WILD_ADDR[ipv]),
             'in_interface': None,
             'out_interface': None,
             'protocol': 'ip'}
@@ -68,11 +69,12 @@ class Rule:
         """ Converts params to  relevant objects.
             src, dst -> ip_network objects
         """
+        ipv = self.ipv if self.ipv else 4
         all_params = self.__default_params()
         if params:
             for key, val in params.items():
                 if key in ['src', 'dst']:
-                    params[key] = self.IPTABLES[self.ipv]['addr'](val)
+                    params[key] = self.IPTABLES[ipv]['addr'](val)
             all_params.update(params)
         return all_params
 
@@ -144,10 +146,10 @@ class Rule:
                 x.pop(i)
             return x
 
-        params = diff(params, other.params)
+        rule.params = diff(params, other.params)
 
         for key in kwargs:
-            kwargs[key] = diff(kwargs[key], other.kwargs[key])
+            rule.kwargs[key] = diff(kwargs[key], other.kwargs[key])
 
         return rule
 
@@ -301,15 +303,17 @@ class Rule:
 
     def _iptc_table(self):
         """ Returns the iptc table. """
-        tableName = self.table
-        tableClass = self.IPTABLES[self.ipv]['table']
+        ipv = self.ipv if self.ipv else 4
+        tableName = self.table if self.table else "FILTER"
+        tableClass = self.IPTABLES[ipv]['table']
         return tableClass(
             tableClass.__dict__[tableName])
 
     def _iptc_chain(self):
         """ Returns the iptc chain. """
-        chainName = self.chain
-        chainClass = self.IPTABLES[self.ipv]['chain']
+        ipv = self.ipv if self.ipv else 4
+        chainName = self.chain if self.chain else "OUTPUT"
+        chainClass = self.IPTABLES[ipv]['chain']
 
         return chainClass(
             self._iptc_table(),
@@ -318,7 +322,8 @@ class Rule:
     def iptc(self):
         """ Returns an iptc rule """
 
-        ruleClass = self.IPTABLES[self.ipv]['rule']
+        ipv = self.ipv if self.ipv else 4
+        ruleClass = self.IPTABLES[ipv]['rule']
         rule = ruleClass(
             chain=self._iptc_chain())
 
