@@ -44,33 +44,33 @@ class Topology:
             forward=xforward * (yforward + yreverse),
             reverse=xreverse * (yforward_flipped + yreverse_flipped))
 
-    def __mul__(self, other: Rule):
-        """ Multiplies Topology objects with a Rule"""
-        newArray = baleful.rule.RuleArray()
-        j = other.copy()
+    def __mul__(self, other):
+        if isinstance(other, Rule):
+            y = Topology(RuleArray(other))
+        elif isinstance(other, RuleArray):
+            y = Topology(other)
+        elif isinstance(other, Topology):
+            y = other
+        else:
+            return NotImplemented
 
-        forward = self.forward
-        reverse = self.reverse
+        return self.combine(self, y)
 
-        newArray += forward * other
-        j.flip()
-        newArray += reverse * j
+    def __rmul__(self, other):
+        if isinstance(other, Rule):
+            y = Topology(RuleArray(other))
+        elif isinstance(other, RuleArray):
+            y = Topology(other)
+        elif isinstance(other, Topology):
+            y = other
+        else:
+            return NotImplemented
 
-        return newArray
+        return self.combine(self, y)
 
-    def __rmul__(self, other: Rule):
-        """ Multiplies Topology with a Rule (Right) """
-        newArray = baleful.rule.RuleArray()
-        j = other.copy()
 
-        forward = self.forward
-        reverse = self.reverse
 
-        newArray += other * forward
-        j.flip()
-        newArray += j * reverse
 
-        return newArray
 
 
 
