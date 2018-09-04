@@ -148,8 +148,8 @@ class Test_Rule(unittest.TestCase):
                             target="DROP")
         lo_route = R.Rule(ipv=4, chain="OUTPUT", params={'dst': '127.0.0.1'})
 
-        ssh = http_client * ssh_client
-        http = ssh_client * http_client
+        ssh = ssh_client * http_client
+        http = http_client * ssh_client
 
         self.assertEqual(ssh.kwargs['tcp']['dport'], 22)
         self.assertEqual(http.kwargs['tcp']['dport'], 80)
@@ -274,7 +274,7 @@ class Test_RuleArray(unittest.TestCase):
             rarr * list()
 
     def testRuleMultiplicationOverride(self):
-        """ Tests Rule Multiplication RHS precedence. """
+        """ Tests Rule Multiplication LHS precedence. """
 
         ssh_client = R.Rule(ipv=4, chain="OUTPUT",
                             params={'src': '10.1.1.1',
@@ -291,8 +291,8 @@ class Test_RuleArray(unittest.TestCase):
                                                          'dst': '127.0.0.1'},
                           tcp={'dport': 443})
 
-        rarr_lo = rarr * lo_route
-        rarr_no = lo_route * rarr
+        rarr_no = rarr * lo_route
+        rarr_lo = lo_route * rarr
 
         for rule_lo, rule_no in zip(rarr_lo, rarr_no):
             for key in ['src', 'dst']:
