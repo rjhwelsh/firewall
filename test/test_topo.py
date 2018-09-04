@@ -53,3 +53,19 @@ class Test_Topo(unittest.TestCase):
 
         self.assertEqual(rarr[0].dict(), combo.dict())
         self.assertEqual(rarr[1].dict(), flip.dict())
+    def testGetItem(self):
+        """ Test __getitem__ with Rules. """
+
+        rule = R.RuleArray(R.Rule(chain="OUTPUT"))
+        rule_flip = R.RuleArray(R.Rule(chain="INPUT"))
+
+        topo = T.Topology(rule, rule_flip)
+
+        self.assertEqual(topo[0], rule[0])
+        self.assertEqual(topo[1], rule_flip[0])
+
+        with self.assertRaises(IndexError):
+            topo[2]
+
+        with self.assertRaises(TypeError):
+            topo['string']
