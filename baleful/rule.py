@@ -450,20 +450,29 @@ class RuleArray(list):
                 rules.pop(rule)
         return rules
 
-    def __rmul__(self, other: Rule):
+    def __rmul__(self, other):
         """ Adds a rule with every item in Array.
         y * x_arr = z_arr, where values in x_arr take precedence. """
         rarr = self.copy()
 
-        for i, r in enumerate(rarr):
-            rarr[i] = other * r
+        if isinstance(other, Rule):
+            for i, r in enumerate(rarr):
+                rarr[i] = other * r
+        else:
+            return NotImplemented
+
         return rarr
 
-    def __mul__(self, other: Rule):
+    def __mul__(self, other):
         """ Adds a rule with every item in Array. """
         rarr = self.copy()
-        for i, r in enumerate(rarr):
-            rarr[i] = r * other
+
+        if isinstance(other, Rule):
+            for i, r in enumerate(rarr):
+                rarr[i] = r * other
+        else:
+            return NotImplemented
+
         return rarr
 
     def __matmul__(self, other: list):
