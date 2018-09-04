@@ -341,8 +341,9 @@ class Test_RuleArray(unittest.TestCase):
                      rarr_wifi_http[0],
                      rarr_wifi_ssh[0]]
 
-        route_all = route_lo * route_wifi
-        app_all = app_ssh * app_http
+        route_all = route_lo + route_wifi
+        app_all = app_ssh + app_http
+
         rarr = route_all @ app_all
 
         self.assertEqual(len(rarr), 4)
