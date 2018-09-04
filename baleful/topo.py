@@ -72,13 +72,5 @@ class Topology:
 
         return newArray
 
-    def __matmul__(self, other: RuleArray):
-        """ Multiplies Topology objects with a RuleArray
-        N.B. Topology rules take precedence over RuleArray rules.
-        Topology @ RuleArray -> RuleArray(new) ONLY"""
-        newArray = baleful.rule.RuleArray()
 
-        for i in other:
-            newArray += i * self
 
-        return newArray
