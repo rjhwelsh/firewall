@@ -11,27 +11,27 @@ class Topology:
     topology.
     """
 
-    def __init__(self, ruleArray: RuleArray,
-                 ruleArray_flip: RuleArray):
+    def __init__(self, forward: RuleArray,
+                 reverse: RuleArray):
         """ Constructs a Topology instance.
         This consists of two rules:
-        ruleArray -- a ruleArray to apply to normal rules
-        ruleArray_flip -- a ruleArray to apply to flip rules
+        forward -- a RuleArray to apply to normal rules
+        reverse -- a RuleArray to apply to flip rules
         """
-        self.ruleArray = ruleArray
-        self.ruleArray_flip = ruleArray_flip
+        self.forward = forward
+        self.reverse = reverse
 
     def __mul__(self, other: Rule):
         """ Multiplies Topology objects with a Rule"""
         newArray = baleful.rule.RuleArray()
         j = other.copy()
 
-        ruleArray = self.ruleArray
-        ruleArray_flip = self.ruleArray_flip
+        forward = self.forward
+        reverse = self.reverse
 
-        newArray += ruleArray * other
+        newArray += forward * other
         j.flip()
-        newArray += ruleArray_flip * j
+        newArray += reverse * j
 
         return newArray
 
@@ -40,12 +40,12 @@ class Topology:
         newArray = baleful.rule.RuleArray()
         j = other.copy()
 
-        ruleArray = self.ruleArray
-        ruleArray_flip = self.ruleArray_flip
+        forward = self.forward
+        reverse = self.reverse
 
-        newArray += other * ruleArray
+        newArray += other * forward
         j.flip()
-        newArray += j * ruleArray_flip
+        newArray += j * reverse
 
         return newArray
 
