@@ -200,7 +200,8 @@ class Rule:
                                 not specific_rule[k1][k2] == v2):
                             return False
             else:
-                if not v1 == specific_rule[k1]:
+                if (k1 not in specific_rule or
+                        not v1 == specific_rule[k1]):
                     return False
 
         return True
