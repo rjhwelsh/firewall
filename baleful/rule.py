@@ -29,6 +29,7 @@ class Rule:
                  chain=None,
                  table=None,
                  ipv=None,
+                 lock=False,
                  **kwargs):
         """Keyword Arguments:
         params -- iptc rule parameters (dict)
@@ -36,6 +37,7 @@ class Rule:
         chain -- the chain to put the rule in (str)
         table -- the table to put the rule in (str)
         ipv -- The inet version 4 or 6 (int)
+        lock -- Set to True, if this rule should be enabled for lockdown.
         **kwargs    -- iptc match module parameters (dict)
 
         Example:
@@ -48,6 +50,7 @@ class Rule:
         self.chain = chain
         self.table = table
         self.ipv = ipv
+        self.lock = lock
         self.params = self.__conv_params(params)
         self.kwargs = kwargs if kwargs else dict()
 
