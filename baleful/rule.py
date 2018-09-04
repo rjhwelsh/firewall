@@ -78,50 +78,57 @@ class Rule:
             all_params.update(params)
         return all_params
 
-    def __mul__(self, other):
+    @staticmethod
+    def combine(x, y):
         """ Combines two rules together.
         x + y, x.__add__(y)
-        where y values update x values. """
+        y values only override unset x values """
 
-        if not isinstance(other, type(self)):
+        if not isinstance(x, Rule) or not isinstance(y, Rule):
             return NotImplemented
 
-        rule = self.copy()
+        rule = x.copy()
         params = rule.params
-        defaults = self.__default_params()
+        defaults = x.__default_params()
         kwargs = rule.kwargs
 
-        if other.target:
-            rule.target = other.target
+        if not x.target and y.target:
+            rule.target = y.target
 
-        if other.chain:
-            rule.chain = other.chain
+        if not x.chain and y.chain:
+            rule.chain = y.chain
 
-        if other.table:
-            rule.table = other.table
+        if not x.table and y.table:
+            rule.table = y.table
 
-        if other.ipv:
-            rule.ipv = other.ipv
+        if not x.ipv and y.ipv:
+            rule.ipv = y.ipv
 
         for key in params:
-            if not other.params[key] == defaults[key]:
-                params[key] = other.params[key]
+            if x.params[key] == defaults[key]:
+                params[key] = y.params[key]
 
         kwarg_keys = set(
             [k for k in kwargs] +
-            [k for k in other.kwargs])
+            [k for k in y.kwargs])
 
         for key in kwarg_keys:
-            if key in kwargs and key in other.kwargs:
-                kwargs[key].update(other.kwargs[key])
+            if key in kwargs and key in y.kwargs:
+                for k2, v2 in y.kwargs[key].items():
+                    if k2 not in kwargs[key]:
+                        kwargs[key][k2] = v2
+
             elif key in kwargs:
                 pass
-            elif key in other.kwargs:
-                kwargs[key] = other.kwargs[key].copy()
+            elif key in y.kwargs:
+                kwargs[key] = y.kwargs[key].copy()
             else:
                 raise(ValueError("Unexpected Condition!."))
 
         return rule
+
+    def __mul__(self, other):
+        return self.combine(self, other)
 
     def __sub__(self, other):
         """ Subtract values of one rule from another.
