@@ -170,6 +170,48 @@ class Rule:
              'table': self.table})
         return kwargs
 
+    def __str__(self):
+        """ Return a string representation of the rule."""
+        ipv = self.ipv if self.ipv else 4
+        vdict = self.dict()
+
+        for val in ['target', 'chain', 'table']:
+            vdict.pop(val)
+
+        string = ''
+        string += self.IPTABLES[ipv]['str']
+
+        if self.table:
+            string += ' -t '
+            string += str(self.table)
+
+        if self.chain:
+            string += ' -A '
+            string += str(self.chain)
+
+        k1s = [k for k in vdict]
+        k1s.sort()
+        for k1 in k1s:
+            v1 = vdict[k1]
+            k2s = [k for k in v1]
+            k2s.sort()
+            if k1:
+                string += ' -m '
+                string += k1
+            for k2 in k2s:
+                v2 = v1[k2]
+                if v2:
+                    string += ' --'
+                    string += k2.replace('_', '-')
+                    string += ' '
+                    string += str(v2)
+
+        if self.target:
+            string += ' -j '
+            string += str(self.target)
+
+        return string
+
     def __str_dict(self, kwargs):
         """ Converts a dictionary into string arguments for comparison. """
         k1s = [k for k in kwargs]
