@@ -93,6 +93,7 @@ class Rule:
 
         rule = self.copy()
         params = rule.params
+        defaults = self.__default_params()
         kwargs = rule.kwargs
 
         rule.target = other.target
@@ -100,7 +101,9 @@ class Rule:
         rule.table = other.table
         rule.ipv = other.ipv
 
-        params.update(other.params)
+        for key in params:
+            if not other.params[key] == defaults[key]:
+                params[key] = other.params[key]
 
         kwarg_keys = set(
             [k for k in kwargs] +
