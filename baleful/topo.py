@@ -33,12 +33,10 @@ class Topology:
         yreverse = y.reverse
 
         yforward_flipped = y.forward.copy()
-        yreverse_flipped = y.forward.copy()
+        yreverse_flipped = y.reverse.copy()
 
-        for i, j in zip(yforward_flipped,
-                        yreverse_flipped):
+        for i in yforward_flipped + yreverse_flipped:
             i.flip()
-            j.flip()
 
         return Topology(
             forward=xforward * (yforward + yreverse),
