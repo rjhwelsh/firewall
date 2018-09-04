@@ -22,11 +22,11 @@ class Test_Topo(unittest.TestCase):
 
         app = R.Rule(tcp={'dport': 22})
 
-        combo = route + app + rule[0]
+        combo = route * app * rule[0]
         flip = combo.copy()
         flip.flip()
 
-        rarr = topo * (route + app)
+        rarr = topo * (route * app)
 
         self.assertEqual(rarr[0].dict(), combo.dict())
         self.assertEqual(rarr[1].dict(), flip.dict())
@@ -44,12 +44,12 @@ class Test_Topo(unittest.TestCase):
 
         app = R.Rule(tcp={'dport': 22})
 
-        combo = route + app + rule[0]
+        combo = route * app * rule[0]
 
         flip = combo.copy()
         flip.flip()
 
-        rarr = (route + app) * topo
+        rarr = (route * app) * topo
 
         self.assertEqual(rarr[0].dict(), combo.dict())
         self.assertEqual(rarr[1].dict(), flip.dict())

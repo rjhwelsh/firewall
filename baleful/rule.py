@@ -78,8 +78,8 @@ class Rule:
             all_params.update(params)
         return all_params
 
-    def __add__(self, other):
-        """ Adds two rules together.
+    def __mul__(self, other):
+        """ Combines two rules together.
         x + y, x.__add__(y)
         where y values update x values. """
 
@@ -456,14 +456,14 @@ class RuleArray(list):
         rarr = self.copy()
 
         for i, r in enumerate(rarr):
-            rarr[i] = other + r
+            rarr[i] = other * r
         return rarr
 
     def __mul__(self, other: Rule):
         """ Adds a rule with every item in Array. """
         rarr = self.copy()
         for i, r in enumerate(rarr):
-            rarr[i] = r + other
+            rarr[i] = r * other
         return rarr
 
     def __matmul__(self, other: list):
@@ -471,7 +471,7 @@ class RuleArray(list):
         newArray = RuleArray()
         for i in self:
             for j in other:
-                newArray.append(i + j)
+                newArray.append(i * j)
         return newArray
 
     def __rtruediv__(self, other: Rule):

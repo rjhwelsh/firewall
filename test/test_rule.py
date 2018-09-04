@@ -125,7 +125,7 @@ class Test_Rule(unittest.TestCase):
         rule_ssh_client_2 = R.Rule(ipv=4, chain="OUTPUT", tcp={'sport': 23},
                                    icmp={'icmp_type': 'echo-request'})
 
-        rule_ssh_client = rule_ssh_client_1 + rule_ssh_client_2
+        rule_ssh_client = rule_ssh_client_1 * rule_ssh_client_2
 
         # Test matches in rule.
         self.assertEqual(rule_ssh_client.kwargs['tcp']['dport'], 22)
@@ -148,13 +148,13 @@ class Test_Rule(unittest.TestCase):
                             target="DROP")
         lo_route = R.Rule(ipv=4, chain="OUTPUT", params={'dst': '127.0.0.1'})
 
-        ssh = http_client + ssh_client
-        http = ssh_client + http_client
+        ssh = http_client * ssh_client
+        http = ssh_client * http_client
 
         self.assertEqual(ssh.kwargs['tcp']['dport'], 22)
         self.assertEqual(http.kwargs['tcp']['dport'], 80)
 
-        lo_wifi = wifi_route + lo_route
+        lo_wifi = wifi_route * lo_route
 
         self.assertEqual(lo_wifi.params['src'],
                          ipaddress.ip_network('192.168.1.1'))
@@ -163,7 +163,7 @@ class Test_Rule(unittest.TestCase):
         self.assertEqual(lo_wifi.target, "DROP")
 
         with self.assertRaises(TypeError):
-            http_client + list()
+            http_client * list()
 
     def testRuleSubtraction(self):
         """ Test rule subtraction. """
@@ -334,9 +334,6 @@ class Test_RuleArray(unittest.TestCase):
                    params={'protocol': 'tcp'},
                    tcp={'dport': 80}))
 
-        with self.assertRaises(TypeError):
-            route_lo * app_http
-
         rarr_lo_http = route_lo @ app_http
         rarr_lo_ssh = route_lo @ app_ssh
         rarr_wifi_http = route_wifi @ app_http
@@ -347,8 +344,8 @@ class Test_RuleArray(unittest.TestCase):
                      rarr_wifi_http[0],
                      rarr_wifi_ssh[0]]
 
-        route_all = route_lo + route_wifi
-        app_all = app_ssh + app_http
+        route_all = route_lo * route_wifi
+        app_all = app_ssh * app_http
         rarr = route_all @ app_all
 
         self.assertEqual(len(rarr), 4)
