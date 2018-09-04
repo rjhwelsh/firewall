@@ -68,8 +68,15 @@ class Topology:
 
         return self.combine(self, y)
 
+    def __iter__(self):
+        def generator(self):
+            for rule in self.forward:
+                yield rule
 
+            for rule in self.reverse:
+                yield rule
 
+        return generator(self)
 
 
 
