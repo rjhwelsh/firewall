@@ -450,30 +450,33 @@ class RuleArray(list):
                 rules.pop(rule)
         return rules
 
-    def __rmul__(self, other):
-        """ Adds a rule with every item in Array.
-        y * x_arr = z_arr, where values in x_arr take precedence. """
-        rarr = self.copy()
-
-        if isinstance(other, Rule):
-            for i, r in enumerate(rarr):
-                rarr[i] = other * r
-        else:
-            return NotImplemented
-
-        return rarr
+    @staticmethod
+    def combine(x, y):
+        """ Combines two RuleArrays. """
+        newArray = RuleArray()
+        for i in x:
+            for j in y:
+                newArray.append(i * j)
+        return newArray
 
     def __mul__(self, other):
         """ Adds a rule with every item in Array. """
-        rarr = self.copy()
-
         if isinstance(other, Rule):
-            for i, r in enumerate(rarr):
-                rarr[i] = r * other
+            y = RuleArray(other)
+        elif isinstance(other, RuleArray):
+            y = other
         else:
             return NotImplemented
+        return self.combine(self, y)
 
-        return rarr
+    def __rmul__(self, other):
+        """ Adds a rule with every item in Array.
+        y * x_arr = z_arr, where values in x_arr take precedence. """
+        if isinstance(other, Rule):
+            y = RuleArray(other)
+        else:
+            return NotImplemented
+        return self.combine(y, self)
 
     def __matmul__(self, other: list):
         """ Matrix multiplication between two rule arrays. """
