@@ -31,6 +31,8 @@ class Test_Topo(unittest.TestCase):
         self.assertEqual(rarr[0].dict(), combo.dict())
         self.assertEqual(rarr[1].dict(), flip.dict())
 
+        self.assertEqual(len(rarr), 2)
+
     def testRmul(self):
         """ Test __rmul__ with Rules """
 
