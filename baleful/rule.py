@@ -156,13 +156,22 @@ class Rule:
 
     def __str_dict(self, kwargs):
         """ Converts a dictionary into string arguments for comparison. """
-        for k1, v1 in kwargs.items():
+        k1s = [k for k in kwargs]
+        for k1 in k1s:
+            v1 = kwargs[k1]
             if isinstance(v1, dict):
-                for k2, v2 in v1.items():
-                    kwargs[k1][k2] = str(v2)
+                k2s = [k for k in v1]
+                for k2 in k2s:
+                    v2 = v1[k2]
+                    if v2:
+                        kwargs[k1][k2] = str(v2)
+                    else:
+                        kwargs[k1].pop(k2)
             else:
-                kwargs[k1] = str(v1)
-
+                if v1:
+                    kwargs[k1] = str(v1)
+                else:
+                    kwargs.pop(k1)
         return kwargs
 
     def __eq__(self, other):
