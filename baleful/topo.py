@@ -83,3 +83,6 @@ class Topology:
         ordered thru self.forward, then self.reverse. """
         return (self.forward + self.reverse)[key]
 
+    def __len__(self):
+        """ Returns the length of the Topology. """
+        return len(self.forward) + len(self.reverse)
