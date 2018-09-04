@@ -11,12 +11,14 @@ class Rule:
                     'rule': iptc.Rule,
                     'table': iptc.Table,
                     'chain': iptc.Chain,
-                    'addr': ipaddress.IPv4Network},
+                    'addr': ipaddress.IPv4Network,
+                    'str': 'iptables'},
                 6: {'module': iptc,
                     'rule': iptc.Rule6,
                     'table': iptc.Table6,
                     'chain': iptc.Chain,
-                    'addr': ipaddress.IPv6Network}}
+                    'addr': ipaddress.IPv6Network,
+                    'str': 'ip6tables'}}
 
     WILD_ADDR = {4: "0.0.0.0/0.0.0.0",
                  6: "::/128"}
@@ -74,7 +76,8 @@ class Rule:
         if params:
             for key, val in params.items():
                 if key in ['src', 'dst']:
-                    params[key] = self.IPTABLES[ipv]['addr'](val)
+                    params[key] = self.IPTABLES[ipv]['addr'](val,
+                                                             strict=False)
             all_params.update(params)
         return all_params
 
