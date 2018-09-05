@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Final target configuration.
-
-FINAL_JUMP[OUTPUT]="REJECT"

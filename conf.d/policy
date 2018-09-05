@@ -1,6 +1,0 @@
-#!/bin/bash
-
-TABLE=( "filter" )
-TABLE_6=( "filter" )
-CHAIN=( "INPUT" "OUTPUT" "FORWARD" )
-CHAIN_6=( "INPUT" "OUTPUT" "FORWARD" )

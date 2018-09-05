@@ -1,7 +1,0 @@
-#!/bin/bash
-
-ICMP_REQUEST="echo-request"
-ICMP_REPLY="echo-reply"
-
-DCHAIN="OUTPUT"
-CHAIN="INPUT"
