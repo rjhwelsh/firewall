@@ -69,7 +69,7 @@ class Topology:
         else:
             return NotImplemented
 
-        return self.combine(self, y)
+        return self.combine(y, self)
 
     def __iter__(self):
         def generator(self):
