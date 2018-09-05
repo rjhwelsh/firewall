@@ -98,6 +98,9 @@ class Rule:
         defaults = x.__default_params()
         kwargs = rule.kwargs
 
+        if not x.lock and y.lock:
+            rule.lock = y.lock
+
         if not x.target and y.target:
             rule.target = y.target
 
@@ -287,6 +290,7 @@ class Rule:
                     chain=self.chain,
                     table=self.table,
                     ipv=self.ipv,
+                    lock=self.lock,
                     **kwargs)
 
     def flip(self):
