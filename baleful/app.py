@@ -18,6 +18,19 @@ ping = RuleArray(
         params={'protocol': 'icmp'},
         icmp={'icmp_type': 'echo-request'}))
 
+ftp_pasv = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': 21}),
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': '59136:59140'}))
+
+ftp_active = RuleArray(
+    Rule(
+        params={'protocol': 'tcp'},
+        tcp={'dport': '59136:59140'}))
+
 ssh = RuleArray(
     Rule(
         params={'protocol': 'tcp'},
