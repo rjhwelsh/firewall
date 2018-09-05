@@ -40,9 +40,7 @@ class Node:
         """ Sets the policy for node.
         Only policies described in self.policy will be set"""
         for i, v in self.policy.items():
-            tableClass = Rule.IPTABLES[i]['table']
-            for t in tableClass.ALL:
-                table = tableClass(t)
+            for table in self.tables(ipv=[i]):
                 for chain in table.chains:
                     if chain.name in v:
                         chain.set_policy(v[chain.name])
@@ -142,3 +140,11 @@ class Node:
                 table = tableClass(t)
                 for chain in table.chains:
                     chain.flush()
+
+    def tables(self, ipv=[4, 6]):
+        """ Refreshs all the tables. """
+        for i in ipv:
+            tableClass = Rule.IPTABLES[i]['table']
+            for t in tableClass.ALL:
+                table = tableClass(t)
+                yield table
