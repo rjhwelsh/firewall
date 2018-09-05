@@ -184,6 +184,12 @@ class Rule:
         for val in ['target', 'chain', 'table']:
             vdict.pop(val)
 
+        # Remove src/dst addresses that are wildcards
+        for val in ['src', 'dst']:
+            if vdict[''][val] == self.IPTABLES[ipv]['addr'](
+                    self.WILD_ADDR[ipv]):
+                vdict[''].pop(val)
+
         string = ''
         string += self.IPTABLES[ipv]['str']
 
