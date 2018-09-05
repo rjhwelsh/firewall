@@ -111,7 +111,8 @@ class Rule:
             rule.ipv = y.ipv
 
         for key in params:
-            if x.params[key] == defaults[key]:
+            if ((key in y.params and key in x.params) and
+                    (x.params[key] == defaults[key])):
                 params[key] = y.params[key]
 
         kwarg_keys = set(
