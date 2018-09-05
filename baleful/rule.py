@@ -400,6 +400,13 @@ class Rule:
         # Set target
         rule.create_target(self.target)
 
+        # Set target_param (if available)
+        kwargs = self.kwargs.copy()
+        if 'target_param' in kwargs:
+            for arg, val in kwargs['target_param'].items():
+                rule.target.set_parameter(arg, str(val))
+            kwargs.pop('target_param')
+
         # Set rule params
         for arg, val in self.params.items():
             if arg in ['src',
@@ -412,12 +419,13 @@ class Rule:
                 set_methods[arg](val)
 
         # Set match params
-        for m, params in self.kwargs.items():
+        for m, params in kwargs.items():
             # Create match based on keyword
             match = rule.create_match(m)
             # Create arguments based on value dict.
             for arg, val in params.items():
                 match.set_parameter(arg, str(val))
+
         return rule
 
     @classmethod
