@@ -18,7 +18,6 @@ class Node:
     def __init__(self,
                  hostname=str(),
                  rules=None,
-                 targets=None,
                  policy=None,
                  final_rules=None):
         """ Keyword arguments:
