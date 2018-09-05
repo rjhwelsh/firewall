@@ -189,13 +189,13 @@ hedgewars = RuleArray(
         tcp={'dport': 46631}))
 
 brscan_skey = Topology(
-    # Client connection to scanner
+    # Host connection to Scanner (client)
     RuleArray(
         Rule(
             params={'protocol': 'tcp'},
-            tcp={'dport': 54921})),
-    # Scanner (server) connection to client
+            tcp={'sport': 54921})),
+    # Scanner (client) connection to host
     RuleArray(
         Rule(
             params={'protocol': 'udp'},
-            udp={'dport': 54925})))
+            udp={'sport': 54925})))
