@@ -111,29 +111,30 @@ class Node:
     def panic(self):
         """ Panic, DROP all packets. """
 
+        # Note (only the FILTER table needs to drop packets)
+        # ALL CONNECTIONS PASS THRU FILTER
+
         # Set policy to DROP
         for i, v in self.__PANIC__.items():
             tableClass = Rule.IPTABLES[i]['table']
-            for t in tableClass.ALL:
-                table = tableClass(t)
-                for chain in table.chains:
-                    chain.flush()
+            table = tableClass(tableClass.FILTER)
+            for chain in table.chains:
+                chain.flush()
 
-                    # Delete chain if possible
-                    try:
-                        chain.delete()
-                    except iptc.ip4tc.IPTCError:
-                        pass
-                    except iptc.ip6tc.IPTCError:
-                        pass
+                # Delete chain if possible
+                try:
+                    chain.delete()
+                except iptc.ip4tc.IPTCError:
+                    pass
+                except iptc.ip6tc.IPTCError:
+                    pass
 
-                    if chain.name in v:
-                        chain.set_policy(v[chain.name])
+                if chain.name in v:
+                    chain.set_policy(v[chain.name])
 
     def flush(self, ipv=[4, 6]):
         """ Clear all iptables rules.
         From all tables."""
-
         for i in ipv:
             tableClass = Rule.IPTABLES[i]['table']
             for t in tableClass.ALL:
