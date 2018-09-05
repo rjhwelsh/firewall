@@ -86,7 +86,7 @@ class Node:
         Returns a tuple (exists, (packets, bytes)) """
 
         stats = list()
-        for rule in self.rules:
+        for rule in self.rules + self.final_rules:
             stats.append(
                 (rule.exists(), rule.iptc().get_counters()))
 
