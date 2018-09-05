@@ -21,6 +21,11 @@ class Topology:
         self.forward = forward
         self.reverse = reverse if reverse else RuleArray()
 
+    def copy(self):
+        """ Create a copy of this topology """
+        return Topology(self.forward.copy(),
+                        self.reverse.copy())
+
     @staticmethod
     def combine(x, y):
         """ Combines two topologies together.
