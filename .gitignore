@@ -3,3 +3,5 @@ README.pdf
 README.tex
 *.png
 host.d/*
+hosts/
+iptc/
