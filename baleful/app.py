@@ -217,3 +217,4 @@ brscan_skey = Topology(
         Rule(
             params={'protocol': 'udp'},
             udp={'sport': 54925})))
+# N.B. avahi and snmp are required for brscan_skey
